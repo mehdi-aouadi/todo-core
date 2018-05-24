@@ -1,7 +1,7 @@
 package com.m9i.service;
 
-import com.m9i.domain.Task;
-import com.m9i.domain.User;
+import com.m9i.model.Task;
+import com.m9i.model.User;
 
 public interface TaskService {
 

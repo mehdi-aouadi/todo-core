@@ -1,7 +1,7 @@
 package com.m9i.repositories.impl;
 
-import com.m9i.domain.Task;
-import com.m9i.domain.User;
+import com.m9i.model.Task;
+import com.m9i.model.User;
 import com.m9i.repositories.TaskRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

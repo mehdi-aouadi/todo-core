@@ -1,6 +1,6 @@
 package com.m9i.controllers;
 
-import com.m9i.domain.Task;
+import com.m9i.model.Task;
 import com.m9i.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

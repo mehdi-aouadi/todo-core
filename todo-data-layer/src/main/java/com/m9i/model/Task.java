@@ -1,4 +1,4 @@
-package com.m9i.domain;
+package com.m9i.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
