@@ -12,6 +12,7 @@
     <module>todo-data-layer</module>
     <module>todo-data-service</module>
     <module>todo-web</module>
+    <module>todo-integration-tests</module>
   </modules>
 
   <name>todo</name>
