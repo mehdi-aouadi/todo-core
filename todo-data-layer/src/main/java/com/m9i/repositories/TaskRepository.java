@@ -7,10 +7,10 @@ import java.util.List;
 
 public interface TaskRepository {
 
-    Task getTaskByAssignee(User user);
+    List<Task> findTasksByAssignee(String email);
 
     void saveTask(Task task);
 
-    List<Task> finAllTasks();
+    List<Task> finAllUserTasksByEmail(String email);
 
 }
