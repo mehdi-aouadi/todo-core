@@ -5,10 +5,13 @@ import com.todo.model.Task;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
-public interface TasksMapper {
+import java.util.List;
+import java.util.stream.Collectors;
 
-    TasksMapper INSTANCE = Mappers.getMapper(TasksMapper.class);
+@Mapper
+public interface TaskMapper {
+
+    TaskMapper INSTANCE = Mappers.getMapper(TaskMapper.class);
 
     @Mappings({
             @Mapping(source = "id", target = "id"),
@@ -25,5 +28,13 @@ public interface TasksMapper {
 
     @InheritInverseConfiguration
     Task contentToTask(TaskContent taskContent);
+
+    default List<TaskContent> taskListToContentList(List<Task> taskList) {
+        return taskList.stream().map(task -> taskToContent(task)).collect(Collectors.toList());
+    }
+
+    default List<Task> contentListToTaskList(List<TaskContent> contentsList) {
+        return contentsList.stream().map(taskContent -> contentToTask(taskContent)).collect(Collectors.toList());
+    }
 
 }
