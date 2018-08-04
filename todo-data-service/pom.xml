@@ -12,11 +12,15 @@
     <artifactId>todo-data-service</artifactId>
     <packaging>jar</packaging>
 
+    <properties>
+        <com.todo.todo-data-layer.version>1.0-SNAPSHOT</com.todo.todo-data-layer.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.todo</groupId>
             <artifactId>todo-data-layer</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${com.todo.todo-data-layer.version}</version>
         </dependency>
     </dependencies>
 </project>

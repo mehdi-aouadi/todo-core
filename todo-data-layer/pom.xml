@@ -12,16 +12,21 @@
     <artifactId>todo-data-layer</artifactId>
     <packaging>jar</packaging>
 
+    <properties>
+        <org.mongodb.mongo-java-driver.version>3.2.2</org.mongodb.mongo-java-driver.version>
+        <org.springframework.data.spring-data-mongodb.version>1.9.6.RELEASE</org.springframework.data.spring-data-mongodb.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
-            <version>3.2.2</version>
+            <version>${org.mongodb.mongo-java-driver.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-mongodb</artifactId>
-            <version>1.9.6.RELEASE</version>
+            <version>${org.springframework.data.spring-data-mongodb.version}</version>
         </dependency>
     </dependencies>
 </project>
