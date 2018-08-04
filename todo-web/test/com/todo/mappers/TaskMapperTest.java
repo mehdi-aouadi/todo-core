@@ -1,7 +1,6 @@
 package com.todo.mappers;
 
 import com.todo.contents.TaskContent;
-import com.todo.mappers.TasksMapper;
 import com.todo.model.Task;
 import com.todo.model.User;
 import org.junit.Before;
@@ -12,7 +11,7 @@ import java.util.UUID;
 
 import static org.junit.Assert.*;
 
-public class TasksMapperTest {
+public class TaskMapperTest {
 
     private final UUID taskId = UUID.randomUUID();
     private User requester;
@@ -54,7 +53,7 @@ public class TasksMapperTest {
         task.setId(taskId.toString());
         task.setWishDate(wishDate);
 
-        TaskContent taskContent = TasksMapper.INSTANCE.taskToContent(task);
+        TaskContent taskContent = TaskMapper.INSTANCE.taskToContent(task);
 
         assertEquals(taskId.toString(), taskContent.getId());
         assertEquals(requesterEmail, taskContent.getRequesterEmail());
@@ -79,7 +78,7 @@ public class TasksMapperTest {
         taskContent.setSummary(summary);
         taskContent.setWishDate(wishDate);
 
-        Task task = TasksMapper.INSTANCE.contentToTask(taskContent);
+        Task task = TaskMapper.INSTANCE.contentToTask(taskContent);
 
         assertEquals(taskId.toString(), task.getId());
         assertEquals(requesterEmail, task.getRequester().getEmail());
