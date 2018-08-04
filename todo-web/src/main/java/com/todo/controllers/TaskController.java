@@ -23,7 +23,7 @@ public class TaskController {
     @Autowired
     private UserService userService;
 
-    private TaskMapper taskMapper;
+    private TaskMapper taskMapper = TaskMapper.INSTANCE;
 
     @GET
     @Path("tasks/assigned")
