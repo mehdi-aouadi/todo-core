@@ -10,10 +10,10 @@
 
     <context:annotation-config />
 
-    <context:component-scan base-package="com.m9i.service" />
+    <context:component-scan base-package="com.todo.service" />
 
     <import resource="applicationContextDataLayer.xml"/>
     <import resource="applicationContextDataService.xml"/>
 
-    <bean id="taskController" class="com.m9i.controllers.TaskController"/>
+    <bean id="taskController" class="com.todo.controllers.TaskController"/>
 </beans>
