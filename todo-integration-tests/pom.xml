@@ -13,6 +13,8 @@
 
     <properties>
         <com.todo.todo-web.version>1.0-SNAPSHOT</com.todo.todo-web.version>
+        <com.jayway.restassured.rest-assured>2.9.0</com.jayway.restassured.rest-assured>
+        <jersey-version>2.25</jersey-version>
     </properties>
 
     <dependencies>
@@ -20,6 +22,17 @@
             <groupId>com.todo</groupId>
             <artifactId>todo-web</artifactId>
             <version>${com.todo.todo-web.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.test-framework</groupId>
+            <artifactId>jersey-test-framework-core</artifactId>
+            <version>${jersey-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.test-framework.providers</groupId>
+            <artifactId>jersey-test-framework-provider-grizzly2</artifactId>
+            <version>${jersey-version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
