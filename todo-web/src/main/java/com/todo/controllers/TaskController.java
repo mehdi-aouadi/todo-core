@@ -12,7 +12,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Controller
-@Path("todo/")
+@Path("todo/tasks/")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class TaskController {
@@ -27,7 +27,7 @@ public class TaskController {
     }
 
     @GET
-    @Path("tasks/assigned")
+    @Path("assigned")
     public Response getAllUserAssignedTasksByEmail(@QueryParam("email") String email) {
         return Response.status(200)
                 .entity(jsonSerializer.toJson(taskMapper.taskListToContentList(
@@ -36,7 +36,7 @@ public class TaskController {
     }
 
     @GET
-    @Path("tasks/created")
+    @Path("created")
     public Response getAllUserTasksByEmail(@QueryParam("email") String email) {
         return Response.status(200)
                 .entity(jsonSerializer.toJson(taskMapper.taskListToContentList(
@@ -45,7 +45,6 @@ public class TaskController {
     }
 
     @POST
-    @Path("tasks")
     public Response create(TaskContent taskContent) {
         taskService.saveTask(taskMapper.contentToTask(taskContent));
         return Response.status(Response.Status.OK).entity("TASK INSERTED SUCCESSFULLY").build();
