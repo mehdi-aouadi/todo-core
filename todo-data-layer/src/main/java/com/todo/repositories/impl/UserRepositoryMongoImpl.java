@@ -22,7 +22,6 @@ public class UserRepositoryMongoImpl implements UserRepository {
 
     @Override
     public User getUserByEmail(String email) {
-        LOGGER.info("Retrieving user by email {}");
         Query query = new Query();
         query.addCriteria(Criteria.where("email").is(email));
         return mongoTemplate.findOne(query, User.class);
@@ -30,10 +29,16 @@ public class UserRepositoryMongoImpl implements UserRepository {
 
     @Override
     public void saveUser(User user) {
-        LOGGER.info("Saving user {}.", user.getEmail());
         if(user.getId() == null || user.getId().isEmpty()) {
             user.setId(UUID.randomUUID().toString());
         }
         mongoTemplate.save(user);
+    }
+
+    @Override
+    public boolean userExists(String email) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("email").is(email));
+        return mongoTemplate.exists(query, User.class);
     }
 }

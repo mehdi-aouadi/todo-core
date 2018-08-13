@@ -3,8 +3,13 @@ package com.todo.service.impl;
 import com.todo.model.User;
 import com.todo.repositories.UserRepository;
 import com.todo.service.UserService;
+import exceptions.DataIntegrityException;
+import org.apache.commons.lang3.StringUtils;
+import org.mapstruct.ap.shaded.freemarker.template.utility.NullArgumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -19,6 +24,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void saveUser(User user) {
+        checkUser(user);
+        if(StringUtils.isBlank(user.getId())) {
+            user.setId(UUID.randomUUID().toString());
+        }
         userRepository.saveUser(user);
+    }
+
+    @Override
+    public boolean userExists(String email) {
+        return userRepository.userExists(email);
+    }
+
+    private void checkUser(User user) {
+        if(user == null) {
+            throw new NullArgumentException("User is null.");
+        }
+        if(StringUtils.isBlank(user.getEmail())) {
+            throw new DataIntegrityException("Missing user email.");
+        }
     }
 }
