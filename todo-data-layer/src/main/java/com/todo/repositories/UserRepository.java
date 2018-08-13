@@ -8,4 +8,6 @@ public interface UserRepository {
 
     void saveUser(User user);
 
+    boolean userExists(String email);
+
 }
