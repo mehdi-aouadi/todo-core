@@ -6,7 +6,6 @@ import com.todo.service.TaskService;
 import com.todo.service.UserService;
 import exceptions.DataIntegrityException;
 import org.apache.commons.lang3.StringUtils;
-import org.mapstruct.ap.shaded.freemarker.template.utility.NullArgumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +43,7 @@ public class TaskServiceImpl implements TaskService {
 
     private void checkTask(Task task) throws DataIntegrityException {
         if(task == null) {
-            throw new NullArgumentException("Task is null.");
+            throw new IllegalArgumentException("Task is null.");
         }
         if(task.getAssignee() == null || StringUtils.isBlank(task.getAssignee().getEmail())) {
             throw new DataIntegrityException("Missing assignee email.");

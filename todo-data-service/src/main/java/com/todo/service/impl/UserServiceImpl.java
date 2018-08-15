@@ -5,7 +5,6 @@ import com.todo.repositories.UserRepository;
 import com.todo.service.UserService;
 import exceptions.DataIntegrityException;
 import org.apache.commons.lang3.StringUtils;
-import org.mapstruct.ap.shaded.freemarker.template.utility.NullArgumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +37,7 @@ public class UserServiceImpl implements UserService {
 
     private void checkUser(User user) {
         if(user == null) {
-            throw new NullArgumentException("User is null.");
+            throw new IllegalArgumentException("User is null.");
         }
         if(StringUtils.isBlank(user.getEmail())) {
             throw new DataIntegrityException("Missing user email.");
