@@ -1,44 +1,42 @@
 package com.todo.repositories.impl;
 
+import com.mongodb.client.MongoCollection;
+import com.todo.dbutils.DbManager;
 import com.todo.model.Task;
 import com.todo.repositories.TaskRepository;
+import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import static com.mongodb.client.model.Filters.eq;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
+@NoArgsConstructor
 public class TaskRepositoryMongoImpl implements TaskRepository {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskRepositoryMongoImpl.class);
 
-    @Autowired
-    private MongoTemplate mongoTemplate;
+    private final MongoCollection<Task> mongoCollection = DbManager.getMongoCollection(Task.class);
 
     @Override
     public List<Task> findTasksByAssignee(String email) {
         LOGGER.info("Retrieving Tasks assigned to {} from db.", email);
-        Query query = new Query();
-        query.addCriteria(Criteria.where("assignee.email").is(email));
-        return mongoTemplate.find(query, Task.class);
+        return mongoCollection.find(eq("assignee.email", email)).into(new ArrayList<>());
     }
 
     @Override
     public void saveTask(Task task) {
         LOGGER.info("Inserting new Task assigned to {}. Description : {}.", task.getAssignee(), task.getDescription());
-        mongoTemplate.save(task);
+        mongoCollection.insertOne(task);
     }
 
     @Override
     public List<Task> finAllUserTasksByEmail(String email) {
         LOGGER.info("Retrieving all user {} tasks.", email);
-        Query query = new Query();
-        query.addCriteria(Criteria.where("requester.email").is(email));
-        return mongoTemplate.find(query, Task.class);
+        return mongoCollection.find(eq("requester.email", email)).into(new ArrayList<>());
     }
 }

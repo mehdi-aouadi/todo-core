@@ -1,30 +1,29 @@
 package com.todo.repositories.impl;
 
+import com.mongodb.client.MongoCollection;
+import com.todo.dbutils.DbManager;
 import com.todo.model.User;
 import com.todo.repositories.UserRepository;
+import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
+import static com.mongodb.client.model.Filters.eq;
+
 @Repository
+@NoArgsConstructor
 public class UserRepositoryMongoImpl implements UserRepository {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserRepositoryMongoImpl.class);
 
-    @Autowired
-    private MongoTemplate mongoTemplate;
+    private final MongoCollection<User> mongoCollection = DbManager.getMongoCollection(User.class);
 
     @Override
     public User getUserByEmail(String email) {
-        Query query = new Query();
-        query.addCriteria(Criteria.where("email").is(email));
-        return mongoTemplate.findOne(query, User.class);
+        return mongoCollection.find(eq("email", email)).first();
     }
 
     @Override
@@ -32,13 +31,12 @@ public class UserRepositoryMongoImpl implements UserRepository {
         if(user.getId() == null || user.getId().isEmpty()) {
             user.setId(UUID.randomUUID().toString());
         }
-        mongoTemplate.save(user);
+
+        mongoCollection.insertOne(user);
     }
 
     @Override
     public boolean userExists(String email) {
-        Query query = new Query();
-        query.addCriteria(Criteria.where("email").is(email));
-        return mongoTemplate.exists(query, User.class);
+        return mongoCollection.find(eq("email", email)).first() != null;
     }
 }
