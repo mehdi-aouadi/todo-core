@@ -16,4 +16,5 @@
     <import resource="applicationContextDataService.xml"/>
 
     <bean id="taskController" class="com.todo.controllers.TaskController"/>
+    <bean id="userController" class="com.todo.controllers.UserController"/>
 </beans>
