@@ -23,10 +23,5 @@
             <artifactId>mongo-java-driver</artifactId>
             <version>${org.mongodb.mongo-java-driver.version}</version>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.springframework.data</groupId>-->
-            <!--<artifactId>spring-data-mongodb</artifactId>-->
-            <!--<version>${org.springframework.data.spring-data-mongodb.version}</version>-->
-        <!--</dependency>-->
     </dependencies>
 </project>
