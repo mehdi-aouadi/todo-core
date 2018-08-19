@@ -7,13 +7,11 @@ import com.todo.repositories.UserRepository;
 import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
 import static com.mongodb.client.model.Filters.eq;
 
-@Repository
 @NoArgsConstructor
 public class UserRepositoryMongoImpl implements UserRepository {
 

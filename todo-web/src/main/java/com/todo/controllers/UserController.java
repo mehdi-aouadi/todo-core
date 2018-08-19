@@ -3,25 +3,25 @@ package com.todo.controllers;
 import com.google.gson.Gson;
 import com.todo.contents.UserContent;
 import com.todo.mappers.UserMapper;
-import com.todo.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import com.todo.services.UserService;
+import lombok.NoArgsConstructor;
 
+import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Controller
-@Path("todo/users/")
+@Path("users")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@NoArgsConstructor
 public class UserController {
 
     private UserService userService;
     private UserMapper userMapper = UserMapper.INSTANCE;
     private Gson jsonSerializer = new Gson();
 
-    @Autowired
+    @Inject
     public UserController(UserService userService) {
         this.userService = userService;
     }

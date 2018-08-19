@@ -1,13 +1,9 @@
 package com.todo.controllers;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.todo.contents.TaskContent;
 import com.todo.contents.UserContent;
-import com.todo.model.Task;
-import com.todo.model.User;
-import com.todo.service.TaskService;
-import com.todo.service.UserService;
+import com.todo.mappers.UserMapper;
+import com.todo.services.UserService;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
@@ -22,9 +18,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -57,17 +50,20 @@ public class UserControllerTest extends JerseyTest {
         userContentForPost.setPhoneNumber("123456");
 
         Entity<UserContent> userContentEntity = Entity.entity(userContentForPost, MediaType.APPLICATION_JSON);
-        Response postResponse = target("todo/users")
+        Response postResponse = target("users")
                 .request()
                 .post(userContentEntity);
 
         Assert.assertEquals(201, postResponse.getStatus());
 
-        Response response = target("todo/users/details")
+        Mockito.when(userService.findUserByEmail(Mockito.anyString())).thenReturn(UserMapper.INSTANCE.contentToUser(userContentForPost));
+
+        Response response = target("users/details")
                 .queryParam("email", userContentForPost.getEmail()).request()
                 .get();
         Assert.assertEquals(200, response.getStatus());
-        UserContent userContentAfterPost = jsonSerializer.fromJson(response.readEntity(String.class),
+        String responseString = response.readEntity(String.class);
+        UserContent userContentAfterPost = jsonSerializer.fromJson(responseString,
                 UserContent.class);
 
         Assert.assertEquals(userContentForPost.getEmail(), userContentAfterPost.getEmail());
