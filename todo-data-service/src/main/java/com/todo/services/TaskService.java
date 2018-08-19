@@ -1,7 +1,7 @@
-package com.todo.service;
+package com.todo.services;
 
 import com.todo.model.Task;
-import exceptions.DataIntegrityException;
+import com.todo.exceptions.DataIntegrityException;
 
 import java.util.List;
 

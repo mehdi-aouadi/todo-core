@@ -1,26 +1,25 @@
-package com.todo.service.impl;
+package com.todo.services.impl;
 
+import com.google.inject.Inject;
 import com.todo.model.Task;
 import com.todo.repositories.TaskRepository;
-import com.todo.service.TaskService;
-import com.todo.service.UserService;
-import exceptions.DataIntegrityException;
+import com.todo.services.TaskService;
+import com.todo.exceptions.DataIntegrityException;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
-@Service
+@NoArgsConstructor
 public class TaskServiceImpl implements TaskService {
 
-    @Autowired
     private TaskRepository taskRepository;
 
-    @Autowired
-    private UserService userService;
-
+    @Inject
+    public TaskServiceImpl(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
+    }
 
     @Override
     public List<Task> getAllUserCreatedTasksByEmail(String email) {

@@ -1,20 +1,24 @@
-package com.todo.service.impl;
+package com.todo.services.impl;
 
+import com.google.inject.Inject;
 import com.todo.model.User;
 import com.todo.repositories.UserRepository;
-import com.todo.service.UserService;
-import exceptions.DataIntegrityException;
+import com.todo.services.UserService;
+import com.todo.exceptions.DataIntegrityException;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
-@Service
+@NoArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    @Autowired
     private UserRepository userRepository;
+
+    @Inject
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public User findUserByEmail(String email) {
