@@ -14,7 +14,6 @@
 
     <properties>
         <org.mongodb.mongo-java-driver.version>3.8.0</org.mongodb.mongo-java-driver.version>
-        <org.springframework.data.spring-data-mongodb.version>1.9.6.RELEASE</org.springframework.data.spring-data-mongodb.version>
     </properties>
 
     <dependencies>

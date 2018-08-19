@@ -16,6 +16,7 @@
         <org.webjars.bootstrap.version>3.3.5</org.webjars.bootstrap.version>
         <org.glassfish.jersey.containers.jersey-container-servlet.version>2.25</org.glassfish.jersey.containers.jersey-container-servlet.version>
         <com.fasterxml.jackson.module.jackson-modules-java8.version>2.9.6</com.fasterxml.jackson.module.jackson-modules-java8.version>
+        <org.glassfish.hk2.guice-bridge.version>2.5.0-b62</org.glassfish.hk2.guice-bridge.version>
     </properties>
 
     <dependencies>
@@ -34,6 +35,11 @@
             <artifactId>jersey-container-servlet</artifactId>
             <version>${org.glassfish.jersey.containers.jersey-container-servlet.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-servlet-core</artifactId>
+            <version>${org.glassfish.jersey.containers.jersey-container-servlet.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
@@ -60,6 +66,11 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${com.fasterxml.jackson.module.jackson-modules-java8.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.hk2</groupId>
+            <artifactId>guice-bridge</artifactId>
+            <version>${org.glassfish.hk2.guice-bridge.version}</version>
         </dependency>
     </dependencies>
 

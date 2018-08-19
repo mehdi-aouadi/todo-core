@@ -1,4 +1,4 @@
-package com.todo.service;
+package com.todo.services;
 
 import com.todo.model.User;
 

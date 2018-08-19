@@ -1,4 +1,4 @@
-package exceptions;
+package com.todo.exceptions;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
