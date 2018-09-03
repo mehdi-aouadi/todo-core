@@ -4,10 +4,10 @@ import com.todo.model.User;
 
 public interface UserRepository {
 
-    User getUserByEmail(String email);
+  User getUserByEmail(String email);
 
-    void saveUser(User user);
+  void saveUser(User user);
 
-    boolean userExists(String email);
+  boolean userExists(String email);
 
 }

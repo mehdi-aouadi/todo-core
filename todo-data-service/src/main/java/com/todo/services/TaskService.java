@@ -1,16 +1,16 @@
 package com.todo.services;
 
-import com.todo.model.Task;
 import com.todo.exceptions.DataIntegrityException;
+import com.todo.model.Task;
 
 import java.util.List;
 
 public interface TaskService {
 
-    List<Task> getAllUserCreatedTasksByEmail(String email);
+  List<Task> getAllUserCreatedTasksByEmail(String email);
 
-    void saveTask(Task task) throws DataIntegrityException;
+  void saveTask(Task task) throws DataIntegrityException;
 
-    List<Task> getAllUserAssignedTasksByEmail(String email);
+  List<Task> getAllUserAssignedTasksByEmail(String email);
 
 }
