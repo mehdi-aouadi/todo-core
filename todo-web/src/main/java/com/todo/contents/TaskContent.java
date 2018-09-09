@@ -16,15 +16,15 @@ import java.time.LocalDateTime;
 @Setter
 public class TaskContent {
 
-    private String id;
-    private String summary;
-    private String requesterId;
-    private String requesterEmail;
-    private String assigneeId;
-    private String assigneeEmail;
-    private String description;
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    private LocalDateTime wishDate;
+  private String id;
+  private String summary;
+  private String requesterId;
+  private String requesterEmail;
+  private String assigneeId;
+  private String assigneeEmail;
+  private String description;
+  @JsonSerialize(using = LocalDateTimeSerializer.class)
+  @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+  private LocalDateTime wishDate;
 
 }

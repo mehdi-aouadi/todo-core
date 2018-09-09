@@ -13,30 +13,30 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 public class DbManager {
 
-    private static MongoClientURI connectionString;
-    private static MongoClient mongoClient;
-    private static MongoDatabase database;
+  private static MongoClientURI connectionString;
+  private static MongoClient mongoClient;
+  private static MongoDatabase database;
 
-    private static DbManager INSTANCE;
+  private static DbManager INSTANCE;
 
-    private DbManager() {
-        connectionString = new MongoClientURI("mongodb://localhost:27017");
-        mongoClient = new MongoClient(connectionString);
-        CodecRegistry pojoCodecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
-                fromProviders(PojoCodecProvider.builder().automatic(true).build()));
-        database = mongoClient.getDatabase("tododb").withCodecRegistry(pojoCodecRegistry);
+  private DbManager() {
+    connectionString = new MongoClientURI("mongodb://localhost:27017");
+    mongoClient = new MongoClient(connectionString);
+    CodecRegistry pojoCodecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
+        fromProviders(PojoCodecProvider.builder().automatic(true).build()));
+    database = mongoClient.getDatabase("tododb").withCodecRegistry(pojoCodecRegistry);
+  }
+
+  private static DbManager getInstance() {
+    if (INSTANCE == null) {
+      return new DbManager();
+    } else {
+      return INSTANCE;
     }
+  }
 
-    private static DbManager getInstance() {
-        if(INSTANCE == null) {
-            return new DbManager();
-        } else {
-            return INSTANCE;
-        }
-    }
-
-    public static MongoCollection getMongoCollection(Class type) {
-        return getInstance().database.getCollection(type.getSimpleName(), type);
-    }
+  public static MongoCollection getMongoCollection(Class type) {
+    return getInstance().database.getCollection(type.getSimpleName(), type);
+  }
 
 }

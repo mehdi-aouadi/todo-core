@@ -8,10 +8,10 @@ import com.todo.repositories.impl.UserRepositoryMongoImpl;
 
 public class DataServiceModule extends AbstractModule {
 
-    @Override
-    protected void configure() {
-        bind(TaskRepository.class).to(TaskRepositoryMongoImpl.class);
-        bind(UserRepository.class).to(UserRepositoryMongoImpl.class);
-    }
+  @Override
+  protected void configure() {
+    bind(TaskRepository.class).to(TaskRepositoryMongoImpl.class);
+    bind(UserRepository.class).to(UserRepositoryMongoImpl.class);
+  }
 
 }

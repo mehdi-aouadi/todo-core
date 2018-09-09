@@ -9,5 +9,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class DataIntegrityException extends IllegalArgumentException {
 
-    private String fieldName;
+  private String fieldName;
+
 }
