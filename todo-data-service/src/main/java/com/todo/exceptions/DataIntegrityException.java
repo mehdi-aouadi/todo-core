@@ -1,14 +1,9 @@
 package com.todo.exceptions;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+public class DataIntegrityException extends PersistenceException {
 
-@Getter
-@Setter
-@AllArgsConstructor
-public class DataIntegrityException extends IllegalArgumentException {
-
-  private String fieldName;
+  public DataIntegrityException(String fieldName, String message) {
+    super(fieldName, message);
+  }
 
 }

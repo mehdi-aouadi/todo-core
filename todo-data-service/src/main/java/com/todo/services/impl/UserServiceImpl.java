@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
       throw new IllegalArgumentException("User is null.");
     }
     if (StringUtils.isBlank(user.getEmail())) {
-      throw new DataIntegrityException("Missing user email.");
+      throw new DataIntegrityException("Email", "Missing user email.");
     }
   }
 }
