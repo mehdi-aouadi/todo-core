@@ -44,13 +44,13 @@ public class TaskServiceImpl implements TaskService {
       throw new IllegalArgumentException("Task is null.");
     }
     if (task.getAssignee() == null || StringUtils.isBlank(task.getAssignee().getEmail())) {
-      throw new DataIntegrityException("Missing assignee email.");
+      throw new DataIntegrityException("Assignee Email", "Missing assignee email.");
     }
     if (task.getRequester() == null || StringUtils.isBlank(task.getRequester().getEmail())) {
-      throw new DataIntegrityException("Missing requester email.");
+      throw new DataIntegrityException("Requester Email", "Missing requester email.");
     }
     if (StringUtils.isBlank(task.getSummary())) {
-      throw new DataIntegrityException("Missing task summary.");
+      throw new DataIntegrityException("Task Summary", "Missing task summary.");
     }
   }
 }
