@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,11 +17,11 @@ import java.time.LocalDateTime;
 @Setter
 public class TaskContent {
 
-  private String id;
+  private UUID id;
   private String summary;
-  private String requesterId;
+  private UUID requesterId;
   private String requesterEmail;
-  private String assigneeId;
+  private UUID assigneeId;
   private String assigneeEmail;
   private String description;
   @JsonSerialize(using = LocalDateTimeSerializer.class)

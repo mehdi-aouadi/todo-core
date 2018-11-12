@@ -32,12 +32,12 @@ public class TaskMapperTest {
     @Before
     public void init() {
         requester = new User();
-        requester.setId(requesterId.toString());
+        requester.setId(requesterId);
         requester.setEmail(requesterEmail);
         requester.setPhoneNumber("111222");
 
         assignee = new User();
-        assignee.setId(assigneeId.toString());
+        assignee.setId(assigneeId);
         assignee.setEmail(assigneeEmail);
         assignee.setPhoneNumber(assigneePhone);
     }
@@ -50,7 +50,7 @@ public class TaskMapperTest {
         task.setAssignee(assignee);
         task.setDescription(description);
         task.setSummary(summary);
-        task.setId(taskId.toString());
+        task.setId(taskId);
         task.setWishDate(wishDate);
 
         TaskContent taskContent = TaskMapper.INSTANCE.taskToContent(task);
@@ -69,10 +69,10 @@ public class TaskMapperTest {
     public void contentToTaskTest() {
 
         taskContent = new TaskContent();
-        taskContent.setId(taskId.toString());
-        taskContent.setRequesterId(requesterId.toString());
+        taskContent.setId(taskId);
+        taskContent.setRequesterId(requesterId);
         taskContent.setRequesterEmail(requesterEmail);
-        taskContent.setAssigneeId(assigneeId.toString());
+        taskContent.setAssigneeId(assigneeId);
         taskContent.setAssigneeEmail(assigneeEmail);
         taskContent.setDescription(description);
         taskContent.setSummary(summary);
@@ -80,14 +80,14 @@ public class TaskMapperTest {
 
         Task task = TaskMapper.INSTANCE.contentToTask(taskContent);
 
-        assertEquals(taskId.toString(), task.getId());
+        assertEquals(taskId, task.getId());
         assertEquals(requesterEmail, task.getRequester().getEmail());
         assertEquals(assigneeEmail, task.getAssignee().getEmail());
         assertEquals(description, task.getDescription());
         assertEquals(summary, task.getSummary());
         assertEquals(wishDate, task.getWishDate());
-        assertEquals(requesterId.toString(), task.getRequester().getId());
-        assertEquals(assigneeId.toString(), task.getAssignee().getId());
+        assertEquals(requesterId, task.getRequester().getId());
+        assertEquals(assigneeId, task.getAssignee().getId());
     }
 
 }

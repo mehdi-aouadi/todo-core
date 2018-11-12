@@ -62,7 +62,7 @@ public class TaskControllerTest extends JerseyTest {
     taskContentForPost.setSummary("Task Summary For Test.");
     taskContentForPost.setDescription("Task Description For Test.");
     taskContentForPost.setWishDate(LocalDateTime.now().plusDays(2));
-    taskContentForPost.setId(UUID.randomUUID().toString());
+    taskContentForPost.setId(UUID.randomUUID());
 
     Entity<TaskContent> taskContentEntity = Entity.entity(taskContentForPost,
         MediaType.APPLICATION_JSON);

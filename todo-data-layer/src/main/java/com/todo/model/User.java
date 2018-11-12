@@ -1,19 +1,18 @@
 package com.todo.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+
+import java.util.UUID;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
+@AllArgsConstructor
 public class User {
 
-  private String id;
+  private UUID id;
 
   private String email;
   private String phoneNumber;

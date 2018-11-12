@@ -24,12 +24,12 @@ public class UserRepositoryMongoImpl implements UserRepository {
   }
 
   @Override
-  public void saveUser(User user) {
-    if (user.getId() == null || user.getId().isEmpty()) {
-      user.setId(UUID.randomUUID().toString());
+  public User saveUser(User user) {
+    if (user.getId() == null) {
+      user.setId(UUID.randomUUID());
     }
-
     mongoCollection.insertOne(user);
+    return new User(user.getId(), user.getEmail(), user.getPhoneNumber());
   }
 
   @Override

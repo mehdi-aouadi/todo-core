@@ -1,21 +1,19 @@
 package com.todo.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode
+@AllArgsConstructor
 public class Task {
 
-  private String id;
+  private UUID id;
 
   private String summary;
   private User requester;
