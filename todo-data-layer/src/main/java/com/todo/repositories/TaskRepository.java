@@ -8,7 +8,7 @@ public interface TaskRepository {
 
   List<Task> findTasksByAssignee(String email);
 
-  void saveTask(Task task);
+  Task saveTask(Task task);
 
   List<Task> finAllUserTasksByEmail(String email);
 

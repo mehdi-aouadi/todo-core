@@ -46,7 +46,7 @@ public class UserControllerTest extends JerseyTest {
 
     UserContent userContentForPost = new UserContent();
     userContentForPost.setEmail("userfortest@email.com");
-    userContentForPost.setId(UUID.randomUUID().toString());
+    userContentForPost.setId(UUID.randomUUID());
     userContentForPost.setPhoneNumber("123456");
 
     Entity<UserContent> userContentEntity = Entity.entity(userContentForPost,

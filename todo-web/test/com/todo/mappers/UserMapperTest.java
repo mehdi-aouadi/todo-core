@@ -20,13 +20,13 @@ public class UserMapperTest {
     @Test
     public void userToContentTest() {
         user = new User();
-        user.setId(userId.toString());
+        user.setId(userId);
         user.setEmail(userEmail);
         user.setPhoneNumber(userPhone);
 
         UserContent userContent = UserMapper.INSTANCE.userToContent(user);
 
-        assertEquals(userId.toString(), userContent.getId());
+        assertEquals(userId, userContent.getId());
         assertEquals(userEmail, userContent.getEmail());
         assertEquals(userPhone, userContent.getPhoneNumber());
     }
@@ -34,13 +34,13 @@ public class UserMapperTest {
     @Test
     public void contentToUserTest() {
         userContent = new UserContent();
-        userContent.setId(userId.toString());
+        userContent.setId(userId);
         userContent.setEmail(userEmail);
         userContent.setPhoneNumber(userPhone);
 
         user = UserMapper.INSTANCE.contentToUser(userContent);
 
-        assertEquals(userId.toString(), user.getId());
+        assertEquals(userId, user.getId());
         assertEquals(userEmail, user.getEmail());
         assertEquals(userPhone, user.getPhoneNumber());
     }

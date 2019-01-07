@@ -7,6 +7,8 @@ import lombok.ToString;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
@@ -15,7 +17,7 @@ import lombok.Setter;
 @Setter
 public class UserContent {
 
-  private String id;
+  private UUID id;
   private String email;
   private String phoneNumber;
 

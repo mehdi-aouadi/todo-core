@@ -14,6 +14,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import static javax.ws.rs.core.Response.Status.OK;
 
 import lombok.NoArgsConstructor;
 
@@ -35,7 +36,7 @@ public class TaskController {
   @GET
   @Path("assigned")
   public Response getAllUserAssignedTasksByEmail(@QueryParam("email") String email) {
-    return Response.status(200)
+    return Response.status(OK)
         .entity(jsonSerializer.toJson(taskMapper.taskListToContentList(
             taskService.getAllUserAssignedTasksByEmail(email))))
         .build();
@@ -44,7 +45,7 @@ public class TaskController {
   @GET
   @Path("created")
   public Response getAllUserTasksByEmail(@QueryParam("email") String email) {
-    return Response.status(200)
+    return Response.status(OK)
         .entity(jsonSerializer.toJson(taskMapper.taskListToContentList(
             taskService.getAllUserCreatedTasksByEmail(email))))
         .build();
@@ -53,6 +54,6 @@ public class TaskController {
   @POST
   public Response create(TaskContent taskContent) {
     taskService.saveTask(taskMapper.contentToTask(taskContent));
-    return Response.status(Response.Status.OK).entity("TASK INSERTED SUCCESSFULLY").build();
+    return Response.status(OK).entity("TASK INSERTED SUCCESSFULLY").build();
   }
 }

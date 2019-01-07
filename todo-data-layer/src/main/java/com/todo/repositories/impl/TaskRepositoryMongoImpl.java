@@ -27,11 +27,13 @@ public class TaskRepositoryMongoImpl implements TaskRepository {
   }
 
   @Override
-  public void saveTask(Task task) {
+  public Task saveTask(Task task) {
     LOGGER.info("Inserting new Task assigned to {}. Description : {}.",
         task.getAssignee(),
         task.getDescription());
     mongoCollection.insertOne(task);
+    return new Task(task.getId(), task.getSummary(), task.getRequester(), task.getAssignee(),
+        task.getDescription(), task.getWishDate());
   }
 
   @Override

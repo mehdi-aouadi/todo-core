@@ -14,6 +14,7 @@ import javax.ws.rs.QueryParam;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import static javax.ws.rs.core.Response.Status.OK;
 
 import lombok.NoArgsConstructor;
 
@@ -36,7 +37,7 @@ public class UserController {
   @Path("details")
   public Response getUserByEmail(@QueryParam("email") String email) {
     return Response
-        .status(Response.Status.OK)
+        .status(OK)
         .entity(jsonSerializer.toJson(
             userMapper.userToContent(userService.findUserByEmail(email))))
         .build();

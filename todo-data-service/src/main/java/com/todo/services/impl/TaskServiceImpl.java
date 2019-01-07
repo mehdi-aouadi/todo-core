@@ -26,12 +26,12 @@ public class TaskServiceImpl implements TaskService {
   }
 
   @Override
-  public void saveTask(Task task) throws DataIntegrityException {
+  public Task saveTask(Task task) throws DataIntegrityException {
     checkTask(task);
-    if (task.getId() == null || task.getId().isEmpty()) {
-      task.setId(UUID.randomUUID().toString());
+    if (task.getId() == null) {
+      task.setId(UUID.randomUUID());
     }
-    taskRepository.saveTask(task);
+    return taskRepository.saveTask(task);
   }
 
   @Override

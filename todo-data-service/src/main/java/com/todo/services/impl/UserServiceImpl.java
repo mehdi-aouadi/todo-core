@@ -25,12 +25,12 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public void saveUser(User user) {
+  public User saveUser(User user) {
     checkUser(user);
-    if (StringUtils.isBlank(user.getId())) {
-      user.setId(UUID.randomUUID().toString());
+    if (user.getId() == null) {
+      user.setId(UUID.randomUUID());
     }
-    userRepository.saveUser(user);
+    return userRepository.saveUser(user);
   }
 
   @Override
