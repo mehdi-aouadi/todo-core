@@ -15,10 +15,10 @@ import java.util.UUID;
 public class ProgramTemplate {
 
   private UUID id;
-  private Period period;
   private String name;
-  private String introduction;
   private String description;
+  private String introduction;
+  private Period period;
   private List<Task> taskList;
 
 }

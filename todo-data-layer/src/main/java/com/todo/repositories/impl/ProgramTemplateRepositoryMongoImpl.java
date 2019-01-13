@@ -28,9 +28,8 @@ public class ProgramTemplateRepositoryMongoImpl implements ProgramTemplateReposi
     LOGGER.info("Inserting new ProgramTemplate. Id : {}, Name : {}", programTemplate.getId(),
         programTemplate.getName());
     mongoCollection.insertOne(programTemplate);
-    return new ProgramTemplate(programTemplate.getId(), programTemplate.getPeriod(),
-        programTemplate.getName(), programTemplate.getIntroduction(),
-        programTemplate.getDescription(), programTemplate.getTaskList());
+    return new ProgramTemplate(programTemplate.getId(), programTemplate.getName(), programTemplate.getDescription(),
+            programTemplate.getIntroduction(), programTemplate.getPeriod(),  programTemplate.getTaskList());
   }
 
   @Override
