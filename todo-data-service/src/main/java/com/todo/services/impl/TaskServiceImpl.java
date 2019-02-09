@@ -21,8 +21,8 @@ public class TaskServiceImpl implements TaskService {
   }
 
   @Override
-  public List<Task> getAllUserCreatedTasksByEmail(String email) {
-    return taskRepository.finAllUserTasksByEmail(email);
+  public List<Task> findTasksByRange(int skip, int limit) {
+    return taskRepository.findTasksByRange(skip, limit);
   }
 
   @Override
@@ -35,22 +35,21 @@ public class TaskServiceImpl implements TaskService {
   }
 
   @Override
-  public List<Task> getAllUserAssignedTasksByEmail(String email) {
-    return taskRepository.findTasksByAssignee(email);
+  public Task findTaskById(UUID taskId) {
+    return taskRepository.findTaskById(taskId);
+  }
+
+  @Override
+  public List<Task> findTasksByName(String taskName, int skip, int limit) {
+    return taskRepository.findTasksByName(taskName, skip, limit);
   }
 
   private void checkTask(Task task) throws DataIntegrityException {
     if (task == null) {
       throw new IllegalArgumentException("Task is null.");
     }
-    if (task.getAssignee() == null || StringUtils.isBlank(task.getAssignee().getEmail())) {
-      throw new DataIntegrityException("Assignee Email", "Missing assignee email.");
-    }
-    if (task.getRequester() == null || StringUtils.isBlank(task.getRequester().getEmail())) {
-      throw new DataIntegrityException("Requester Email", "Missing requester email.");
-    }
-    if (StringUtils.isBlank(task.getSummary())) {
-      throw new DataIntegrityException("Task Summary", "Missing task summary.");
+    if (task.getName() == null || StringUtils.isBlank(task.getName())) {
+      throw new DataIntegrityException("Task Name", "Missing Task Name.");
     }
   }
 }

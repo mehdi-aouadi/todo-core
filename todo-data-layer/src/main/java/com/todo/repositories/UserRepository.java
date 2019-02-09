@@ -4,7 +4,7 @@ import com.todo.model.User;
 
 public interface UserRepository {
 
-  User getUserByEmail(String email);
+  User findUserByEmail(String email);
 
   User saveUser(User user);
 

@@ -4,13 +4,16 @@ import com.todo.exceptions.DataIntegrityException;
 import com.todo.model.Task;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface TaskService {
 
-  List<Task> getAllUserCreatedTasksByEmail(String email);
+  Task saveTask(Task task);
 
-  Task saveTask(Task task) throws DataIntegrityException;
+  Task findTaskById(UUID taskId);
 
-  List<Task> getAllUserAssignedTasksByEmail(String email);
+  List<Task> findTasksByRange(int skip, int limit);
+
+  List<Task> findTasksByName(String taskName, int skip, int limit);
 
 }

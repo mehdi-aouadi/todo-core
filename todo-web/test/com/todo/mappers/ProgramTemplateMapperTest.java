@@ -23,7 +23,7 @@ public class ProgramTemplateMapperTest {
     ProgramTemplate programTemplate
         = new ProgramTemplate(UUID.randomUUID(),
         Period.of(0, 0, 21),
-        "ProgramTemplate For Test",
+        "Program For Test",
         "The very first program template",
         "What not to eat",
         Arrays.asList(

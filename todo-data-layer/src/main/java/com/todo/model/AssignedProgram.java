@@ -1,15 +1,19 @@
 package com.todo.model;
 
+import lombok.*;
+
 import java.time.LocalDateTime;
-import java.util.List;
 
-public class AssignedProgram {
+@ToString
+@EqualsAndHashCode
+@AllArgsConstructor
+@Getter
+@Setter
+public class AssignedProgram extends Entity {
 
+  private LocalDateTime enrollmentDate;
   private LocalDateTime startDate;
-  private LocalDateTime endDates;
-  private User assignee;
-  private List<Task> taskList;
-  private String description;
-  private Long scrore;
+  private LocalDateTime endDate;
+  private Program program;
 
 }

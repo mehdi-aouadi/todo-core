@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public User findUserByEmail(String email) {
-    return userRepository.getUserByEmail(email);
+    return userRepository.findUserByEmail(email);
   }
 
   @Override
@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
     if (user == null) {
       throw new IllegalArgumentException("User is null.");
     }
-    if (StringUtils.isBlank(user.getEmail())) {
+    if (StringUtils.isBlank(user.getUserProfile().getEmail())) {
       throw new DataIntegrityException("Email", "Missing user email.");
     }
   }

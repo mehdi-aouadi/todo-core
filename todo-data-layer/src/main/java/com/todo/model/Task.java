@@ -1,35 +1,44 @@
 package com.todo.model;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-@ToString
-@EqualsAndHashCode
-@AllArgsConstructor
-public class Task {
+public class Task extends Entity {
 
-  private UUID id;
+    private String name;
+    private String summary;
+    private String description;
+    private Duration duration;
+    private List<UUID> mediaIds;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
 
-  private String summary;
-  private User requester;
-  private User assignee;
-  private String description;
-  private LocalDateTime wishDate;
-
-  public Task(String summary,
-              User requester,
-              User assignee,
-              String description,
-              LocalDateTime wishDate) {
-    this.summary = summary;
-    this.requester = requester;
-    this.assignee = assignee;
-    this.description = description;
-    this.wishDate = wishDate;
-  }
+    @Builder
+    public Task(UUID id,
+                LocalDateTime creationDate,
+                LocalDateTime lastModificationDate,
+                String name,
+                String summary,
+                String description,
+                Duration duration,
+                List<UUID> mediaIds,
+                LocalDateTime startDate,
+                LocalDateTime endDate) {
+        super(id, creationDate, lastModificationDate);
+        this.name = name;
+        this.summary = summary;
+        this.description = description;
+        this.duration = duration;
+        this.mediaIds = mediaIds;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
 }
