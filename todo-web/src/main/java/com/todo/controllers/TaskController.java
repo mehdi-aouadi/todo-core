@@ -6,6 +6,7 @@ import com.todo.mappers.TaskMapper;
 import com.todo.services.TaskService;
 
 import javax.inject.Inject;
+import javax.validation.constraints.Max;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -34,20 +35,13 @@ public class TaskController {
   }
 
   @GET
-  @Path("assigned")
-  public Response getAllUserAssignedTasksByEmail(@QueryParam("email") String email) {
+  @Path("/")
+  public Response getAllUserAssignedTasksByEmail(@QueryParam("name") String name,
+                                                 @QueryParam("skip") int skip,
+                                                 @QueryParam("limit") @Max(100) int limit) {
     return Response.status(OK)
         .entity(jsonSerializer.toJson(taskMapper.taskListToContentList(
-            taskService.getAllUserAssignedTasksByEmail(email))))
-        .build();
-  }
-
-  @GET
-  @Path("created")
-  public Response getAllUserTasksByEmail(@QueryParam("email") String email) {
-    return Response.status(OK)
-        .entity(jsonSerializer.toJson(taskMapper.taskListToContentList(
-            taskService.getAllUserCreatedTasksByEmail(email))))
+            taskService.findTasksByName(name, skip, limit))))
         .build();
   }
 

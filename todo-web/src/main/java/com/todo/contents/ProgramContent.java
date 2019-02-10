@@ -1,24 +1,25 @@
-package com.todo.model;
+package com.todo.contents;
 
 import lombok.*;
 
+import java.time.Duration;
 import java.time.Period;
 import java.util.List;
 import java.util.UUID;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+@ToString
 @Getter
 @Setter
-@NoArgsConstructor
-@ToString
-@EqualsAndHashCode
-@AllArgsConstructor
-public class ProgramTemplate {
+public class ProgramContent {
 
   private UUID id;
-  private String name;
+  private String title;
   private String description;
   private String introduction;
-  private Period period;
-  private List<Task> taskList;
+  private List<UUID> taskList;
+  private Duration duration;
 
 }

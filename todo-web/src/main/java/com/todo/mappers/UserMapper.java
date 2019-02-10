@@ -15,8 +15,9 @@ public interface UserMapper {
 
   @Mappings({
       @Mapping(source = "id", target = "id"),
-      @Mapping(source = "email", target = "email"),
-      @Mapping(source = "phoneNumber", target = "phoneNumber")
+      @Mapping(source = "userProfile", target = "userProfile"),
+      @Mapping(source = "assignedPrograms", target = "assignedPrograms"),
+      @Mapping(source = "userHistory", target = "userHistory")
   })
   UserContent userToContent(User user);
 

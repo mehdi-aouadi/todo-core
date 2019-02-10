@@ -3,13 +3,16 @@ package com.todo.repositories;
 import com.todo.model.Task;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface TaskRepository {
 
-  List<Task> findTasksByAssignee(String email);
-
   Task saveTask(Task task);
 
-  List<Task> finAllUserTasksByEmail(String email);
+  Task findTaskById(UUID taskId);
+
+  List<Task> findTasksByRange(int skip, int limit);
+
+  List<Task> findTasksByName(String taskName, int skip, int limit);
 
 }

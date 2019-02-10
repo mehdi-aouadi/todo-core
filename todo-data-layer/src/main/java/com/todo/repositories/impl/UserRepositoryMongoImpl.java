@@ -19,7 +19,7 @@ public class UserRepositoryMongoImpl implements UserRepository {
   private final MongoCollection<User> mongoCollection = DbManager.getMongoCollection(User.class);
 
   @Override
-  public User getUserByEmail(String email) {
+  public User findUserByEmail(String email) {
     return mongoCollection.find(eq("email", email)).first();
   }
 
@@ -29,7 +29,15 @@ public class UserRepositoryMongoImpl implements UserRepository {
       user.setId(UUID.randomUUID());
     }
     mongoCollection.insertOne(user);
-    return new User(user.getId(), user.getEmail(), user.getPhoneNumber());
+    return User.builder()
+            .id(user.getId())
+            .creationDate(user.getCreationDate())
+            .lastModificationDate(user.getLastModificationDate())
+            .userProfile(user.getUserProfile())
+            .password(user.getPassword())
+            .assignedPrograms(user.getAssignedPrograms())
+            .userHistory(user.getUserHistory())
+            .build();
   }
 
   @Override

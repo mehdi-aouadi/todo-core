@@ -1,24 +1,34 @@
 package com.todo.model;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-@EqualsAndHashCode
-@ToString
-@AllArgsConstructor
-public class User {
+public class User extends Entity {
 
-  private UUID id;
+  private UserProfile userProfile;
+  private char[] password;
+  private List<AssignedProgram> assignedPrograms;
+  private UserHistory userHistory;
 
-  private String email;
-  private String phoneNumber;
-
-  public User(String email, String phoneNumber) {
-    this.email = email;
-    this.phoneNumber = phoneNumber;
+  @Builder
+  public User(UUID id,
+              LocalDateTime creationDate,
+              LocalDateTime lastModificationDate,
+              UserProfile userProfile,
+              char[] password,
+              List<AssignedProgram> assignedPrograms,
+              UserHistory userHistory) {
+    super(id, creationDate, lastModificationDate);
+    this.userProfile = userProfile;
+    this.password = password;
+    this.assignedPrograms = assignedPrograms;
+    this.userHistory = userHistory;
   }
 }
