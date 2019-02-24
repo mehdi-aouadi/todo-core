@@ -16,27 +16,12 @@ public interface TaskMapper {
 
   TaskMapper INSTANCE = Mappers.getMapper(TaskMapper.class);
 
-  @Mappings( {
-      @Mapping(source = "id", target = "id"),
-      @Mapping(source = "name", target = "name"),
-      @Mapping(source = "description", target = "description"),
-      @Mapping(source = "duration", target = "duration"),
-      @Mapping(source = "mediaIds", target = "mediaIds"),
-      @Mapping(source = "startDate", target = "startDate"),
-      @Mapping(source = "endDate", target = "endDate")
-  })
-  TaskContent taskToContent(Task task);
+  TaskContent mapFromDomain(Task task);
 
-  @InheritInverseConfiguration
-  Task contentToTask(TaskContent taskContent);
+  Task mapToDomain(TaskContent taskContent);
 
-  default List<TaskContent> taskListToContentList(List<Task> taskList) {
-    return taskList.stream().map(task -> taskToContent(task)).collect(Collectors.toList());
-  }
+  List<TaskContent> mapFromDomain(List<Task> taskList);
 
-  default List<Task> contentListToTaskList(List<TaskContent> contentsList) {
-    return contentsList.stream().map(taskContent -> contentToTask(taskContent))
-        .collect(Collectors.toList());
-  }
+  List<Task> mapToDomain(List<TaskContent> contentsList);
 
 }

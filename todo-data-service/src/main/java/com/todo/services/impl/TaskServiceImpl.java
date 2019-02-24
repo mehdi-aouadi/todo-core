@@ -4,15 +4,19 @@ import com.google.inject.Inject;
 import com.todo.exceptions.DataIntegrityException;
 import com.todo.model.Task;
 import com.todo.repositories.TaskRepository;
+import com.todo.services.ServiceUtils;
 import com.todo.services.TaskService;
 import java.util.List;
 import java.util.UUID;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @NoArgsConstructor
-public class TaskServiceImpl implements TaskService {
+public class TaskServiceImpl implements TaskService, ServiceUtils {
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(TaskService.class);
   private TaskRepository taskRepository;
 
   @Inject
@@ -27,10 +31,8 @@ public class TaskServiceImpl implements TaskService {
 
   @Override
   public Task saveTask(Task task) throws DataIntegrityException {
+    task.setId(checkId(task.getId()));
     checkTask(task);
-    if (task.getId() == null) {
-      task.setId(UUID.randomUUID());
-    }
     return taskRepository.saveTask(task);
   }
 
@@ -41,6 +43,7 @@ public class TaskServiceImpl implements TaskService {
 
   @Override
   public List<Task> findTasksByName(String taskName, int skip, int limit) {
+    limit = checkLimit(100, limit, LOGGER);
     return taskRepository.findTasksByName(taskName, skip, limit);
   }
 

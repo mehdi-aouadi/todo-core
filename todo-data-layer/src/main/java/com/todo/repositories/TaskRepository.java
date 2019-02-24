@@ -15,4 +15,6 @@ public interface TaskRepository {
 
   List<Task> findTasksByName(String taskName, int skip, int limit);
 
+  void deleteTaskById(UUID taskId);
+
 }

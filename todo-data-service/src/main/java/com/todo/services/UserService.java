@@ -1,13 +1,18 @@
 package com.todo.services;
 
+import com.todo.model.AssignedProgram;
 import com.todo.model.User;
+
+import java.util.UUID;
 
 public interface UserService {
 
-  public User findUserByEmail(String email);
+  User findUserByEmail(String email);
 
-  public User saveUser(User user);
+  User saveUser(User user);
 
-  public boolean userExists(String email);
+  boolean userExists(String email);
+
+  AssignedProgram addAssignedProgram(AssignedProgram assignedProgram, UUID userId);
 
 }

@@ -15,4 +15,6 @@ public interface ProgramRepository {
 
   List<Program> findProgramsByRange(int skip, int limit);
 
+  void deleteProgramById(UUID programId);
+
 }

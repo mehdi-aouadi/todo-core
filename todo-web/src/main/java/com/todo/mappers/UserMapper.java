@@ -13,15 +13,8 @@ public interface UserMapper {
 
   UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
-  @Mappings({
-      @Mapping(source = "id", target = "id"),
-      @Mapping(source = "userProfile", target = "userProfile"),
-      @Mapping(source = "assignedPrograms", target = "assignedPrograms"),
-      @Mapping(source = "userHistory", target = "userHistory")
-  })
   UserContent userToContent(User user);
 
-  @InheritInverseConfiguration
   User contentToUser(UserContent userContent);
 
 }

@@ -19,8 +19,8 @@ import static javax.ws.rs.core.Response.Status.OK;
 @Produces(MediaType.APPLICATION_JSON)
 public class ProgramController {
 
-  ProgramService programService;
-  ProgramMapper programMapper = ProgramMapper.INSTANCE;
+  private ProgramService programService;
+  private ProgramMapper programMapper = ProgramMapper.INSTANCE;
   private Gson jsonSerializer = new Gson();
 
   @Inject
