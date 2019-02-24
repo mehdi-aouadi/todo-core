@@ -11,10 +11,12 @@ import com.todo.repositories.ProgramRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import com.todo.repositories.RepositoryUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ProgramRepositoryMongoImpl implements ProgramRepository {
+public class ProgramRepositoryMongoImpl implements ProgramRepository, RepositoryUtils {
 
   private static final Logger LOGGER =
           LoggerFactory.getLogger(ProgramRepositoryMongoImpl.class);
@@ -25,6 +27,7 @@ public class ProgramRepositoryMongoImpl implements ProgramRepository {
   @Override
   public Program saveProgram(Program program) {
     LOGGER.info("Inserting new Program : {}", program.toString());
+    program.setId(checkId(program.getId()));
     mongoCollection.insertOne(program);
     return Program.builder()
             .id(program.getId())
@@ -47,10 +50,7 @@ public class ProgramRepositoryMongoImpl implements ProgramRepository {
   @Override
   public List<Program> findProgramsByTitle(String programName, int skip, int limit) {
     LOGGER.info("Retrieving Programs by name : {}", programName);
-    if(limit > 100) {
-        limit = 100;
-        LOGGER.warn("Limit exceeded. Set to default value {}.", limit);
-    }
+    checkLimit(100, limit, LOGGER);
 
     return mongoCollection.find(regex("title", programName))
             .sort(Sorts.ascending("title"))
@@ -62,10 +62,7 @@ public class ProgramRepositoryMongoImpl implements ProgramRepository {
   @Override
   public List<Program> findProgramsByRange(int skip, int limit) {
     LOGGER.info("Retrieving ProgramTemplates. From : {}, To : {}", skip, limit);
-    if(limit > 100) {
-      limit = 100;
-      LOGGER.warn("Limit exceeded. Set to default value {}.", limit);
-    }
+    checkLimit(100, limit, LOGGER);
     return mongoCollection.find()
             .sort(Sorts.ascending("lastModificationDate"))
             .skip(skip)

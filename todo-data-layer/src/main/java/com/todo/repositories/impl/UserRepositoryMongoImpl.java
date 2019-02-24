@@ -3,6 +3,7 @@ package com.todo.repositories.impl;
 import com.mongodb.client.MongoCollection;
 import com.todo.dbutils.DbManager;
 import com.todo.model.User;
+import com.todo.repositories.RepositoryUtils;
 import com.todo.repositories.UserRepository;
 import java.util.UUID;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import static com.mongodb.client.model.Filters.eq;
 
 @NoArgsConstructor
-public class UserRepositoryMongoImpl implements UserRepository {
+public class UserRepositoryMongoImpl implements UserRepository, RepositoryUtils {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(UserRepositoryMongoImpl.class);
 
@@ -25,9 +26,7 @@ public class UserRepositoryMongoImpl implements UserRepository {
 
   @Override
   public User saveUser(User user) {
-    if (user.getId() == null) {
-      user.setId(UUID.randomUUID());
-    }
+    user.setId(checkId(user.getId()));
     mongoCollection.insertOne(user);
     return User.builder()
             .id(user.getId())

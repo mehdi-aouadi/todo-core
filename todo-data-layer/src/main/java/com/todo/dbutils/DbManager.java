@@ -27,10 +27,9 @@ public class DbManager {
 
   private static DbManager getInstance() {
     if (INSTANCE == null) {
-      return new DbManager();
-    } else {
-      return INSTANCE;
+      INSTANCE = new DbManager();
     }
+    return INSTANCE;
   }
 
   public static MongoCollection getMongoCollection(Class type) {
