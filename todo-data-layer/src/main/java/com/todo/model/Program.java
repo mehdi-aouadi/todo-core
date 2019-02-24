@@ -13,26 +13,26 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Program extends Entity {
 
-    private String title;
-    private String description;
-    private String introduction;
-    private List<UUID> taskList;
-    private Duration duration;
+  private String title;
+  private String description;
+  private String introduction;
+  private List<UUID> taskList;
+  private Duration duration;
 
-    @Builder
-    public Program(UUID id,
-                   LocalDateTime creationDate,
-                   LocalDateTime lastModificationDate,
-                   String title,
-                   String description,
-                   String introduction,
-                   List<UUID> taskList,
-                   Duration duration) {
-        super(id, creationDate, lastModificationDate);
-        this.title = title;
-        this.description = description;
-        this.introduction = introduction;
-        this.taskList = taskList;
-        this.duration = duration;
-    }
+  @Builder
+  public Program(UUID id,
+                 LocalDateTime creationDate,
+                 LocalDateTime lastModificationDate,
+                 String title,
+                 String description,
+                 String introduction,
+                 List<UUID> taskList,
+                 Duration duration) {
+    super(id, creationDate, lastModificationDate);
+    this.title = title;
+    this.description = description;
+    this.introduction = introduction;
+    this.taskList = taskList;
+    this.duration = duration;
+  }
 }

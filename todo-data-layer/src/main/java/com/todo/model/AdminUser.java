@@ -1,18 +1,37 @@
 package com.todo.model;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@ToString
-@EqualsAndHashCode
-@AllArgsConstructor
-@Getter
-@Setter
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@Data
+@NoArgsConstructor
 public class AdminUser extends Entity {
 
-    private String userName;
-    private String firstName;
-    private String lastNAme;
-    private String email;
-    private char[] password;
+  private String userName;
+  private String firstName;
+  private String lastName;
+  private String email;
+  private char[] password;
+
+  @Builder
+  public AdminUser(UUID id,
+                   LocalDateTime creationDate,
+                   LocalDateTime lastModificationDate,
+                   String userName,
+                   String firstName,
+                   String lastName,
+                   String email,
+                   char[] password) {
+    super(id, creationDate, lastModificationDate);
+    this.userName = userName;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.email = email;
+    this.password = password;
+  }
 
 }
