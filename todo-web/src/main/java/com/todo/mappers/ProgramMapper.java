@@ -16,10 +16,10 @@ public interface ProgramMapper {
 
   ProgramMapper INSTANCE = Mappers.getMapper(ProgramMapper.class);
 
-  ProgramContent programTemplateToContent(Program program);
+  ProgramContent domainToContent(Program program);
 
-  List<ProgramContent> programTemplateListToContents(List<Program> programList);
+  List<ProgramContent> domainListToContentList(List<Program> programList);
 
-  Program contentToProgramTemplate(ProgramContent programContent);
+  Program contentToDomain(ProgramContent programContent);
 
 }

@@ -35,7 +35,7 @@ public class ProgramController {
       @QueryParam("limit") @Max(100) int limit) {
     return Response.status(OK)
         .entity(jsonSerializer.toJson(
-            programMapper.programTemplateListToContents(
+            programMapper.domainListToContentList(
                 programService.findProgramsByRange(skip, limit)
             )
         )).build();
@@ -45,9 +45,9 @@ public class ProgramController {
   @Path("new")
   public Response createProgram(ProgramContent programContent) {
     return Response.status(CREATED).entity(jsonSerializer.toJson(
-        programMapper.programTemplateToContent(
+        programMapper.domainToContent(
             programService.saveProgram(
-                programMapper.contentToProgramTemplate(programContent)
+                programMapper.contentToDomain(programContent)
             )
         )
     )).build();

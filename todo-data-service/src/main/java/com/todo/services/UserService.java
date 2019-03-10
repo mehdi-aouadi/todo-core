@@ -3,6 +3,7 @@ package com.todo.services;
 import com.todo.model.AssignedProgram;
 import com.todo.model.User;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface UserService {
@@ -13,6 +14,8 @@ public interface UserService {
 
   boolean userExists(String email);
 
-  AssignedProgram addAssignedProgram(AssignedProgram assignedProgram, UUID userId);
+  List<AssignedProgram> findAssignedProgramsByUserId(UUID userId, int skip, int limit);
+
+  void addAssignedProgram(AssignedProgram assignedProgram, UUID userId);
 
 }

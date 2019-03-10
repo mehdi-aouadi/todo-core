@@ -4,7 +4,10 @@ import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Filters.regex;
 
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.model.Sorts;
+import com.mongodb.client.model.UpdateOptions;
+import com.mongodb.client.result.DeleteResult;
 import com.todo.dbutils.DbManager;
 import com.todo.model.Program;
 import com.todo.repositories.ProgramRepository;
@@ -20,13 +23,16 @@ public class ProgramRepositoryMongoImpl implements ProgramRepository {
   private static final Logger LOGGER =
           LoggerFactory.getLogger(ProgramRepositoryMongoImpl.class);
 
+  private static final ReplaceOptions REPLACE_OPTIONS
+      = ReplaceOptions.createReplaceOptions(new UpdateOptions().upsert(true));
+
   private final MongoCollection<Program> programMongoCollection =
           DbManager.getMongoCollection(Program.class);
 
   @Override
   public Program saveProgram(Program program) {
     LOGGER.info("Inserting new Program : {}", program.toString());
-    programMongoCollection.insertOne(program);
+    programMongoCollection.replaceOne(eq("id", program.getId().toString()), program, REPLACE_OPTIONS);
     return Program.builder()
             .id(program.getId())
             .creationDate(program.getCreationDate())
@@ -67,8 +73,8 @@ public class ProgramRepositoryMongoImpl implements ProgramRepository {
   }
 
   @Override
-  public void deleteProgramById(UUID programId) {
+  public DeleteResult deleteProgramById(UUID programId) {
     LOGGER.info("Deletin Program. Id : {}", programId);
-    programMongoCollection.deleteOne(eq("id", programId.toString()));
+    return programMongoCollection.deleteOne(eq("id", programId.toString()));
   }
 }

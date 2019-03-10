@@ -1,7 +1,9 @@
 package com.todo.services.impl;
 
 import com.google.inject.Inject;
+import com.mongodb.client.result.DeleteResult;
 import com.todo.exceptions.DataIntegrityException;
+import com.todo.exceptions.DataOperationException;
 import com.todo.model.Program;
 import com.todo.repositories.ProgramRepository;
 import com.todo.services.ProgramService;
@@ -47,6 +49,15 @@ public class ProgramServiceImpl implements ProgramService, ServiceUtils {
   public List<Program> findProgramsByRange(int skip, int limit) {
     limit = checkLimit(100, limit, LOGGER);
     return programRepository.findProgramsByRange(skip, limit);
+  }
+
+  @Override
+  public void deleteProgramById(UUID programId) {
+    DeleteResult deleteResult = programRepository.deleteProgramById(programId);
+    if(!deleteResult.wasAcknowledged() || deleteResult.getDeletedCount() == 0) {
+      throw new DataOperationException("programId",
+          "Unable to delete program with id " + programId.toString());
+    }
   }
 
   private void checkProgram(Program program) {

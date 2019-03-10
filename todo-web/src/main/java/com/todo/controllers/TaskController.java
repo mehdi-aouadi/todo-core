@@ -40,14 +40,14 @@ public class TaskController {
                                                  @QueryParam("skip") int skip,
                                                  @QueryParam("limit") @Max(100) int limit) {
     return Response.status(OK)
-        .entity(jsonSerializer.toJson(taskMapper.mapFromDomain(
+        .entity(jsonSerializer.toJson(taskMapper.domainListToContentList(
             taskService.findTasksByName(name, skip, limit))))
         .build();
   }
 
   @POST
   public Response create(TaskContent taskContent) {
-    taskService.saveTask(taskMapper.mapToDomain(taskContent));
+    taskService.saveTask(taskMapper.contentListToDomainList(taskContent));
     return Response.status(OK).entity("TASK INSERTED SUCCESSFULLY").build();
   }
 }

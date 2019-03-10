@@ -1,7 +1,10 @@
 package com.todo.repositories.impl;
 
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.model.Sorts;
+import com.mongodb.client.model.UpdateOptions;
+import com.mongodb.client.result.DeleteResult;
 import com.todo.dbutils.DbManager;
 import com.todo.model.Task;
 import com.todo.repositories.TaskRepository;
@@ -21,6 +24,9 @@ public class TaskRepositoryMongoImpl implements TaskRepository {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(TaskRepositoryMongoImpl.class);
 
+  private static final ReplaceOptions REPLACE_OPTIONS
+      = ReplaceOptions.createReplaceOptions(new UpdateOptions().upsert(true));
+
   private final MongoCollection<Task> taskMongoCollection
       = DbManager.getMongoCollection(Task.class);
 
@@ -33,7 +39,7 @@ public class TaskRepositoryMongoImpl implements TaskRepository {
   @Override
   public Task saveTask(Task task) {
     LOGGER.info("Inserting new Task : {}", task.toString());
-    taskMongoCollection.insertOne(task);
+    taskMongoCollection.replaceOne(eq("id", task.getId().toString()), task, REPLACE_OPTIONS);
     return Task.builder()
         .id(task.getId())
         .creationDate(task.getCreationDate())
@@ -71,8 +77,8 @@ public class TaskRepositoryMongoImpl implements TaskRepository {
   }
 
   @Override
-  public void deleteTaskById(UUID taskId) {
+  public DeleteResult deleteTaskById(UUID taskId) {
     LOGGER.info("Deleting Task. Id : {}", taskId.toString());
-    taskMongoCollection.deleteOne(eq("id", taskId.toString()));
+    return taskMongoCollection.deleteOne(eq("id", taskId.toString()));
   }
 }

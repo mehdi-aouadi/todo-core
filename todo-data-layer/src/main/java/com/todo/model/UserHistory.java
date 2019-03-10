@@ -13,16 +13,16 @@ import java.util.UUID;
 public class UserHistory extends Entity {
 
   private Double score;
-  private List<UUID> finishedAssignedPrograms;
-  private List<UUID> cancelledAssignedPrograms;
+  private List<AssignedProgram> finishedAssignedPrograms;
+  private List<AssignedProgram> cancelledAssignedPrograms;
 
   @Builder
   public UserHistory(UUID id,
                      LocalDateTime creationDate,
                      LocalDateTime lastModificationDate,
                      Double score,
-                     List<UUID> finishedAssignedPrograms,
-                     List<UUID> cancelledAssignedPrograms) {
+                     List<AssignedProgram> finishedAssignedPrograms,
+                     List<AssignedProgram> cancelledAssignedPrograms) {
     super(id, creationDate, lastModificationDate);
     this.score = score;
     this.finishedAssignedPrograms = finishedAssignedPrograms;
