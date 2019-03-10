@@ -1,5 +1,6 @@
 package com.todo.repositories;
 
+import com.mongodb.client.result.DeleteResult;
 import com.todo.model.Program;
 
 import java.util.List;
@@ -14,5 +15,7 @@ public interface ProgramRepository {
   List<Program> findProgramsByTitle(String programName, int skip, int limit);
 
   List<Program> findProgramsByRange(int skip, int limit);
+
+  DeleteResult deleteProgramById(UUID programId);
 
 }

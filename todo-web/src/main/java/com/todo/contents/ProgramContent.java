@@ -1,18 +1,16 @@
 package com.todo.contents;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.Duration;
-import java.time.Period;
 import java.util.List;
 import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
-@ToString
-@Getter
-@Setter
+@Data
 public class ProgramContent {
 
   private UUID id;

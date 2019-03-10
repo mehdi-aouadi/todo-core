@@ -16,25 +16,10 @@ public interface ProgramMapper {
 
   ProgramMapper INSTANCE = Mappers.getMapper(ProgramMapper.class);
 
-  @Mappings({
-          @Mapping(source = "id", target = "id"),
-          @Mapping(source = "title", target = "title"),
-          @Mapping(source = "description", target = "description"),
-          @Mapping(source = "introduction", target = "introduction"),
-          @Mapping(source = "taskList", target = "taskList"),
-          @Mapping(source = "duration", target = "duration")
-  })
-  ProgramContent programTemplateToContent(Program program);
+  ProgramContent domainToContent(Program program);
 
-  default List<ProgramContent> programTemplateListToContents(
-      List<Program> programList) {
-    return programList.stream()
-        .map(programTemplate ->
-            programTemplateToContent(programTemplate))
-        .collect(Collectors.toList());
-  }
+  List<ProgramContent> domainListToContentList(List<Program> programList);
 
-  @InheritInverseConfiguration
-  Program contentToProgramTemplate(ProgramContent programContent);
+  Program contentToDomain(ProgramContent programContent);
 
 }

@@ -1,5 +1,6 @@
 package com.todo.repositories;
 
+import com.mongodb.client.result.DeleteResult;
 import com.todo.model.Task;
 
 import java.util.List;
@@ -14,5 +15,7 @@ public interface TaskRepository {
   List<Task> findTasksByRange(int skip, int limit);
 
   List<Task> findTasksByName(String taskName, int skip, int limit);
+
+  DeleteResult deleteTaskById(UUID taskId);
 
 }

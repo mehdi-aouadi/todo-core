@@ -2,26 +2,20 @@ package com.todo.mappers;
 
 import com.todo.contents.UserContent;
 import com.todo.model.User;
-import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
+import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(
+    unmappedTargetPolicy = ReportingPolicy.IGNORE,
+    uses = {UserProfileMapper.class, UserHistoryMapper.class, AssignedProgramMapper.class}
+)
 public interface UserMapper {
 
   UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
-  @Mappings({
-      @Mapping(source = "id", target = "id"),
-      @Mapping(source = "userProfile", target = "userProfile"),
-      @Mapping(source = "assignedPrograms", target = "assignedPrograms"),
-      @Mapping(source = "userHistory", target = "userHistory")
-  })
-  UserContent userToContent(User user);
+  UserContent contentToDomain(User user);
 
-  @InheritInverseConfiguration
-  User contentToUser(UserContent userContent);
+  User domainToContent(UserContent userContent);
 
 }

@@ -11,5 +11,6 @@ public interface ProgramService {
   Program findProgramById(UUID programTemplateId);
   List<Program> findProgramsByTitle(String programTemplateName, int skip, int limit);
   List<Program> findProgramsByRange(int skip, int limit);
+  void deleteProgramById(UUID programId);
 
 }
