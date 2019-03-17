@@ -13,12 +13,12 @@ public interface TaskMapper {
 
   TaskMapper INSTANCE = Mappers.getMapper(TaskMapper.class);
 
-  TaskContent domainListToContentList(Task task);
+  TaskContent domainToContent(Task task);
 
-  Task contentListToDomainList(TaskContent taskContent);
+  Task contentToDomain(TaskContent taskContent);
 
-  List<TaskContent> domainListToContentList(List<Task> taskList);
+  List<TaskContent> domainToContent(List<Task> taskList);
 
-  List<Task> contentListToDomainList(List<TaskContent> contentsList);
+  List<Task> contentToDomain(List<TaskContent> contentsList);
 
 }

@@ -7,7 +7,9 @@ import java.util.UUID;
 
 public interface TaskService {
 
-  Task saveTask(Task task);
+  Task createTask(Task task);
+
+  Task updateTask(Task task);
 
   Task findTaskById(UUID taskId);
 

@@ -1,9 +1,7 @@
 package com.todo.repositories.impl;
 
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.model.Sorts;
-import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.result.DeleteResult;
 import com.todo.dbutils.DbManager;
 import com.todo.model.Task;
@@ -24,8 +22,7 @@ public class TaskRepositoryMongoImpl implements TaskRepository {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(TaskRepositoryMongoImpl.class);
 
-  private static final ReplaceOptions REPLACE_OPTIONS
-      = ReplaceOptions.createReplaceOptions(new UpdateOptions().upsert(true));
+  private static final String ID_FIELD = "_id";
 
   private final MongoCollection<Task> taskMongoCollection
       = DbManager.getMongoCollection(Task.class);
@@ -33,13 +30,31 @@ public class TaskRepositoryMongoImpl implements TaskRepository {
   @Override
   public Task findTaskById(UUID taskId) {
     LOGGER.info("Retrieving Tasks by id {}.", taskId.toString());
-    return taskMongoCollection.find(eq("id", taskId.toString())).first();
+    return taskMongoCollection.find(eq(ID_FIELD, taskId)).first();
   }
 
   @Override
-  public Task saveTask(Task task) {
+  public Task insertTask(Task task) {
     LOGGER.info("Inserting new Task : {}", task.toString());
-    taskMongoCollection.replaceOne(eq("id", task.getId().toString()), task, REPLACE_OPTIONS);
+    taskMongoCollection.insertOne(task);
+    return Task.builder()
+        .id(task.getId())
+        .creationDate(task.getCreationDate())
+        .lastModificationDate(task.getLastModificationDate())
+        .name(task.getName())
+        .summary(task.getSummary())
+        .description(task.getDescription())
+        .duration(task.getDuration())
+        .mediaIds(task.getMediaIds())
+        .startDate(task.getStartDate())
+        .endDate(task.getEndDate())
+        .build();
+  }
+
+  @Override
+  public Task updateTask(Task task) {
+    LOGGER.info("Updating Task : {}", task.toString());
+    taskMongoCollection.findOneAndReplace(eq(ID_FIELD, task.getId()), task);
     return Task.builder()
         .id(task.getId())
         .creationDate(task.getCreationDate())
@@ -79,6 +94,6 @@ public class TaskRepositoryMongoImpl implements TaskRepository {
   @Override
   public DeleteResult deleteTaskById(UUID taskId) {
     LOGGER.info("Deleting Task. Id : {}", taskId.toString());
-    return taskMongoCollection.deleteOne(eq("id", taskId.toString()));
+    return taskMongoCollection.deleteOne(eq(ID_FIELD, taskId.toString()));
   }
 }

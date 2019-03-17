@@ -4,18 +4,20 @@ import com.google.inject.Inject;
 import com.mongodb.client.result.UpdateResult;
 import com.todo.exceptions.DataIntegrityException;
 import com.todo.exceptions.DataOperationException;
+import com.todo.exceptions.ResourceNotFoundException;
 import com.todo.model.AssignedProgram;
 import com.todo.model.User;
 import com.todo.repositories.UserRepository;
 import com.todo.services.ServiceUtils;
 import com.todo.services.UserService;
-
-import java.util.List;
-import java.util.UUID;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @NoArgsConstructor
 public class UserServiceImpl implements UserService, ServiceUtils {
@@ -34,10 +36,23 @@ public class UserServiceImpl implements UserService, ServiceUtils {
   }
 
   @Override
-  public User saveUser(User user) {
-    user.setId(checkId(user.getId()));
-    checkUser(user);
-    return userRepository.saveUser(user);
+  public User createUser(User user) {
+    if(user.getId() != null) {
+      throw new DataIntegrityException("userId", "To create a new User userId must be null");
+    } else {
+      checkUser(user);
+      return userRepository.insertUser(user);
+    }
+  }
+
+  @Override
+  public User updateUser(User user) {
+    if(user.getId() == null) {
+      throw new DataIntegrityException("userId", "To update a User userId is mandatory");
+    } else {
+      checkUser(user);
+      return userRepository.updateUser(user);
+    }
   }
 
   @Override
@@ -52,12 +67,25 @@ public class UserServiceImpl implements UserService, ServiceUtils {
   }
 
   @Override
-  public void addAssignedProgram(AssignedProgram assignedProgram, UUID userId) {
-    UpdateResult updateResult = userRepository.addAssignedProgram(assignedProgram, userId);
-    if(!updateResult.wasAcknowledged() || updateResult.getModifiedCount() == 0) {
+  public AssignedProgram findAssignedProgramById(UUID userId, UUID assignedProgramId) {
+    Optional<AssignedProgram> assignedProgram
+        = userRepository.findAssignedProgramById(assignedProgramId, userId);
+    if (!assignedProgram.isPresent()) {
+      throw new ResourceNotFoundException("userId, assignedProgramId",
+          "Unable to find assigned program with id " + assignedProgramId.toString()
+              + "for user with id " + userId.toString()
+      );
+    } else {
+      return assignedProgram.get();
+    }
+  }
+
+  @Override
+  public void addAssignedProgram(UUID programId, UUID userId) {
+    UpdateResult updateResult = userRepository.addAssignedProgram(programId, userId);
+    if (!updateResult.wasAcknowledged() || updateResult.getModifiedCount() == 0) {
       throw new DataOperationException("Assigned Program",
-          "Unable to add Assigned Program " + assignedProgram.getProgram().getTitle()
-              + "with id " + assignedProgram.getId()
+          "Unable to assign Program " + programId.toString()
               + " to User with id " + userId.toString());
     }
   }

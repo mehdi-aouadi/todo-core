@@ -8,7 +8,9 @@ import java.util.UUID;
 
 public interface ProgramRepository {
 
-  Program saveProgram(Program program);
+  Program insertProgram(Program program);
+
+  Program updateProgram(Program program);
 
   Program findProgramById(UUID programId);
 

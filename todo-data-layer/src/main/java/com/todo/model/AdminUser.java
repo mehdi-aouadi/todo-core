@@ -3,11 +3,13 @@ package com.todo.model;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
+@ToString(callSuper = true)
 @NoArgsConstructor
 public class AdminUser extends Entity {
 

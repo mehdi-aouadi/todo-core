@@ -10,12 +10,16 @@ public interface UserService {
 
   User findUserByEmail(String email);
 
-  User saveUser(User user);
+  User createUser(User user);
+
+  User updateUser(User user);
 
   boolean userExists(String email);
 
   List<AssignedProgram> findAssignedProgramsByUserId(UUID userId, int skip, int limit);
 
-  void addAssignedProgram(AssignedProgram assignedProgram, UUID userId);
+  AssignedProgram findAssignedProgramById(UUID userId, UUID assignedProgramId);
+
+  void addAssignedProgram(UUID programId, UUID userId);
 
 }

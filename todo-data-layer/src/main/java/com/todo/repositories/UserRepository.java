@@ -12,7 +12,9 @@ public interface UserRepository {
 
   User findUserByEmail(String userEmail);
 
-  User saveUser(User user);
+  User insertUser(User user);
+
+  User updateUser(User user);
 
   boolean userExists(String userEmail);
 
@@ -22,7 +24,9 @@ public interface UserRepository {
 
   List<AssignedProgram> findAssignedProgramsByUserId(UUID userId, int skip, int limit);
 
-  UpdateResult addAssignedProgram(AssignedProgram assignedProgram, UUID userId);
+  Optional<AssignedProgram> findAssignedProgramsById(UUID userId, UUID assignedProgramId);
+
+  UpdateResult addAssignedProgram(UUID programId, UUID userId);
 
   Optional<AssignedProgram> findAssignedProgramById(UUID assignedProgramId, UUID userId);
 
