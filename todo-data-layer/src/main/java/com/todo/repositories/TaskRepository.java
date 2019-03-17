@@ -8,7 +8,9 @@ import java.util.UUID;
 
 public interface TaskRepository {
 
-  Task saveTask(Task task);
+  Task insertTask(Task task);
+
+  Task updateTask(Task task);
 
   Task findTaskById(UUID taskId);
 

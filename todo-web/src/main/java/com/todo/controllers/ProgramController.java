@@ -7,17 +7,19 @@ import com.todo.mappers.ProgramMapper;
 import com.todo.services.ProgramService;
 
 import javax.validation.constraints.Max;
+import javax.validation.constraints.Pattern;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.UUID;
 
 import static javax.ws.rs.core.Response.Status.CREATED;
 import static javax.ws.rs.core.Response.Status.OK;
 
-@Path("program/")
+@Path("program")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class ProgramController {
+public class ProgramController extends AbstractController {
 
   private ProgramService programService;
   private ProgramMapper programMapper = ProgramMapper.INSTANCE;
@@ -29,10 +31,11 @@ public class ProgramController {
   }
 
   @GET
-  @Path("all")
-  public Response getProgramTemplateList(
+  @Path("/list")
+  public Response listPrograms(
       @QueryParam("skip") int skip,
-      @QueryParam("limit") @Max(100) int limit) {
+      @QueryParam("limit") @Max(100) int limit
+  ) {
     return Response.status(OK)
         .entity(jsonSerializer.toJson(
             programMapper.domainListToContentList(
@@ -41,12 +44,26 @@ public class ProgramController {
         )).build();
   }
 
+  @GET
+  @Path("/{programId}")
+  public Response getProgramById(
+      @PathParam("programId")
+      @Pattern(regexp = UUID_PATTERN, message = "Program Id must be a valid UUID.")
+          UUID programId) {
+    return Response.status(OK)
+        .entity(jsonSerializer.toJson(
+            programMapper.domainToContent(
+                programService.findProgramById(programId)
+            )
+        )).build();
+  }
+
   @POST
-  @Path("new")
+  @Path("/")
   public Response createProgram(ProgramContent programContent) {
     return Response.status(CREATED).entity(jsonSerializer.toJson(
         programMapper.domainToContent(
-            programService.saveProgram(
+            programService.createProgram(
                 programMapper.contentToDomain(programContent)
             )
         )

@@ -1,18 +1,18 @@
 package com.todo.repositories.impl;
 
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.ReplaceOptions;
-import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.UpdateResult;
 import com.todo.dbutils.DbManager;
 import com.todo.model.AssignedProgram;
+import com.todo.model.Program;
 import com.todo.model.User;
 import com.todo.repositories.UserRepository;
 import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,8 +25,10 @@ public class UserRepositoryMongoImpl implements UserRepository {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(UserRepositoryMongoImpl.class);
 
-  private static final ReplaceOptions REPLACE_OPTIONS
-      = ReplaceOptions.createReplaceOptions(new UpdateOptions().upsert(true));
+  private static final String ID_FIELD = "_id";
+
+  private final MongoCollection<Program> programMongoCollection
+      = DbManager.getMongoCollection(Program.class);
 
   private final MongoCollection<User> userMongoCollection
       = DbManager.getMongoCollection(User.class);
@@ -38,9 +40,24 @@ public class UserRepositoryMongoImpl implements UserRepository {
   }
 
   @Override
-  public User saveUser(User user) {
+  public User insertUser(User user) {
     LOGGER.info("Inserting User : {}", user.toString());
-    userMongoCollection.replaceOne(eq("id", user.getId().toString()), user, REPLACE_OPTIONS);
+    userMongoCollection.insertOne(user);
+    return User.builder()
+        .id(user.getId())
+        .creationDate(user.getCreationDate())
+        .lastModificationDate(user.getLastModificationDate())
+        .userProfile(user.getUserProfile())
+        .password(user.getPassword())
+        .assignedPrograms(user.getAssignedPrograms())
+        .userHistory(user.getUserHistory())
+        .build();
+  }
+
+  @Override
+  public User updateUser(User user) {
+    LOGGER.info("Updatig User : {}", user.toString());
+    userMongoCollection.findOneAndReplace(eq(ID_FIELD, user.getId()), user);
     return User.builder()
         .id(user.getId())
         .creationDate(user.getCreationDate())
@@ -67,20 +84,43 @@ public class UserRepositoryMongoImpl implements UserRepository {
   @Override
   public void deleteUserById(UUID userId) {
     LOGGER.info("Deleting User. Id : {}", userId.toString());
-    userMongoCollection.deleteOne(eq("id", userId.toString()));
+    userMongoCollection.deleteOne(eq(ID_FIELD, userId.toString()));
   }
 
   @Override
   public List<AssignedProgram> findAssignedProgramsByUserId(UUID userId, int skip, int limit) {
     LOGGER.info("Retrieving Assigned Programs of user id : {}", userId.toString());
-    return userMongoCollection.find(eq("id", userId.toString())).first()
+    return userMongoCollection.find(eq(ID_FIELD, userId.toString())).first()
         .getAssignedPrograms().stream().skip(skip).limit(limit).collect(Collectors.toList());
   }
 
   @Override
-  public UpdateResult addAssignedProgram(AssignedProgram assignedProgram, UUID userId) {
-    LOGGER.info("Adding Assigned Program {} to User {}",
-        assignedProgram.getId().toString(), userId.toString());
+  public Optional<AssignedProgram> findAssignedProgramsById(UUID userId, UUID assignedProgramId) {
+    LOGGER.info("Retrieving Assigned Programs with id {} of user id : {}",
+        assignedProgramId.toString(), userId.toString());
+    User user = userMongoCollection.find(eq(ID_FIELD, userId.toString())).first();
+    if (user == null) {
+      return Optional.empty();
+    } else {
+      return userMongoCollection.find(eq(ID_FIELD, userId.toString())).first()
+          .getAssignedPrograms().stream().filter(assignedProgram -> assignedProgram.getId().equals(assignedProgramId)).findFirst();
+    }
+  }
+
+  @Override
+  public UpdateResult addAssignedProgram(UUID programId, UUID userId) {
+    LOGGER.info("Assigning Program {} to User {}",
+        programId.toString(), userId.toString());
+    Program programToAssign = programMongoCollection.find(eq(ID_FIELD, programId)).first();
+    AssignedProgram assignedProgram = AssignedProgram.builder()
+        .id(UUID.randomUUID())
+        .creationDate(LocalDateTime.now())
+        .lastModificationDate(LocalDateTime.now())
+        .enrollmentDate(LocalDateTime.now())
+        .startDate(null)
+        .endDate(null)
+        .program(programToAssign)
+        .build();
     return userMongoCollection.updateOne(
         eq("id", userId.toString()),
         Updates.addToSet("assignedPrograms", assignedProgram));
@@ -88,7 +128,7 @@ public class UserRepositoryMongoImpl implements UserRepository {
 
   @Override
   public Optional<AssignedProgram> findAssignedProgramById(UUID assignedProgramId, UUID userId) {
-    return userMongoCollection.find(eq("id",
+    return userMongoCollection.find(eq(ID_FIELD,
         userId.toString())).first().getAssignedPrograms()
         .stream()
         .filter(assignedProgram -> assignedProgram.getId().equals(assignedProgramId))
@@ -101,6 +141,6 @@ public class UserRepositoryMongoImpl implements UserRepository {
         assignedProgramId.toString(), userId.toString());
     return userMongoCollection.updateOne(
         eq("id", userId.toString()),
-        Updates.pull("assignedPrograms", eq("id", assignedProgramId.toString())));
+        Updates.pull("assignedPrograms", eq(ID_FIELD, assignedProgramId.toString())));
   }
 }

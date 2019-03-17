@@ -3,11 +3,15 @@ package com.todo.mappers;
 import com.todo.contents.AssignedProgramContent;
 import com.todo.model.AssignedProgram;
 import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper(uses = ProgramMapper.class)
+@Mapper(
+    uses = ProgramMapper.class,
+    unmappedTargetPolicy = ReportingPolicy.IGNORE
+)
 public interface AssignedProgramMapper {
 
   AssignedProgramMapper INSTANCE = Mappers.getMapper(AssignedProgramMapper.class);

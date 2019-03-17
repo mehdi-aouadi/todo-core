@@ -33,10 +33,25 @@ public class TaskServiceImpl implements TaskService, ServiceUtils {
   }
 
   @Override
-  public Task saveTask(Task task) throws DataIntegrityException {
-    task.setId(checkId(task.getId()));
-    checkTask(task);
-    return taskRepository.saveTask(task);
+  public Task createTask(Task task) throws DataIntegrityException {
+    if(task.getId() != null) {
+      throw new DataIntegrityException("taskId", "To create a new Task taskId must be null.");
+    } else {
+      task.setId(UUID.randomUUID());
+      checkTask(task);
+      return taskRepository.insertTask(task);
+    }
+  }
+
+  @Override
+  public Task updateTask(Task task) throws DataIntegrityException {
+    if(task.getId() == null) {
+      throw new DataIntegrityException("taskId", "To update a Task taskId is mandatory");
+    } else {
+      task.setId(UUID.randomUUID());
+      checkTask(task);
+      return taskRepository.updateTask(task);
+    }
   }
 
   @Override

@@ -13,12 +13,4 @@ public interface ServiceUtils {
     }
     return limit;
   }
-
-  default UUID checkId(UUID id) {
-    if (id == null) {
-      id = UUID.randomUUID();
-    }
-    return id;
-  }
-
 }

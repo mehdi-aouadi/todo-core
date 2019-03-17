@@ -28,10 +28,26 @@ public class ProgramServiceImpl implements ProgramService, ServiceUtils {
   }
 
   @Override
-  public Program saveProgram(Program program) {
-    program.setId(checkId(program.getId()));
-    checkProgram(program);
-    return this.programRepository.saveProgram(program);
+  public Program createProgram(Program program) {
+    if(program.getId() != null) {
+      throw new DataIntegrityException(
+          "programId", "To create a new program programId must be null"
+      );
+    } else {
+      program.setId(UUID.randomUUID());
+      checkProgram(program);
+      return this.programRepository.insertProgram(program);
+    }
+  }
+
+  @Override
+  public Program updateProgram(Program program) {
+    if(program.getId() == null) {
+      throw new DataIntegrityException("programId", "To update a program programId is mandatory");
+    } else {
+      checkProgram(program);
+      return this.programRepository.insertProgram(program);
+    }
   }
 
   @Override

@@ -3,6 +3,7 @@ package com.todo.model;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
+@ToString(callSuper = true)
 @NoArgsConstructor
 public class Program extends Entity {
 
