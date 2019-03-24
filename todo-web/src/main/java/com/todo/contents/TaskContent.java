@@ -2,7 +2,9 @@ package com.todo.contents;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.DurationDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.DurationSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
 import java.time.Duration;
@@ -29,6 +31,8 @@ public class TaskContent {
   private String name;
   private String summary;
   private String description;
+  @JsonSerialize(using = DurationSerializer.class)
+  @JsonDeserialize(using = DurationDeserializer.class)
   private Duration duration;
   private List<UUID> mediaIds;
   @JsonSerialize(using = LocalDateTimeSerializer.class)

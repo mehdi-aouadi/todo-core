@@ -3,15 +3,16 @@ package com.todo.controllers;
 import com.todo.contents.TaskContent;
 import com.todo.mappers.TaskMapper;
 import com.todo.services.TaskService;
-import lombok.NoArgsConstructor;
 
+import java.util.UUID;
 import javax.inject.Inject;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Pattern;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.UUID;
+
+import lombok.NoArgsConstructor;
 
 import static javax.ws.rs.core.Response.Status.OK;
 
@@ -37,8 +38,8 @@ public class TaskController extends AbstractController {
       @QueryParam("limit") @Max(100) int limit
   ) {
     return Response.status(OK)
-        .entity(jsonSerializer.toJson(taskMapper.domainToContent(
-            taskService.findTasksByName(name, skip, limit))))
+        .entity(taskMapper.domainToContent(
+            taskService.findTasksByName(name, skip, limit)))
         .build();
   }
 
@@ -49,8 +50,8 @@ public class TaskController extends AbstractController {
       @QueryParam("limit") @Max(100) int limit
   ) {
     return Response.status(OK)
-        .entity(jsonSerializer.toJson(taskMapper.domainToContent(
-            taskService.findTasksByRange(skip, limit))))
+        .entity(taskMapper.domainToContent(
+            taskService.findTasksByRange(skip, limit)))
         .build();
   }
 
@@ -62,8 +63,8 @@ public class TaskController extends AbstractController {
           UUID taskId
   ) {
     return Response.status(OK)
-        .entity(jsonSerializer.toJson(taskMapper.domainToContent(
-            taskService.findTaskById(taskId))))
+        .entity(taskMapper.domainToContent(
+            taskService.findTaskById(taskId)))
         .build();
   }
 
@@ -71,7 +72,8 @@ public class TaskController extends AbstractController {
   @Path("/")
   public Response create(TaskContent taskContent) {
     TaskContent createdTask
-        = taskMapper.domainToContent(taskService.createTask(taskMapper.contentToDomain(taskContent)));
-    return Response.status(OK).entity(jsonSerializer.toJson(createdTask)).build();
+        = taskMapper.domainToContent(
+            taskService.createTask(taskMapper.contentToDomain(taskContent)));
+    return Response.status(OK).entity(createdTask).build();
   }
 }

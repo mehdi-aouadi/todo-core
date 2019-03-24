@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.net.URL;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,6 +19,7 @@ import java.net.URL;
 @Setter
 public class MediaContent {
 
+  private UUID id;
   private MediaType type;
   private URL mediaResourceUrl;
 

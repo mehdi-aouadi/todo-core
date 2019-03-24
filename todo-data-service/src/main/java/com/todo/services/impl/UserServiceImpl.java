@@ -37,12 +37,11 @@ public class UserServiceImpl implements UserService, ServiceUtils {
 
   @Override
   public User createUser(User user) {
-    if(user.getId() != null) {
-      throw new DataIntegrityException("userId", "To create a new User userId must be null");
-    } else {
-      checkUser(user);
-      return userRepository.insertUser(user);
-    }
+    checkUserForCreation(user);
+    user.setId(UUID.randomUUID());
+    user.getUserProfile().setId(UUID.randomUUID());
+    user.getUserHistory().setId(UUID.randomUUID());
+    return userRepository.insertUser(user);
   }
 
   @Override
@@ -50,7 +49,7 @@ public class UserServiceImpl implements UserService, ServiceUtils {
     if(user.getId() == null) {
       throw new DataIntegrityException("userId", "To update a User userId is mandatory");
     } else {
-      checkUser(user);
+      checkUserForUpdate(user);
       return userRepository.updateUser(user);
     }
   }
@@ -90,7 +89,27 @@ public class UserServiceImpl implements UserService, ServiceUtils {
     }
   }
 
-  private void checkUser(User user) {
+  private void checkUserForCreation(User user) {
+    if (user == null) {
+      throw new IllegalArgumentException("User is null.");
+    }
+    if(user.getId() != null) {
+      throw new DataIntegrityException("userId", "To create a new User userId must be null");
+    }
+    if(user.getUserProfile().getId() != null) {
+      throw new DataIntegrityException("userProfileId",
+          "To create a new User userProfileId must be null");
+    }
+    if(user.getUserHistory().getId() != null) {
+      throw new DataIntegrityException("userHistoryId",
+          "To create a new User userHistoryId must be null");
+    }
+    if (StringUtils.isBlank(user.getUserProfile().getEmail())) {
+      throw new DataIntegrityException("Email", "Missing user email.");
+    }
+  }
+
+  private void checkUserForUpdate(User user) {
     if (user == null) {
       throw new IllegalArgumentException("User is null.");
     }
