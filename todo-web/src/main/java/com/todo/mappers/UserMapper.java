@@ -14,8 +14,8 @@ public interface UserMapper {
 
   UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
-  UserContent contentToDomain(User user);
+  UserContent domainToContent(User user);
 
-  User domainToContent(UserContent userContent);
+  User contentToDomain(UserContent userContent);
 
 }

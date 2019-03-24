@@ -1,7 +1,6 @@
 package com.todo.mappers;
 
 import com.todo.contents.UserContent;
-import com.todo.contents.UserProfileContent;
 import com.todo.model.*;
 import org.junit.Test;
 
@@ -69,22 +68,18 @@ public class UserMapperTest {
             .build();
         user.setUserHistory(userHistory);
 
-        UserContent userContent = UserMapper.INSTANCE.contentToDomain(user);
+        userContent = UserMapper.INSTANCE.domainToContent(user);
 
         assertEquals(userId, userContent.getId());
         assertEquals(userProfileId, userContent.getUserProfile().getId());
         assertEquals(firstName, userContent.getUserProfile().getFirstName());
         assertEquals(lastName, userContent.getUserProfile().getLastName());
         assertEquals(userName, userContent.getUserProfile().getUserName());
-        assertEquals(now, userContent.getUserProfile().getCreationDate());
-        assertEquals(now, userContent.getUserProfile().getLastModificationDate());
         assertEquals(address, userContent.getUserProfile().getAddress());
         assertEquals(phoneNumber, userContent.getUserProfile().getPhoneNumber());
         assertEquals(userEmail, userContent.getUserProfile().getEmail());
         assertEquals(phoneNumber, userContent.getUserProfile().getPhoneNumber());
         assertEquals(userHistoryId, userContent.getUserHistory().getId());
-        assertEquals(now, userContent.getUserHistory().getCreationDate());
-        assertEquals(now, userContent.getUserHistory().getLastModificationDate());
         assertEquals(firstAssignedProgram.getId(), userContent.getUserHistory().getFinishedAssignedPrograms().get(0).getId());
         assertEquals(firstAssignedProgram.getProgram().getDescription(), userContent.getUserHistory().getFinishedAssignedPrograms().get(0).getProgram().getDescription());
         assertEquals(secondAssignedProgram.getId(), userContent.getUserHistory().getCancelledAssignedPrograms().get(0).getId());

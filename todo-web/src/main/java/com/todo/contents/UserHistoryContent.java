@@ -1,7 +1,5 @@
 package com.todo.contents;
 
-import com.todo.model.AssignedProgram;
-
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -10,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,6 +18,7 @@ import java.util.List;
 @Setter
 public class UserHistoryContent {
 
+  private UUID id;
   private Double score;
   private List<AssignedProgramContent> finishedAssignedPrograms;
   private List<AssignedProgramContent> cancelledAssignedPrograms;

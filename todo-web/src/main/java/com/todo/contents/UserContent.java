@@ -1,8 +1,6 @@
 package com.todo.contents;
 
 import com.todo.model.AssignedProgram;
-import com.todo.model.UserHistory;
-import com.todo.model.UserProfile;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -22,8 +20,8 @@ import java.util.UUID;
 public class UserContent {
 
   private UUID id;
-  private UserProfile userProfile;
+  private UserProfileContent userProfile;
   private List<AssignedProgram> assignedPrograms;
-  private UserHistory userHistory;
+  private UserHistoryContent userHistory;
 
 }

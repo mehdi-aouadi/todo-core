@@ -1,6 +1,5 @@
 package com.todo.controllers;
 
-import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.todo.contents.ProgramContent;
 import com.todo.mappers.ProgramMapper;
@@ -23,10 +22,9 @@ public class ProgramController extends AbstractController {
 
   private ProgramService programService;
   private ProgramMapper programMapper = ProgramMapper.INSTANCE;
-  private Gson jsonSerializer = new Gson();
 
   @Inject
-  public void ProgramTemplateController(ProgramService programService) {
+  public ProgramController(ProgramService programService) {
     this.programService = programService;
   }
 
@@ -37,11 +35,11 @@ public class ProgramController extends AbstractController {
       @QueryParam("limit") @Max(100) int limit
   ) {
     return Response.status(OK)
-        .entity(jsonSerializer.toJson(
+        .entity(
             programMapper.domainListToContentList(
                 programService.findProgramsByRange(skip, limit)
             )
-        )).build();
+        ).build();
   }
 
   @GET
@@ -51,22 +49,22 @@ public class ProgramController extends AbstractController {
       @Pattern(regexp = UUID_PATTERN, message = "Program Id must be a valid UUID.")
           UUID programId) {
     return Response.status(OK)
-        .entity(jsonSerializer.toJson(
+        .entity(
             programMapper.domainToContent(
                 programService.findProgramById(programId)
             )
-        )).build();
+        ).build();
   }
 
   @POST
   @Path("/")
   public Response createProgram(ProgramContent programContent) {
-    return Response.status(CREATED).entity(jsonSerializer.toJson(
+    return Response.status(CREATED).entity(
         programMapper.domainToContent(
             programService.createProgram(
                 programMapper.contentToDomain(programContent)
             )
         )
-    )).build();
+    ).build();
   }
 }
