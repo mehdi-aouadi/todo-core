@@ -2,17 +2,15 @@ package com.todo.controllers;
 
 import com.todo.contents.TaskContent;
 import com.todo.mappers.TaskMapper;
+import com.todo.queries.TaskQuery;
 import com.todo.services.TaskService;
+import lombok.NoArgsConstructor;
 
-import java.util.UUID;
 import javax.inject.Inject;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Pattern;
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
-import lombok.NoArgsConstructor;
+import javax.ws.rs.core.*;
+import java.util.UUID;
 
 import static javax.ws.rs.core.Response.Status.OK;
 
@@ -31,27 +29,15 @@ public class TaskController extends AbstractController {
   }
 
   @GET
-  @Path("/list/name")
-  public Response searchTasksByName(
-      @QueryParam("name") String name,
-      @QueryParam("skip") int skip,
-      @QueryParam("limit") @Max(100) int limit
-  ) {
-    return Response.status(OK)
-        .entity(taskMapper.domainToContent(
-            taskService.findTasksByName(name, skip, limit)))
-        .build();
-  }
+  @Path("/")
+  public Response listTasks(@Context UriInfo uriInfo) {
 
-  @GET
-  @Path("/list")
-  public Response listTasks(
-      @QueryParam("skip") int skip,
-      @QueryParam("limit") @Max(100) int limit
-  ) {
+    MultivaluedMap<String, String> queryParameters = uriInfo.getQueryParameters();
+    TaskQuery taskQuery = new TaskQuery(queryParameters);
+
     return Response.status(OK)
         .entity(taskMapper.domainToContent(
-            taskService.findTasksByRange(skip, limit)))
+            taskService.findTasksByQuery((com.todo.repositories.impl.queries.TaskQuery) taskQuery.toDomainQuery())))
         .build();
   }
 
@@ -73,7 +59,7 @@ public class TaskController extends AbstractController {
   public Response create(TaskContent taskContent) {
     TaskContent createdTask
         = taskMapper.domainToContent(
-            taskService.insertTask(taskMapper.contentToDomain(taskContent)));
+        taskService.insertTask(taskMapper.contentToDomain(taskContent)));
     return Response.status(OK).entity(createdTask).build();
   }
 }

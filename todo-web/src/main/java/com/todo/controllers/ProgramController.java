@@ -3,13 +3,12 @@ package com.todo.controllers;
 import com.google.inject.Inject;
 import com.todo.contents.ProgramContent;
 import com.todo.mappers.ProgramMapper;
+import com.todo.queries.ProgramQuery;
 import com.todo.services.ProgramService;
 
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Pattern;
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
 import java.util.UUID;
 
 import static javax.ws.rs.core.Response.Status.CREATED;
@@ -29,15 +28,19 @@ public class ProgramController extends AbstractController {
   }
 
   @GET
-  @Path("/list")
-  public Response listPrograms(
-      @QueryParam("skip") int skip,
-      @QueryParam("limit") @Max(100) int limit
-  ) {
+  @Path("/")
+  public Response listPrograms(@Context UriInfo uriInfo) {
+
+    MultivaluedMap<String, String> queryParameters = uriInfo.getQueryParameters();
+
+    ProgramQuery programQuery = new ProgramQuery(queryParameters);
+
     return Response.status(OK)
         .entity(
             programMapper.domainListToContentList(
-                programService.findProgramsByRange(skip, limit)
+                programService.findProgramsByQuery(
+                    (com.todo.repositories.impl.queries.ProgramQuery) programQuery.toDomainQuery()
+                )
             )
         ).build();
   }

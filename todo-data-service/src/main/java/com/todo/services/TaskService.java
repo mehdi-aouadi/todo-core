@@ -1,6 +1,7 @@
 package com.todo.services;
 
 import com.todo.model.Task;
+import com.todo.repositories.impl.queries.TaskQuery;
 
 import java.util.List;
 import java.util.UUID;
@@ -13,9 +14,7 @@ public interface TaskService {
 
   Task findTaskById(UUID taskId);
 
-  List<Task> findTasksByRange(int skip, int limit);
-
-  List<Task> findTasksByName(String taskName, int skip, int limit);
+  List<Task> findTasksByQuery(TaskQuery taskQuery);
 
   void deleteTaskById(UUID taskId);
 

@@ -8,6 +8,7 @@ import com.todo.model.AssignedProgram;
 import com.todo.model.Program;
 import com.todo.model.User;
 import com.todo.repositories.UserRepository;
+import com.todo.repositories.impl.queries.AssignedProgramQuery;
 import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,10 +89,18 @@ public class UserRepositoryMongoImpl implements UserRepository {
   }
 
   @Override
-  public List<AssignedProgram> findAssignedProgramsByUserId(UUID userId, int skip, int limit) {
-    LOGGER.info("Retrieving Assigned Programs of user id : {}", userId.toString());
-    return userMongoCollection.find(eq(ID_FIELD, userId.toString())).first()
-        .getAssignedPrograms().stream().skip(skip).limit(limit).collect(Collectors.toList());
+  public List<AssignedProgram> findAssignedProgramsByQuery(UUID userId, AssignedProgramQuery assignedProgramQuery) {
+    LOGGER.info("Retrieving Assigned Programs by Query : {}", assignedProgramQuery);
+    return userMongoCollection
+        .find(eq(ID_FIELD, userId))
+        .first()
+        .getAssignedPrograms()
+        .stream()
+        .filter(assignedProgram ->
+            assignedProgram.getProgram().getTitle().matches(assignedProgramQuery.getTitle()))
+        .skip(assignedProgramQuery.getPageIndex())
+        .limit(assignedProgramQuery.getPageSize())
+        .collect(Collectors.toList());
   }
 
   @Override
