@@ -73,7 +73,7 @@ public class TaskController extends AbstractController {
   public Response create(TaskContent taskContent) {
     TaskContent createdTask
         = taskMapper.domainToContent(
-            taskService.createTask(taskMapper.contentToDomain(taskContent)));
+            taskService.insertTask(taskMapper.contentToDomain(taskContent)));
     return Response.status(OK).entity(createdTask).build();
   }
 }
