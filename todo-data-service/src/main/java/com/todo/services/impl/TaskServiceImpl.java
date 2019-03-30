@@ -33,7 +33,7 @@ public class TaskServiceImpl implements TaskService, ServiceUtils {
   }
 
   @Override
-  public Task createTask(Task task) throws DataIntegrityException {
+  public Task insertTask(Task task) throws DataIntegrityException {
     if(task.getId() != null) {
       throw new DataIntegrityException("taskId", "To create a new Task taskId must be null.");
     } else {
