@@ -8,7 +8,7 @@ import com.todo.exceptions.ResourceNotFoundException;
 import com.todo.model.AssignedProgram;
 import com.todo.model.User;
 import com.todo.repositories.UserRepository;
-import com.todo.services.ServiceUtils;
+import com.todo.repositories.impl.queries.AssignedProgramQuery;
 import com.todo.services.UserService;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -20,7 +20,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @NoArgsConstructor
-public class UserServiceImpl implements UserService, ServiceUtils {
+public class UserServiceImpl implements UserService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
   private UserRepository userRepository;
@@ -60,9 +60,8 @@ public class UserServiceImpl implements UserService, ServiceUtils {
   }
 
   @Override
-  public List<AssignedProgram> findAssignedProgramsByUserId(UUID userId, int skip, int limit) {
-    limit = checkLimit(100, limit, LOGGER);
-    return userRepository.findAssignedProgramsByUserId(userId, skip, limit);
+  public List<AssignedProgram> findAssignedProgramsByQuery(AssignedProgramQuery assignedProgramQuery) {
+    return userRepository.findAssignedProgramsByQuery(assignedProgramQuery);
   }
 
   @Override

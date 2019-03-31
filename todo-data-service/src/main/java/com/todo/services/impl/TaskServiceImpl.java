@@ -6,7 +6,7 @@ import com.todo.exceptions.DataIntegrityException;
 import com.todo.exceptions.DataOperationException;
 import com.todo.model.Task;
 import com.todo.repositories.TaskRepository;
-import com.todo.services.ServiceUtils;
+import com.todo.repositories.impl.queries.TaskQuery;
 import com.todo.services.TaskService;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.UUID;
 
 @NoArgsConstructor
-public class TaskServiceImpl implements TaskService, ServiceUtils {
+public class TaskServiceImpl implements TaskService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(TaskService.class);
   private TaskRepository taskRepository;
@@ -28,8 +28,8 @@ public class TaskServiceImpl implements TaskService, ServiceUtils {
   }
 
   @Override
-  public List<Task> findTasksByRange(int skip, int limit) {
-    return taskRepository.findTasksByRange(skip, limit);
+  public List<Task> findTasksByQuery(TaskQuery taskQuery) {
+    return taskRepository.findTasksByQuery(taskQuery);
   }
 
   @Override
@@ -57,12 +57,6 @@ public class TaskServiceImpl implements TaskService, ServiceUtils {
   @Override
   public Task findTaskById(UUID taskId) {
     return taskRepository.findTaskById(taskId);
-  }
-
-  @Override
-  public List<Task> findTasksByName(String taskName, int skip, int limit) {
-    limit = checkLimit(100, limit, LOGGER);
-    return taskRepository.findTasksByName(taskName, skip, limit);
   }
 
   @Override

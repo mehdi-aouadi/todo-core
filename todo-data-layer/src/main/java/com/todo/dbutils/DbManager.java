@@ -25,7 +25,7 @@ public class DbManager {
     database = mongoClient.getDatabase("tododb").withCodecRegistry(pojoCodecRegistry);
   }
 
-  private static DbManager getInstance() {
+  public static DbManager getInstance() {
     if (INSTANCE == null) {
       INSTANCE = new DbManager();
     }

@@ -1,12 +1,11 @@
-package com.todo.services.impl;
+package com.todo.repositories.impl;
 
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.Sorts;
 import com.mongodb.client.result.DeleteResult;
 import com.todo.dbutils.DbManager;
 import com.todo.model.Media;
 import com.todo.repositories.MediaRepository;
-import com.todo.services.ServiceUtils;
+import com.todo.repositories.impl.queries.MediaQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,13 +16,11 @@ import java.util.UUID;
 
 import static com.mongodb.client.model.Filters.eq;
 
-public class MediaRepositoryImpl implements MediaRepository, ServiceUtils {
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(MediaRepositoryImpl.class);
+public class MediaRepositoryImpl implements MediaRepository {
 
   private static final String ID_FIELD = "_id";
-  private static final String LAST_MODIFICATION_DATE_FIELD = "lastModificationDate";
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(MediaRepositoryImpl.class);
 
   private final MongoCollection<Media> mediaMongoCollection
       = DbManager.getMongoCollection(Media.class);
@@ -36,9 +33,9 @@ public class MediaRepositoryImpl implements MediaRepository, ServiceUtils {
         .id(media.getId())
         .creationDate(media.getCreationDate())
         .lastModificationDate(media.getLastModificationDate())
-        .mediaName(media.getMediaName())
+        .mediaName(media.getName())
         .type(media.getType())
-        .mediaResourceUrl(media.getMediaResourceUrl())
+        .mediaResourceUrl(media.getResourceUrl())
         .adminUserIdCreatedBy(media.getAdminUserIdCreatedBy())
         .adminUserIdLastModifiedBy(media.getAdminUserIdLastModifiedBy())
         .build();
@@ -59,24 +56,14 @@ public class MediaRepositoryImpl implements MediaRepository, ServiceUtils {
   }
 
   @Override
-  public List<Media> findMediasByRange(int skip, int limit) {
-    LOGGER.info("Retrieving all Medias. Skip {}, limit {}", skip, limit);
-    limit = checkLimit(100, limit, LOGGER);
+  public List<Media> findByQuery(MediaQuery mediaQuery) {
+    LOGGER.info("Retrieving Medias by MediaQuery {}", mediaQuery);
     return mediaMongoCollection.find()
-        .sort(Sorts.ascending(LAST_MODIFICATION_DATE_FIELD))
-        .skip(skip)
-        .limit(limit)
-        .into(new ArrayList<>());
-  }
-
-  @Override
-  public List<Media> findMediasByName(String mediaName, int skip, int limit) {
-    LOGGER.info("Retrieving Medias by name {}, skip {}, limit {}", mediaName, skip, limit);
-    limit = checkLimit(100, limit, LOGGER);
-    return mediaMongoCollection.find()
-        .sort(Sorts.ascending(LAST_MODIFICATION_DATE_FIELD))
-        .skip(skip)
-        .limit(limit)
+        .sort(mediaQuery.nameOrderToBson())
+        .sort(mediaQuery.lastModificationDateOrderToBson())
+        .sort(mediaQuery.creationDateOrderToBson())
+        .skip(mediaQuery.getPageIndex())
+        .limit(mediaQuery.getPageSize())
         .into(new ArrayList<>());
   }
 

@@ -6,6 +6,7 @@ import com.mongodb.client.result.DeleteResult;
 import com.todo.dbutils.DbManager;
 import com.todo.model.Task;
 import com.todo.repositories.TaskRepository;
+import com.todo.repositories.impl.queries.TaskQuery;
 import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,23 +71,15 @@ public class TaskRepositoryMongoImpl implements TaskRepository {
   }
 
   @Override
-  public List<Task> findTasksByRange(int skip, int limit) {
-    LOGGER.info("Retrieving all tasks. Skip {}, limit {}", skip, limit);
-    return taskMongoCollection.find()
-        .sort(Sorts.ascending("lastModificationDate"))
-        .skip(skip)
-        .limit(limit)
-        .into(new ArrayList<>());
-  }
+  public List<Task> findTasksByQuery(TaskQuery taskQuery) {
+    LOGGER.info("Retrieving Tasks by Query : {}", taskQuery);
 
-  @Override
-  public List<Task> findTasksByName(String taskName, int skip, int limit) {
-    LOGGER.info("Retrieving Tasks by name : {}. Skip {}, limit {}", taskName, skip, limit);
-
-    return taskMongoCollection.find(regex("name", taskName))
-        .sort(Sorts.ascending("name"))
-        .skip(skip)
-        .limit(limit)
+    return taskMongoCollection.find(taskQuery.toBsonFilter())
+        .sort(taskQuery.nameOrderToBson())
+        .sort(taskQuery.lastModificationDateOrderToBson())
+        .sort(taskQuery.creationDateOrderToBson())
+        .skip(taskQuery.getPageIndex())
+        .limit(taskQuery.getPageSize())
         .into(new ArrayList<>());
 
   }
