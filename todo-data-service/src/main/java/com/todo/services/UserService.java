@@ -2,7 +2,6 @@ package com.todo.services;
 
 import com.todo.model.AssignedProgram;
 import com.todo.model.User;
-import com.todo.repositories.impl.queries.AssignedProgramQuery;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,7 +16,7 @@ public interface UserService {
 
   boolean userExists(String email);
 
-  List<AssignedProgram> findAssignedProgramsByQuery(UUID userId, AssignedProgramQuery assignedProgramQuery);
+  List<AssignedProgram> findAssignedProgramsByUserId(UUID userId, int skip, int limit);
 
   AssignedProgram findAssignedProgramById(UUID userId, UUID assignedProgramId);
 

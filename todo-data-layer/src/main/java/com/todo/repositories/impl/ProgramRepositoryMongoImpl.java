@@ -6,7 +6,6 @@ import com.mongodb.client.result.DeleteResult;
 import com.todo.dbutils.DbManager;
 import com.todo.model.Program;
 import com.todo.repositories.ProgramRepository;
-import com.todo.repositories.impl.queries.ProgramQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,13 +14,14 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.regex;
 
 public class ProgramRepositoryMongoImpl implements ProgramRepository {
 
-  private static final String ID_FIELD = "_id";
-
   private static final Logger LOGGER =
       LoggerFactory.getLogger(ProgramRepositoryMongoImpl.class);
+
+  private static final String ID_FIELD = "_id";
 
   private final MongoCollection<Program> programMongoCollection =
       DbManager.getMongoCollection(Program.class);
@@ -65,15 +65,23 @@ public class ProgramRepositoryMongoImpl implements ProgramRepository {
   }
 
   @Override
-  public List<Program> findProgramsByQuery(ProgramQuery programQuery) {
-    LOGGER.info("Retrieving Programs by Query : {}", programQuery);
+  public List<Program> findProgramsByTitle(String programName, int skip, int limit) {
+    LOGGER.info("Retrieving Programs by name : {}", programName);
 
-    return programMongoCollection.find(programQuery.toBsonFilter())
-        .sort(programQuery.titleOrderToBson())
-        .sort(programQuery.lastModificationDateOrderToBson())
-        .sort(programQuery.creationDateOrderToBson())
-        .skip(programQuery.getPageIndex())
-        .limit(programQuery.getPageSize())
+    return programMongoCollection.find(regex("title", programName))
+        .sort(Sorts.ascending("title"))
+        .skip(skip)
+        .limit(limit)
+        .into(new ArrayList<>());
+  }
+
+  @Override
+  public List<Program> findProgramsByRange(int skip, int limit) {
+    LOGGER.info("Retrieving ProgramTemplates. From : {}, To : {}", skip, limit);
+    return programMongoCollection.find()
+        .sort(Sorts.ascending("lastModificationDate"))
+        .skip(skip)
+        .limit(limit)
         .into(new ArrayList<>());
   }
 

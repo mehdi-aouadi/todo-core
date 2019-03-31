@@ -3,18 +3,17 @@ package com.todo.controllers;
 import com.todo.contents.UserContent;
 import com.todo.mappers.AssignedProgramMapper;
 import com.todo.mappers.UserMapper;
-import com.todo.queries.AssignedProgramQuery;
 import com.todo.services.UserService;
-import lombok.NoArgsConstructor;
-
 import javax.inject.Inject;
+
+import javax.validation.constraints.Max;
+import java.util.UUID;
 import javax.validation.constraints.Pattern;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-import java.util.UUID;
+
+import lombok.NoArgsConstructor;
 
 import static javax.ws.rs.core.Response.Status.CREATED;
 import static javax.ws.rs.core.Response.Status.OK;
@@ -80,18 +79,14 @@ public class UserController extends AbstractController {
       @PathParam("userId")
       @Pattern(regexp = UUID_PATTERN, message = "User Id must be a valid UUID.")
           UUID userId,
-      @Context UriInfo uriInfo) {
-    AssignedProgramQuery assignedProgramQuery
-        = new AssignedProgramQuery(uriInfo.getQueryParameters());
+      @QueryParam("skip") int skip,
+      @Max(100)
+      @QueryParam("limit") int limit
+  ) {
     return Response
         .status(OK)
         .entity(assignedProgramMapper
-            .domainListToContentList(
-                userService.findAssignedProgramsByQuery(
-                    userId,
-                    (com.todo.repositories.impl.queries.AssignedProgramQuery)
-                        assignedProgramQuery.toDomainQuery()
-                ))
+            .domainListToContentList(userService.findAssignedProgramsByUserId(userId, skip, limit))
         ).build();
   }
 

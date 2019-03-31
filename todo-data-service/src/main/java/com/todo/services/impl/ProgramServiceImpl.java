@@ -6,8 +6,8 @@ import com.todo.exceptions.DataIntegrityException;
 import com.todo.exceptions.DataOperationException;
 import com.todo.model.Program;
 import com.todo.repositories.ProgramRepository;
-import com.todo.repositories.impl.queries.ProgramQuery;
 import com.todo.services.ProgramService;
+import com.todo.services.ServiceUtils;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.UUID;
 
 @NoArgsConstructor
-public class ProgramServiceImpl implements ProgramService {
+public class ProgramServiceImpl implements ProgramService, ServiceUtils {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ProgramServiceImpl.class);
   private ProgramRepository programRepository;
@@ -56,8 +56,15 @@ public class ProgramServiceImpl implements ProgramService {
   }
 
   @Override
-  public List<Program> findProgramsByQuery(ProgramQuery programQuery) {
-    return this.programRepository.findProgramsByQuery(programQuery);
+  public List<Program> findProgramsByTitle(String programTemplateName, int skip, int limit) {
+    limit = checkLimit(100, limit, LOGGER);
+    return this.programRepository.findProgramsByTitle(programTemplateName, skip, limit);
+  }
+
+  @Override
+  public List<Program> findProgramsByRange(int skip, int limit) {
+    limit = checkLimit(100, limit, LOGGER);
+    return programRepository.findProgramsByRange(skip, limit);
   }
 
   @Override
