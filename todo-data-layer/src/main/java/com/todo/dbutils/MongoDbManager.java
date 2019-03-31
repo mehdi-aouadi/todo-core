@@ -11,13 +11,13 @@ import org.bson.codecs.pojo.PojoCodecProvider;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
-public class DbManager {
+public class MongoDbManager {
 
   private static MongoDatabase database;
 
-  private static DbManager INSTANCE;
+  private static MongoDbManager INSTANCE;
 
-  private DbManager() {
+  private MongoDbManager() {
     MongoClientURI connectionString = new MongoClientURI("mongodb://localhost:27017");
     MongoClient mongoClient = new MongoClient(connectionString);
     CodecRegistry pojoCodecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
@@ -25,9 +25,9 @@ public class DbManager {
     database = mongoClient.getDatabase("tododb").withCodecRegistry(pojoCodecRegistry);
   }
 
-  public static DbManager getInstance() {
+  private static MongoDbManager getInstance() {
     if (INSTANCE == null) {
-      INSTANCE = new DbManager();
+      INSTANCE = new MongoDbManager();
     }
     return INSTANCE;
   }

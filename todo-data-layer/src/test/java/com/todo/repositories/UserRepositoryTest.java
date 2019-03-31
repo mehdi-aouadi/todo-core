@@ -1,39 +1,77 @@
 package com.todo.repositories;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
-import com.todo.dbutils.DbManager;
+import com.todo.dbutils.MongoDbManager;
+import com.todo.model.AssignedProgram;
+import com.todo.model.Program;
 import com.todo.model.User;
+import com.todo.model.UserProfile;
 import com.todo.repositories.impl.UserRepositoryMongoImpl;
 import com.todo.repositories.impl.queries.AssignedProgramQuery;
+import org.bson.codecs.pojo.PojoCodecProvider;
 import org.bson.conversions.Bson;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatcher;
+import org.mockito.BDDMockito;
 import org.mockito.Mock;
 
-import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
+import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
+import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
 
-import org.mockito.runners.MockitoJUnitRunner;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(MongoDbManager.class)
 public class UserRepositoryTest {
 
-  @Mock
-  MongoCollection userMongoCollectionMock;
-  @Mock
-  DbManager dbManagerMcok;
-  private UserRepositoryMongoImpl userRepositoryMongo = new UserRepositoryMongoImpl();
+  private MongoCollection<User> userMongoCollectionMock;
+  private MongoCollection<Program> programMongoCollectionMock;
+
   private final UUID userId = UUID.randomUUID();
 
   @Before
   public void before() {
-    when(dbManagerMcok.getMongoCollection(User.class)).thenReturn(userMongoCollectionMock);
+    PowerMockito.mockStatic(MongoDbManager.class);
+    userMongoCollectionMock = mock(MongoCollection.class);
+    programMongoCollectionMock = mock(MongoCollection.class);
+    BDDMockito.given(MongoDbManager.getMongoCollection(User.class)).willReturn(userMongoCollectionMock);
+    BDDMockito.given(MongoDbManager.getMongoCollection(Program.class)).willReturn(programMongoCollectionMock);
+    FindIterable<User> userFindIterable = mock(FindIterable.class);
+    when(userMongoCollectionMock.find(any(Bson.class))).thenReturn(userFindIterable);
+    List<AssignedProgram> userAssignedProgramList = Arrays.asList(
+        AssignedProgram.builder()
+            .id(UUID.randomUUID())
+            .program(
+                Program.builder()
+                    .title("First Assigned Program")
+                    .build())
+            .build(),
+        AssignedProgram.builder()
+            .id(UUID.randomUUID())
+            .program(Program.builder()
+                .title("Second Assigned Program")
+                .build())
+            .build()
+        );
+    User user = User.builder()
+        .id(userId)
+        .userProfile(UserProfile.builder()
+            .userName("John Galt")
+            .build())
+        .assignedPrograms(userAssignedProgramList).build();
+    when(userFindIterable.first()).thenReturn(user);
   }
 
   @Test
@@ -45,10 +83,11 @@ public class UserRepositoryTest {
         .pageSize(10)
         .build();
 
-    when(userMongoCollectionMock.find(Bson.class).first()).thenReturn(null);
+    UserRepositoryMongoImpl userRepositoryMongo = new UserRepositoryMongoImpl();
+
     userRepositoryMongo.findAssignedProgramsByQuery(assignedProgramQuery);
 
-    verify(userMongoCollectionMock).find();
+    verify(userMongoCollectionMock, times(1)).find(assignedProgramQuery.toBsonFilter());
 
   }
 

@@ -1,9 +1,8 @@
 package com.todo.repositories.impl;
 
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.Sorts;
 import com.mongodb.client.result.DeleteResult;
-import com.todo.dbutils.DbManager;
+import com.todo.dbutils.MongoDbManager;
 import com.todo.model.Program;
 import com.todo.repositories.ProgramRepository;
 import com.todo.repositories.impl.queries.ProgramQuery;
@@ -24,7 +23,7 @@ public class ProgramRepositoryMongoImpl implements ProgramRepository {
       LoggerFactory.getLogger(ProgramRepositoryMongoImpl.class);
 
   private final MongoCollection<Program> programMongoCollection =
-      DbManager.getMongoCollection(Program.class);
+      MongoDbManager.getMongoCollection(Program.class);
 
   @Override
   public Program insertProgram(Program program) {
