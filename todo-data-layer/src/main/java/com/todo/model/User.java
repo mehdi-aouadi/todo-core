@@ -15,7 +15,7 @@ import java.util.UUID;
 public class User extends Entity {
 
   private UserProfile userProfile;
-  private char[] password;
+  private String password;
   private List<AssignedProgram> assignedPrograms;
   private UserHistory userHistory;
 
@@ -24,7 +24,7 @@ public class User extends Entity {
               LocalDateTime creationDate,
               LocalDateTime lastModificationDate,
               UserProfile userProfile,
-              char[] password,
+              String password,
               List<AssignedProgram> assignedPrograms,
               UserHistory userHistory) {
     super(id, creationDate, lastModificationDate);

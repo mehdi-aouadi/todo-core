@@ -1,9 +1,8 @@
 package com.todo.repositories.impl;
 
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.Sorts;
 import com.mongodb.client.result.DeleteResult;
-import com.todo.dbutils.DbManager;
+import com.todo.dbutils.MongoDbManager;
 import com.todo.model.Task;
 import com.todo.repositories.TaskRepository;
 import com.todo.repositories.impl.queries.TaskQuery;
@@ -26,7 +25,7 @@ public class TaskRepositoryMongoImpl implements TaskRepository {
   private static final String ID_FIELD = "_id";
 
   private final MongoCollection<Task> taskMongoCollection
-      = DbManager.getMongoCollection(Task.class);
+      = MongoDbManager.getMongoCollection(Task.class);
 
   @Override
   public Task findTaskById(UUID taskId) {

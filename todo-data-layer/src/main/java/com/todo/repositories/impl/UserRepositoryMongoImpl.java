@@ -3,7 +3,7 @@ package com.todo.repositories.impl;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.UpdateResult;
-import com.todo.dbutils.DbManager;
+import com.todo.dbutils.MongoDbManager;
 import com.todo.model.AssignedProgram;
 import com.todo.model.Program;
 import com.todo.model.User;
@@ -29,10 +29,10 @@ public class UserRepositoryMongoImpl implements UserRepository {
   private static final String ID_FIELD = "_id";
 
   private final MongoCollection<Program> programMongoCollection
-      = DbManager.getMongoCollection(Program.class);
+      = MongoDbManager.getMongoCollection(Program.class);
 
   private final MongoCollection<User> userMongoCollection
-      = DbManager.getMongoCollection(User.class);
+      = MongoDbManager.getMongoCollection(User.class);
 
   @Override
   public User findUserByEmail(String userEmail) {

@@ -2,7 +2,7 @@ package com.todo.repositories.impl;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.result.DeleteResult;
-import com.todo.dbutils.DbManager;
+import com.todo.dbutils.MongoDbManager;
 import com.todo.model.Media;
 import com.todo.repositories.MediaRepository;
 import com.todo.repositories.impl.queries.MediaQuery;
@@ -23,7 +23,7 @@ public class MediaRepositoryImpl implements MediaRepository {
   private static final Logger LOGGER = LoggerFactory.getLogger(MediaRepositoryImpl.class);
 
   private final MongoCollection<Media> mediaMongoCollection
-      = DbManager.getMongoCollection(Media.class);
+      = MongoDbManager.getMongoCollection(Media.class);
 
   @Override
   public Media insertMedia(Media media) {
