@@ -3,7 +3,6 @@ package com.todo.repositories;
 import com.mongodb.client.result.UpdateResult;
 import com.todo.model.AssignedProgram;
 import com.todo.model.User;
-import com.todo.repositories.impl.queries.AssignedProgramQuery;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +22,7 @@ public interface UserRepository {
 
   void deleteUserById(UUID userId);
 
-  List<AssignedProgram> findAssignedProgramsByQuery(UUID userId, AssignedProgramQuery assignedProgramQuery);
+  List<AssignedProgram> findAssignedProgramsByUserId(UUID userId, int skip, int limit);
 
   Optional<AssignedProgram> findAssignedProgramsById(UUID userId, UUID assignedProgramId);
 

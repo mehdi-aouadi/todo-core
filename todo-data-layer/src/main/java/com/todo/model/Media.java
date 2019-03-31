@@ -14,9 +14,9 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Media extends Entity {
 
-  private String name;
+  private String mediaName;
   private MediaType type;
-  private URL resourceUrl;
+  private URL mediaResourceUrl;
   private UUID adminUserIdCreatedBy;
   private UUID adminUserIdLastModifiedBy;
 
@@ -31,8 +31,8 @@ public class Media extends Entity {
                UUID adminUserIdLastModifiedBy) {
     super(id, creationDate, lastModificationDate);
     this.type = type;
-    this.name = mediaName;
-    this.resourceUrl = mediaResourceUrl;
+    this.mediaName = mediaName;
+    this.mediaResourceUrl = mediaResourceUrl;
     this.adminUserIdCreatedBy = adminUserIdCreatedBy;
     this.adminUserIdLastModifiedBy = adminUserIdLastModifiedBy;
   }

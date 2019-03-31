@@ -20,8 +20,8 @@ import java.util.UUID;
 public class MediaContent {
 
   private UUID id;
-  private String name;
+  private String mediaName;
   private MediaType type;
-  private URL resourceUrl;
+  private URL mediaResourceUrl;
 
 }
