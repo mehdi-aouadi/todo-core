@@ -1,6 +1,5 @@
 package com.todo.controllers;
 
-import com.google.gson.Gson;
 import com.todo.contents.TaskContent;
 import com.todo.mappers.TaskMapper;
 import com.todo.model.Task;
@@ -16,7 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
@@ -32,8 +31,6 @@ public class TaskControllerTest extends JerseyTest {
 
   @Mock
   TaskService taskServiceMock;
-
-  private Gson jsonSerializer = new Gson();
 
   @Override
   public Application configure() {

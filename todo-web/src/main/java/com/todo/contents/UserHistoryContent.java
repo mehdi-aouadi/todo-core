@@ -16,9 +16,8 @@ import java.util.UUID;
 @ToString
 @Getter
 @Setter
-public class UserHistoryContent {
+public class UserHistoryContent extends Content {
 
-  private UUID id;
   private Double score;
   private List<AssignedProgramContent> finishedAssignedPrograms;
   private List<AssignedProgramContent> cancelledAssignedPrograms;

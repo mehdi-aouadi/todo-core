@@ -25,9 +25,8 @@ import lombok.ToString;
 @ToString
 @Getter
 @Setter
-public class TaskContent {
+public class TaskContent extends Content {
 
-  private UUID id;
   private String name;
   private String summary;
   private String description;
