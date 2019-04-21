@@ -17,9 +17,8 @@ import java.util.UUID;
 @ToString
 @Getter
 @Setter
-public class MediaContent {
+public class MediaContent extends Content{
 
-  private UUID id;
   private String name;
   private MediaType type;
   private URL resourceUrl;

@@ -17,9 +17,8 @@ import java.util.UUID;
 @ToString
 @Getter
 @Setter
-public class UserContent {
+public class UserContent extends Content {
 
-  private UUID id;
   private UserProfileContent userProfile;
   private List<AssignedProgram> assignedPrograms;
   private UserHistoryContent userHistory;
