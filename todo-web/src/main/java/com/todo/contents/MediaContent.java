@@ -21,6 +21,6 @@ public class MediaContent extends Content{
 
   private String name;
   private MediaType type;
-  private URL resourceUrl;
+  private String resourceUrl;
 
 }
