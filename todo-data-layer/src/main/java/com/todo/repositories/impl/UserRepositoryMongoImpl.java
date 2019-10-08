@@ -98,7 +98,7 @@ public class UserRepositoryMongoImpl implements UserRepository {
         .stream()
         .filter(assignedProgram ->
             assignedProgram.getProgram().getName().toLowerCase().matches(
-                "(.)*" + assignedProgramQuery.getTitle().toLowerCase() + "(.)*")
+                "(.)*" + assignedProgramQuery.getName().toLowerCase() + "(.)*")
         )
         .skip(assignedProgramQuery.getPageIndex())
         .limit(assignedProgramQuery.getPageSize())

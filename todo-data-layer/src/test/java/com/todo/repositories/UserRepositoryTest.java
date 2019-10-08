@@ -55,13 +55,13 @@ public class UserRepositoryTest {
             .id(UUID.randomUUID())
             .program(
                 Program.builder()
-                    .title("First Assigned Program")
+                    .name("First Assigned Program")
                     .build())
             .build(),
         AssignedProgram.builder()
             .id(UUID.randomUUID())
             .program(Program.builder()
-                .title("Second Assigned Program")
+                .name("Second Assigned Program")
                 .build())
             .build()
         );
@@ -78,7 +78,7 @@ public class UserRepositoryTest {
   public void findAssignedProgramByQueryTest() {
     AssignedProgramQuery assignedProgramQuery
         = AssignedProgramQuery.builder()
-        .title("assigned program task name")
+        .name("assigned program task name")
         .pageIndex(2)
         .pageSize(10)
         .build();

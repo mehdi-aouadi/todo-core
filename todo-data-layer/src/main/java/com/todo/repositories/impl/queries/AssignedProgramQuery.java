@@ -16,15 +16,15 @@ import java.util.UUID;
 @ToString(callSuper = true)
 public class AssignedProgramQuery extends Query {
 
-  private static final String PROGRAM_TITLE_FIELD = "title";
+  private static final String PROGRAM_NAME_FIELD = "name";
   private UUID userId;
-  private String title;
+  private String name;
 
   @Builder
-  protected AssignedProgramQuery(Integer pageIndex, Integer pageSize, UUID userId, String title) {
+  protected AssignedProgramQuery(Integer pageIndex, Integer pageSize, UUID userId, String name) {
     super(pageIndex, pageSize);
     this.userId = userId;
-    this.title = title;
+    this.name = name;
   }
 
   @Override

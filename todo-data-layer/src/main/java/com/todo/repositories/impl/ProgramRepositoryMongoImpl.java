@@ -33,7 +33,7 @@ public class ProgramRepositoryMongoImpl implements ProgramRepository {
         .id(program.getId())
         .creationDate(program.getCreationDate())
         .lastModificationDate(program.getLastModificationDate())
-        .title(program.getName())
+        .name(program.getName())
         .description(program.getDescription())
         .introduction(program.getIntroduction())
         .taskList(program.getTaskList())
@@ -49,7 +49,7 @@ public class ProgramRepositoryMongoImpl implements ProgramRepository {
         .id(program.getId())
         .creationDate(program.getCreationDate())
         .lastModificationDate(program.getLastModificationDate())
-        .title(program.getName())
+        .name(program.getName())
         .description(program.getDescription())
         .introduction(program.getIntroduction())
         .taskList(program.getTaskList())
@@ -68,7 +68,7 @@ public class ProgramRepositoryMongoImpl implements ProgramRepository {
     LOGGER.info("Retrieving Programs by Query : {}", programQuery);
 
     return programMongoCollection.find(programQuery.toBsonFilter())
-        .sort(programQuery.titleOrderToBson())
+        .sort(programQuery.nameOrderToBson())
         .sort(programQuery.lastModificationDateOrderToBson())
         .sort(programQuery.creationDateOrderToBson())
         .skip(programQuery.getPageIndex())
