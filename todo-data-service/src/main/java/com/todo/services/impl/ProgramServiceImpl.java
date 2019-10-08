@@ -46,7 +46,7 @@ public class ProgramServiceImpl implements ProgramService {
       throw new DataIntegrityException("programId", "To update a program programId is mandatory");
     } else {
       checkProgram(program);
-      return this.programRepository.insertProgram(program);
+      return this.programRepository.updateProgram(program);
     }
   }
 
@@ -74,7 +74,7 @@ public class ProgramServiceImpl implements ProgramService {
       throw new IllegalArgumentException("Program is null.");
     }
     if (StringUtils.isBlank(program.getName())) {
-      throw new DataIntegrityException("Title", "Missing Program Title");
+      throw new DataIntegrityException("Name", "Missing Program Name");
     }
   }
 }

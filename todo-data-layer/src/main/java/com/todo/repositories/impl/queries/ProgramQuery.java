@@ -14,10 +14,10 @@ import org.bson.conversions.Bson;
 @ToString(callSuper = true)
 public class ProgramQuery extends Query {
 
-  private static final String PROGRAM_TITLE_FIELD = "title";
+  private static final String PROGRAM_NAME_FIELD = "name";
 
-  private String title;
-  private Order titleOrder;
+  private String name;
+  private Order nameOrder;
   private Order lastModificationDateOrder;
   private Order creationDateOrder;
 
@@ -25,14 +25,14 @@ public class ProgramQuery extends Query {
   protected ProgramQuery(
       Integer pageIndex,
       Integer pageSize,
-      String title,
-      Order titleOrder,
+      String name,
+      Order nameOrder,
       Order lastModificationDateOrder,
       Order creationDateOrder) {
     super(pageIndex, pageSize);
-    this.title = title;
-    this.titleOrder
-        = titleOrder != null ? titleOrder : Order.ASC;
+    this.name = name;
+    this.nameOrder
+        = nameOrder != null ? nameOrder : Order.ASC;
     this.lastModificationDateOrder
         = lastModificationDateOrder != null ? lastModificationDateOrder : Order.ASC;
     this.creationDateOrder
@@ -42,17 +42,17 @@ public class ProgramQuery extends Query {
   @Override
   public Bson toBsonFilter() {
     Bson filter = new BasicDBObject();
-    if (this.title != null) {
-      filter = Filters.eq(PROGRAM_TITLE_FIELD, this.title);
+    if (this.name != null) {
+      filter = Filters.eq(PROGRAM_NAME_FIELD, this.name);
     }
     return filter;
   }
 
-  public Bson titleOrderToBson() {
-    if (this.titleOrder != null && this.titleOrder.equals(Order.DESC)) {
-      return Sorts.descending(PROGRAM_TITLE_FIELD);
+  public Bson nameOrderToBson() {
+    if (this.nameOrder != null && this.nameOrder.equals(Order.DESC)) {
+      return Sorts.descending(PROGRAM_NAME_FIELD);
     } else {
-      return Sorts.ascending(PROGRAM_TITLE_FIELD);
+      return Sorts.ascending(PROGRAM_NAME_FIELD);
     }
   }
 

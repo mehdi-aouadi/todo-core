@@ -5,8 +5,8 @@ import java.util.UUID;
 
 public class AssignedProgramQuery extends Query {
 
-  public static final String TITLE = "title";
-  public static final String ORDER_TITLE = "orderTitle";
+  public static final String NAME = "name";
+  public static final String ORDER_NAME = "orderName";
   public static final String ORDER_CREATION_DATE = "orderCreationDate";
   public static final String ORDER_LAST_MODIFICATION_DATE = "orderLastModificationDate";
 
@@ -29,7 +29,7 @@ public class AssignedProgramQuery extends Query {
         .userId(this.userId)
         .pageIndex(page.getPageIndex())
         .pageSize(page.getPageSize())
-        .title(param(TITLE).orElse(null))
+        .name(param(NAME).orElse(null))
         .build();
   }
 }

@@ -4,8 +4,8 @@ import javax.ws.rs.core.MultivaluedMap;
 
 public class ProgramQuery extends Query {
 
-  public static final String TITLE = "title";
-  public static final String ORDER_TITLE = "orderTitle";
+  public static final String NAME = "name";
+  public static final String ORDER_NAME = "orderName";
   public static final String ORDER_CREATION_DATE = "orderCreationDate";
   public static final String ORDER_LAST_MODIFICATION_DATE = "orderLastModificationDate";
 
@@ -24,8 +24,8 @@ public class ProgramQuery extends Query {
     return com.todo.repositories.impl.queries.ProgramQuery.builder()
         .pageIndex(page.getPageIndex())
         .pageSize(page.getPageSize())
-        .title(param(TITLE).orElse(null))
-        .titleOrder(paramOrder(ORDER_TITLE))
+        .name(param(NAME).orElse(null))
+        .nameOrder(paramOrder(ORDER_NAME))
         .creationDateOrder(paramOrder(ORDER_CREATION_DATE))
         .lastModificationDateOrder(paramOrder(ORDER_LAST_MODIFICATION_DATE))
         .build();
