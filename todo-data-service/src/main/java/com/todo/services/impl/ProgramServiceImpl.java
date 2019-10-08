@@ -73,7 +73,7 @@ public class ProgramServiceImpl implements ProgramService {
     if (program == null) {
       throw new IllegalArgumentException("Program is null.");
     }
-    if (StringUtils.isBlank(program.getTitle())) {
+    if (StringUtils.isBlank(program.getName())) {
       throw new DataIntegrityException("Title", "Missing Program Title");
     }
   }

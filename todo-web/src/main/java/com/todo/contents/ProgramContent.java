@@ -17,7 +17,7 @@ import java.util.UUID;
 @Data
 public class ProgramContent extends Content{
 
-  private String title;
+  private String name;
   private String description;
   private String introduction;
   private List<UUID> taskList;
