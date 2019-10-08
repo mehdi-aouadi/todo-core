@@ -24,7 +24,7 @@ import static javax.ws.rs.core.Response.Status.OK;
 public class MediaController extends AbstractController {
 
   private MediaService mediaService;
-  private MediaMapper mediaMapper;
+  private MediaMapper mediaMapper = MediaMapper.INSTANCE;
 
   @Inject
   public MediaController(MediaService mediaService) {
