@@ -16,7 +16,7 @@ public class Media extends Entity {
 
   private String name;
   private MediaType type;
-  private URL resourceUrl;
+  private String resourceUrl;
   private UUID adminUserIdCreatedBy;
   private UUID adminUserIdLastModifiedBy;
 
@@ -26,7 +26,7 @@ public class Media extends Entity {
                LocalDateTime lastModificationDate,
                String mediaName,
                MediaType type,
-               URL mediaResourceUrl,
+               String mediaResourceUrl,
                UUID adminUserIdCreatedBy,
                UUID adminUserIdLastModifiedBy) {
     super(id, creationDate, lastModificationDate);
