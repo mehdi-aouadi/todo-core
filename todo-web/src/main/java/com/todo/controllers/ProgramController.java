@@ -1,10 +1,12 @@
 package com.todo.controllers;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import com.todo.contents.ProgramContent;
 import com.todo.mappers.ProgramMapper;
 import com.todo.queries.ProgramQuery;
 import com.todo.services.ProgramService;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.constraints.Pattern;
 import javax.ws.rs.*;
@@ -17,6 +19,8 @@ import static javax.ws.rs.core.Response.Status.OK;
 @Path("program")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@NoArgsConstructor
+@Slf4j
 public class ProgramController extends AbstractController {
 
   private ProgramService programService;
