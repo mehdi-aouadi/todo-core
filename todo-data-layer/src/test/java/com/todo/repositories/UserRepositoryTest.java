@@ -1,7 +1,5 @@
 package com.todo.repositories;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.MongoClientSettings;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.todo.dbutils.MongoDbManager;
@@ -11,19 +9,11 @@ import com.todo.model.User;
 import com.todo.model.UserProfile;
 import com.todo.repositories.impl.UserRepositoryMongoImpl;
 import com.todo.repositories.impl.queries.AssignedProgramQuery;
-import org.bson.codecs.pojo.PojoCodecProvider;
 import org.bson.conversions.Bson;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.BDDMockito;
-import org.mockito.Mock;
-
-import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
-import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
-
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -32,14 +22,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
+
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(MongoDbManager.class)
 public class UserRepositoryTest {
 
+  private final UUID userId = UUID.randomUUID();
   private MongoCollection<User> userMongoCollectionMock;
   private MongoCollection<Program> programMongoCollectionMock;
-
-  private final UUID userId = UUID.randomUUID();
 
   @Before
   public void before() {
@@ -64,7 +56,7 @@ public class UserRepositoryTest {
                 .name("Second Assigned Program")
                 .build())
             .build()
-        );
+    );
     User user = User.builder()
         .id(userId)
         .userProfile(UserProfile.builder()

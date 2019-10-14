@@ -1,6 +1,8 @@
 package com.todo.mappers;
 
+import com.todo.common.Page;
 import com.todo.contents.ProgramContent;
+import com.todo.contents.ProgramPageContent;
 import com.todo.model.Program;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
@@ -21,5 +23,10 @@ public interface ProgramMapper {
   List<ProgramContent> domainListToContentList(List<Program> programList);
 
   Program contentToDomain(ProgramContent programContent);
+
+  @Mappings( {
+      @Mapping(source = "totalElementCount", target = "totalCount"),
+  })
+  ProgramPageContent pageToProgramPageContent(Page<Program> programPage);
 
 }

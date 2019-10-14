@@ -1,5 +1,6 @@
 package com.todo.services;
 
+import com.todo.common.Page;
 import com.todo.model.Program;
 import com.todo.repositories.impl.queries.ProgramQuery;
 
@@ -14,7 +15,7 @@ public interface ProgramService {
 
   Program findProgramById(UUID programTemplateId);
 
-  List<Program> findProgramsByQuery(ProgramQuery programQuery);
+  Page<Program> findProgramsByQuery(ProgramQuery programQuery);
 
   void deleteProgramById(UUID programId);
 

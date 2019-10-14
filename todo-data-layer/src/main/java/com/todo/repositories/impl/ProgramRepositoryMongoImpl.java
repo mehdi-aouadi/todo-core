@@ -2,6 +2,7 @@ package com.todo.repositories.impl;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.result.DeleteResult;
+import com.todo.common.Page;
 import com.todo.dbutils.MongoDbManager;
 import com.todo.model.Program;
 import com.todo.repositories.ProgramRepository;
@@ -64,21 +65,28 @@ public class ProgramRepositoryMongoImpl implements ProgramRepository {
   }
 
   @Override
-  public List<Program> findProgramsByQuery(ProgramQuery programQuery) {
-    LOGGER.info("Retrieving Programs by Query : {}", programQuery);
-
-    return programMongoCollection.find(programQuery.toBsonFilter())
-        .sort(programQuery.nameOrderToBson())
-        .sort(programQuery.lastModificationDateOrderToBson())
-        .sort(programQuery.creationDateOrderToBson())
-        .skip(programQuery.getPageIndex())
-        .limit(programQuery.getPageSize())
-        .into(new ArrayList<>());
+  public DeleteResult deleteProgramById(UUID programId) {
+    LOGGER.info("Deleting Program. Id : {}", programId);
+    return programMongoCollection.deleteOne(eq(ID_FIELD, programId.toString()));
   }
 
   @Override
-  public DeleteResult deleteProgramById(UUID programId) {
-    LOGGER.info("Deletin Program. Id : {}", programId);
-    return programMongoCollection.deleteOne(eq(ID_FIELD, programId.toString()));
+  public Page<Program> find(ProgramQuery query) {
+    LOGGER.info("Retrieving Programs by Query : {}", query);
+    List<Program> programs = new ArrayList<>();
+    programMongoCollection.find(query.toBsonFilter())
+        .sort(query.nameOrderToBson())
+        .sort(query.lastModificationDateOrderToBson())
+        .sort(query.creationDateOrderToBson())
+        .skip(query.getPageIndex())
+        .limit(query.getPageSize())
+        .into(programs);
+    long count = programMongoCollection.countDocuments(query.toBsonFilter());
+    return new Page<>(
+        query.getPageIndex(),
+        query.getPageSize(),
+        count,
+        programs
+    );
   }
 }

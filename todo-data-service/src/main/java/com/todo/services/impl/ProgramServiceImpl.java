@@ -2,6 +2,7 @@ package com.todo.services.impl;
 
 import com.google.inject.Inject;
 import com.mongodb.client.result.DeleteResult;
+import com.todo.common.Page;
 import com.todo.exceptions.DataIntegrityException;
 import com.todo.exceptions.DataOperationException;
 import com.todo.model.Program;
@@ -56,8 +57,8 @@ public class ProgramServiceImpl implements ProgramService {
   }
 
   @Override
-  public List<Program> findProgramsByQuery(ProgramQuery programQuery) {
-    return this.programRepository.findProgramsByQuery(programQuery);
+  public Page<Program> findProgramsByQuery(ProgramQuery programQuery) {
+    return this.programRepository.find(programQuery);
   }
 
   @Override
