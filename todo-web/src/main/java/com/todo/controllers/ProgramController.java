@@ -3,6 +3,7 @@ package com.todo.controllers;
 import javax.inject.Inject;
 import com.todo.contents.ProgramContent;
 import com.todo.mappers.ProgramMapper;
+import com.todo.mappers.ProgramMapperDecorator;
 import com.todo.queries.ProgramQuery;
 import com.todo.services.ProgramService;
 import lombok.NoArgsConstructor;
@@ -24,7 +25,7 @@ import static javax.ws.rs.core.Response.Status.OK;
 public class ProgramController extends AbstractController {
 
   private ProgramService programService;
-  private ProgramMapper programMapper = ProgramMapper.INSTANCE;
+  private ProgramMapperDecorator programMapper = new ProgramMapperDecorator(ProgramMapper.INSTANCE);
 
   @Inject
   public ProgramController(ProgramService programService) {
@@ -39,14 +40,24 @@ public class ProgramController extends AbstractController {
 
     ProgramQuery programQuery = new ProgramQuery(queryParameters);
 
-    return Response.status(OK)
-        .entity(
-            programMapper.domainListToContentList(
-                programService.findProgramsByQuery(
-                    (com.todo.repositories.impl.queries.ProgramQuery) programQuery.toDomainQuery()
-                )
-            )
-        ).build();
+    if(!programQuery.isValid()) {
+      log.warn(
+          "Invalid parameters on call to /program/list/ : {}. Detailed error : {}",
+          queryParameters,
+          programQuery.errorMessage());
+      return Response
+          .status(Response.Status.BAD_REQUEST)
+          .build();
+    } else {
+      return Response.status(OK)
+          .entity(
+              programMapper.pageToProgramPageContent(
+                  programService.findProgramsByQuery(
+                      (com.todo.repositories.impl.queries.ProgramQuery) programQuery.toDomainQuery()
+                  )
+              )
+          ).build();
+    }
   }
 
   @GET
