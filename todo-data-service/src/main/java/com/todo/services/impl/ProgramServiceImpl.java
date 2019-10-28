@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,8 +36,10 @@ public class ProgramServiceImpl implements ProgramService {
           "programId", "To create a new program programId must be null"
       );
     } else {
-      program.setId(UUID.randomUUID());
       checkProgram(program);
+      program.setId(UUID.randomUUID());
+      program.setCreationDate(LocalDateTime.now());
+      program.setLastModificationDate(LocalDateTime.now());
       return this.programRepository.insertProgram(program);
     }
   }
@@ -47,6 +50,7 @@ public class ProgramServiceImpl implements ProgramService {
       throw new DataIntegrityException("programId", "To update a program programId is mandatory");
     } else {
       checkProgram(program);
+      program.setLastModificationDate(LocalDateTime.now());
       return this.programRepository.updateProgram(program);
     }
   }
