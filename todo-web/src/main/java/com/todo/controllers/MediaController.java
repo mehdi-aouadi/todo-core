@@ -2,6 +2,7 @@ package com.todo.controllers;
 
 import com.todo.contents.MediaContent;
 import com.todo.mappers.MediaMapper;
+import com.todo.mappers.MediaMapperDecorator;
 import com.todo.queries.MediaQuery;
 import com.todo.services.MediaService;
 import lombok.NoArgsConstructor;
@@ -24,7 +25,7 @@ import static javax.ws.rs.core.Response.Status.OK;
 public class MediaController extends AbstractController {
 
   private MediaService mediaService;
-  private MediaMapper mediaMapper = MediaMapper.INSTANCE;
+  private MediaMapperDecorator mediaMapper = new MediaMapperDecorator(MediaMapper.INSTANCE);
 
   @Inject
   public MediaController(MediaService mediaService) {
@@ -36,14 +37,25 @@ public class MediaController extends AbstractController {
   public Response listMedia(@Context UriInfo uriInfo) {
     MultivaluedMap<String, String> queryParameters = uriInfo.getQueryParameters();
     MediaQuery mediaQuery = new MediaQuery(queryParameters);
-    return Response.status(OK)
-        .entity(
-            mediaMapper.domainListToContentList(
-                mediaService.findMediasByQuery(
-                    (com.todo.repositories.impl.queries.MediaQuery) mediaQuery.toDomainQuery()
-                )
-            )
-        ).build();
+
+    if(!mediaQuery.isValid()) {
+      log.warn(
+          "Invalid parameters on call to /program/list/ : {}. Detailed error : {}",
+          queryParameters,
+          mediaQuery.errorMessage());
+      return Response
+          .status(Response.Status.BAD_REQUEST)
+          .build();
+    } else {
+      return Response.status(OK)
+          .entity(
+              mediaMapper.pageToMediaPageContent(
+                  mediaService.findMediasByQuery(
+                      (com.todo.repositories.impl.queries.MediaQuery) mediaQuery.toDomainQuery()
+                  )
+              )
+          ).build();
+    }
   }
 
   @GET

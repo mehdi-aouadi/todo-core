@@ -1,6 +1,7 @@
 package com.todo.repositories;
 
 import com.mongodb.client.result.DeleteResult;
+import com.todo.common.Page;
 import com.todo.model.Media;
 import com.todo.repositories.impl.queries.MediaQuery;
 
@@ -13,7 +14,7 @@ public interface MediaRepository {
   Media insertMedia(Media media);
   Optional<Media> findMediaById(UUID mediaId);
   Optional<Media> updateMedia(Media media);
-  List<Media> findByQuery(MediaQuery mediaQuery);
+  Page<Media> findByQuery(MediaQuery mediaQuery);
   DeleteResult deleteMediaById(UUID mediaId);
 
 }

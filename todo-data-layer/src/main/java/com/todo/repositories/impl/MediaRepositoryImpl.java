@@ -2,6 +2,7 @@ package com.todo.repositories.impl;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.result.DeleteResult;
+import com.todo.common.Page;
 import com.todo.dbutils.MongoDbManager;
 import com.todo.model.Media;
 import com.todo.repositories.MediaRepository;
@@ -56,15 +57,23 @@ public class MediaRepositoryImpl implements MediaRepository {
   }
 
   @Override
-  public List<Media> findByQuery(MediaQuery mediaQuery) {
+  public Page<Media> findByQuery(MediaQuery mediaQuery) {
     LOGGER.info("Retrieving Medias by MediaQuery {}", mediaQuery);
-    return mediaMongoCollection.find()
+    List<Media> medias = new ArrayList<>();
+    mediaMongoCollection.find()
         .sort(mediaQuery.nameOrderToBson())
         .sort(mediaQuery.lastModificationDateOrderToBson())
         .sort(mediaQuery.creationDateOrderToBson())
         .skip(mediaQuery.getPageIndex() * mediaQuery.getPageSize())
         .limit(mediaQuery.getPageSize())
-        .into(new ArrayList<>());
+        .into(medias);
+    long count = mediaMongoCollection.countDocuments(mediaQuery.toBsonFilter());
+    return new Page<>(
+        mediaQuery.getPageIndex(),
+        mediaQuery.getPageSize(),
+        count,
+        medias
+    );
   }
 
   @Override

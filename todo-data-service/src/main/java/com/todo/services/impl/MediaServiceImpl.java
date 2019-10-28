@@ -1,5 +1,6 @@
 package com.todo.services.impl;
 
+import com.todo.common.Page;
 import com.todo.exceptions.DataIntegrityException;
 import com.todo.model.Media;
 import com.todo.repositories.MediaRepository;
@@ -57,7 +58,7 @@ public class MediaServiceImpl implements MediaService {
   }
 
   @Override
-  public List<Media> findMediasByQuery(MediaQuery mediaQuery) {
+  public Page<Media> findMediasByQuery(MediaQuery mediaQuery) {
     return mediaRepository.findByQuery(mediaQuery);
   }
 

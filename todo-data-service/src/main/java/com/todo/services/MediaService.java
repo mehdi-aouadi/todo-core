@@ -1,5 +1,6 @@
 package com.todo.services;
 
+import com.todo.common.Page;
 import com.todo.model.Media;
 import com.todo.repositories.impl.queries.MediaQuery;
 
@@ -15,7 +16,7 @@ public interface MediaService {
 
   Optional<Media> findMediaById(UUID mediaId);
 
-  List<Media> findMediasByQuery(MediaQuery mediaQuery);
+  Page<Media> findMediasByQuery(MediaQuery mediaQuery);
 
   void deleteMediaById(UUID mediaId);
 
