@@ -77,7 +77,7 @@ public class TaskRepositoryMongoImpl implements TaskRepository {
         .sort(taskQuery.nameOrderToBson())
         .sort(taskQuery.lastModificationDateOrderToBson())
         .sort(taskQuery.creationDateOrderToBson())
-        .skip(taskQuery.getPageIndex())
+        .skip(taskQuery.getPageIndex() * taskQuery.getPageSize())
         .limit(taskQuery.getPageSize())
         .into(new ArrayList<>());
 
