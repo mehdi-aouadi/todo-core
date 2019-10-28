@@ -100,7 +100,7 @@ public class UserRepositoryMongoImpl implements UserRepository {
             assignedProgram.getProgram().getName().toLowerCase().matches(
                 "(.)*" + assignedProgramQuery.getName().toLowerCase() + "(.)*")
         )
-        .skip(assignedProgramQuery.getPageIndex())
+        .skip(assignedProgramQuery.getPageIndex() * assignedProgramQuery.getPageSize())
         .limit(assignedProgramQuery.getPageSize())
         .collect(Collectors.toList());
   }

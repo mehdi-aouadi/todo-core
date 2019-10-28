@@ -78,7 +78,7 @@ public class ProgramRepositoryMongoImpl implements ProgramRepository {
         .sort(query.nameOrderToBson())
         .sort(query.lastModificationDateOrderToBson())
         .sort(query.creationDateOrderToBson())
-        .skip(query.getPageIndex())
+        .skip(query.getPageIndex() * query.getPageSize())
         .limit(query.getPageSize())
         .into(programs);
     long count = programMongoCollection.countDocuments(query.toBsonFilter());

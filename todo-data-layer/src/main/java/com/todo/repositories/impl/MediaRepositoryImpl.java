@@ -62,7 +62,7 @@ public class MediaRepositoryImpl implements MediaRepository {
         .sort(mediaQuery.nameOrderToBson())
         .sort(mediaQuery.lastModificationDateOrderToBson())
         .sort(mediaQuery.creationDateOrderToBson())
-        .skip(mediaQuery.getPageIndex())
+        .skip(mediaQuery.getPageIndex() * mediaQuery.getPageSize())
         .limit(mediaQuery.getPageSize())
         .into(new ArrayList<>());
   }
