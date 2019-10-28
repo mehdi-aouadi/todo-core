@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,8 +21,8 @@ public class User extends Entity {
 
   @Builder
   public User(UUID id,
-              LocalDateTime creationDate,
-              LocalDateTime lastModificationDate,
+              Instant creationDate,
+              Instant lastModificationDate,
               UserProfile userProfile,
               String password,
               List<AssignedProgram> assignedPrograms,

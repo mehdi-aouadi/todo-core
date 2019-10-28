@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -35,8 +36,8 @@ public class MediaServiceImpl implements MediaService {
     } else {
       checkMedia(media);
       media.setId(UUID.randomUUID());
-      media.setCreationDate(LocalDateTime.now());
-      media.setLastModificationDate(LocalDateTime.now());
+      media.setCreationDate(Instant.now());
+      media.setLastModificationDate(Instant.now());
       return this.mediaRepository.insertMedia(media);
     }
   }
@@ -47,7 +48,7 @@ public class MediaServiceImpl implements MediaService {
       throw new DataIntegrityException("mediaId", "To update a Media mediaId is mandatory");
     } else {
       checkMedia(media);
-      media.setLastModificationDate(LocalDateTime.now());
+      media.setLastModificationDate(Instant.now());
       return this.mediaRepository.updateMedia(media);
     }
   }

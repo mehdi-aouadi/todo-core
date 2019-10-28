@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,8 +20,8 @@ public class UserHistory extends Entity {
 
   @Builder
   public UserHistory(UUID id,
-                     LocalDateTime creationDate,
-                     LocalDateTime lastModificationDate,
+                     Instant creationDate,
+                     Instant lastModificationDate,
                      Double score,
                      List<AssignedProgram> finishedAssignedPrograms,
                      List<AssignedProgram> cancelledAssignedPrograms) {

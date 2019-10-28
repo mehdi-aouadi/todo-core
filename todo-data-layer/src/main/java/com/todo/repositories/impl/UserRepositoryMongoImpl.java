@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -125,9 +126,9 @@ public class UserRepositoryMongoImpl implements UserRepository {
     Program programToAssign = programMongoCollection.find(eq(ID_FIELD, programId)).first();
     AssignedProgram assignedProgram = AssignedProgram.builder()
         .id(UUID.randomUUID())
-        .creationDate(LocalDateTime.now())
-        .lastModificationDate(LocalDateTime.now())
-        .enrollmentDate(LocalDateTime.now())
+        .creationDate(Instant.now())
+        .lastModificationDate(Instant.now())
+        .enrollmentDate(Instant.now())
         .startDate(null)
         .endDate(null)
         .program(programToAssign)

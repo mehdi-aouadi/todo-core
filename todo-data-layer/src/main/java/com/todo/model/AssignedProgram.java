@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Data
@@ -13,18 +13,18 @@ import java.util.UUID;
 @NoArgsConstructor
 public class AssignedProgram extends Entity {
 
-  private LocalDateTime enrollmentDate;
-  private LocalDateTime startDate;
-  private LocalDateTime endDate;
+  private Instant enrollmentDate;
+  private Instant startDate;
+  private Instant endDate;
   private Program program;
 
   @Builder
   public AssignedProgram(UUID id,
-                         LocalDateTime creationDate,
-                         LocalDateTime lastModificationDate,
-                         LocalDateTime enrollmentDate,
-                         LocalDateTime startDate,
-                         LocalDateTime endDate,
+                         Instant creationDate,
+                         Instant lastModificationDate,
+                         Instant enrollmentDate,
+                         Instant startDate,
+                         Instant endDate,
                          Program program) {
     super(id, creationDate, lastModificationDate);
     this.enrollmentDate = enrollmentDate;
