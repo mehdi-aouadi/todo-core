@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -41,6 +42,8 @@ public class UserServiceImpl implements UserService {
     user.setId(UUID.randomUUID());
     user.getUserProfile().setId(UUID.randomUUID());
     user.getUserHistory().setId(UUID.randomUUID());
+    user.setCreationDate(LocalDateTime.now());
+    user.setLastModificationDate(LocalDateTime.now());
     return userRepository.insertUser(user);
   }
 
@@ -50,6 +53,7 @@ public class UserServiceImpl implements UserService {
       throw new DataIntegrityException("userId", "To update a User userId is mandatory");
     } else {
       checkUserForUpdate(user);
+      user.setLastModificationDate(LocalDateTime.now());
       return userRepository.updateUser(user);
     }
   }

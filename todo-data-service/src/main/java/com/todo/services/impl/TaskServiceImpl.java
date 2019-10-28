@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,12 +34,14 @@ public class TaskServiceImpl implements TaskService {
   }
 
   @Override
-  public Task insertTask(Task task) throws DataIntegrityException {
+  public Task createTask(Task task) throws DataIntegrityException {
     if(task.getId() != null) {
       throw new DataIntegrityException("taskId", "To create a new Task taskId must be null.");
     } else {
-      task.setId(UUID.randomUUID());
       checkTask(task);
+      task.setId(UUID.randomUUID());
+      task.setCreationDate(LocalDateTime.now());
+      task.setLastModificationDate(LocalDateTime.now());
       return taskRepository.insertTask(task);
     }
   }
@@ -48,8 +51,9 @@ public class TaskServiceImpl implements TaskService {
     if(task.getId() == null) {
       throw new DataIntegrityException("taskId", "To update a Task taskId is mandatory");
     } else {
-      task.setId(UUID.randomUUID());
       checkTask(task);
+      task.setId(UUID.randomUUID());
+      task.setLastModificationDate(LocalDateTime.now());
       return taskRepository.updateTask(task);
     }
   }

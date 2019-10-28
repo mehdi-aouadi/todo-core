@@ -57,7 +57,7 @@ public class TaskControllerTest extends JerseyTest {
     taskContentForPost.setMediaIds(Arrays.asList(UUID.randomUUID(), UUID.randomUUID()));
     taskContentForPost.setStartDate(LocalDateTime.now());
 
-    Mockito.doReturn(TaskMapper.INSTANCE.contentToDomain(taskContentForPost)).when(taskServiceMock).insertTask(Mockito.any(Task.class));
+    Mockito.doReturn(TaskMapper.INSTANCE.contentToDomain(taskContentForPost)).when(taskServiceMock).createTask(Mockito.any(Task.class));
     Mockito.doReturn(TaskMapper.INSTANCE.contentToDomain(taskContentForPost)).when(taskServiceMock).findTaskById(Mockito.any(UUID.class));
 
     Entity<TaskContent> taskContentEntity = Entity.entity(taskContentForPost,
