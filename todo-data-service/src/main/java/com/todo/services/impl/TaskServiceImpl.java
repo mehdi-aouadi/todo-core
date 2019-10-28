@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -40,8 +41,8 @@ public class TaskServiceImpl implements TaskService {
     } else {
       checkTask(task);
       task.setId(UUID.randomUUID());
-      task.setCreationDate(LocalDateTime.now());
-      task.setLastModificationDate(LocalDateTime.now());
+      task.setCreationDate(Instant.now());
+      task.setLastModificationDate(Instant.now());
       return taskRepository.insertTask(task);
     }
   }
@@ -53,7 +54,7 @@ public class TaskServiceImpl implements TaskService {
     } else {
       checkTask(task);
       task.setId(UUID.randomUUID());
-      task.setLastModificationDate(LocalDateTime.now());
+      task.setLastModificationDate(Instant.now());
       return taskRepository.updateTask(task);
     }
   }

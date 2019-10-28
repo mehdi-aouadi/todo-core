@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,20 +20,20 @@ public class Task extends Entity {
   private String description;
   private Duration duration;
   private List<UUID> mediaIds;
-  private LocalDateTime startDate;
-  private LocalDateTime endDate;
+  private Instant startDate;
+  private Instant endDate;
 
   @Builder
   public Task(UUID id,
-              LocalDateTime creationDate,
-              LocalDateTime lastModificationDate,
+              Instant creationDate,
+              Instant lastModificationDate,
               String name,
               String summary,
               String description,
               Duration duration,
               List<UUID> mediaIds,
-              LocalDateTime startDate,
-              LocalDateTime endDate) {
+              Instant startDate,
+              Instant endDate) {
     super(id, creationDate, lastModificationDate);
     this.name = name;
     this.summary = summary;

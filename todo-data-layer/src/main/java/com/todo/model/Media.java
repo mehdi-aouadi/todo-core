@@ -5,8 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.net.URL;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Data
@@ -22,8 +21,8 @@ public class Media extends Entity {
 
   @Builder
   public Media(UUID id,
-               LocalDateTime creationDate,
-               LocalDateTime lastModificationDate,
+               Instant creationDate,
+               Instant lastModificationDate,
                String mediaName,
                MediaType type,
                String mediaResourceUrl,
