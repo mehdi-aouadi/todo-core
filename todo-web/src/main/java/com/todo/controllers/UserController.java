@@ -3,21 +3,20 @@ package com.todo.controllers;
 import com.todo.contents.UserContent;
 import com.todo.mappers.AssignedProgramMapper;
 import com.todo.mappers.UserMapper;
+import com.todo.model.User;
 import com.todo.queries.AssignedProgramQuery;
+import com.todo.services.AssignedProgramService;
 import com.todo.services.UserService;
 import lombok.NoArgsConstructor;
 
 import javax.inject.Inject;
 import javax.validation.constraints.Pattern;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
+import java.util.Optional;
 import java.util.UUID;
 
-import static javax.ws.rs.core.Response.Status.CREATED;
-import static javax.ws.rs.core.Response.Status.OK;
+import static javax.ws.rs.core.Response.Status.*;
 
 @Path("user")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -26,23 +25,30 @@ import static javax.ws.rs.core.Response.Status.OK;
 public class UserController extends AbstractController {
 
   private UserService userService;
+  private AssignedProgramService assignedProgramService;
   private UserMapper userMapper = UserMapper.INSTANCE;
   private AssignedProgramMapper assignedProgramMapper = AssignedProgramMapper.INSTANCE;
 
   @Inject
-  public UserController(UserService userService) {
+  public UserController(UserService userService,
+                        AssignedProgramService assignedProgramService) {
     this.userService = userService;
+    this.assignedProgramService = assignedProgramService;
   }
 
   @GET
   public Response getUserByEmail(
       @QueryParam("userEmail") String userEmail
   ) {
-    return Response
-        .status(OK)
-        .entity(
-            userMapper.domainToContent(userService.findUserByEmail(userEmail)))
-        .build();
+    Optional<User> user = userService.findByEmail(userEmail);
+    if(user.isPresent()) {
+      return Response
+              .status(OK)
+              .entity(userMapper.domainToContent(user.get()))
+              .build();
+    } else {
+      return Response.status(NOT_FOUND).build();
+    }
   }
 
   @GET
@@ -60,6 +66,7 @@ public class UserController extends AbstractController {
   @GET
   @Path("/{userId}/assigned/program/{assignedProgramId}")
   public Response getUserAssignedProgram(
+          @Context UriInfo uriInfo,
       @PathParam("userId")
       @Pattern(regexp = UUID_PATTERN, message = "User Id must be a valid UUID.")
           UUID userId,
@@ -67,10 +74,12 @@ public class UserController extends AbstractController {
       @Pattern(regexp = UUID_PATTERN, message = "AssignedProgram Id must be a valid UUID.")
           UUID assignedProgramId
   ) {
+    MultivaluedMap<String, String> queryParameters = uriInfo.getQueryParameters();
+    com.todo.repositories.impl.queries.AssignedProgramQuery
     return Response
         .status(OK)
         .entity(assignedProgramMapper
-            .domainToContent(userService.findAssignedProgramById(userId, assignedProgramId))
+            .domainToContent(assignedProgramService.find(userId, assignedProgramId))
         ).build();
   }
 
@@ -112,7 +121,7 @@ public class UserController extends AbstractController {
 
   @POST
   public Response createNewUser(UserContent userContent) {
-    userService.createUser(userMapper.contentToDomain(userContent));
+    userService.insert(userMapper.contentToDomain(userContent));
     return Response.status(Response.Status.CREATED)
         .entity("User created successfully")
         .build();

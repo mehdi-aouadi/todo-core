@@ -12,7 +12,7 @@ public interface MediaService {
 
   Media createMedia(Media media);
 
-  Optional<Media> updteMedia(Media media);
+  Media updateMedia(Media media);
 
   Optional<Media> findMediaById(UUID mediaId);
 

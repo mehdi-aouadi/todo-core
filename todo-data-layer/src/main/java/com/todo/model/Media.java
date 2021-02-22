@@ -23,14 +23,14 @@ public class Media extends Entity {
   public Media(UUID id,
                Instant creationDate,
                Instant lastModificationDate,
-               String mediaName,
+               String name,
                MediaType type,
                String mediaResourceUrl,
                UUID adminUserIdCreatedBy,
                UUID adminUserIdLastModifiedBy) {
     super(id, creationDate, lastModificationDate);
     this.type = type;
-    this.name = mediaName;
+    this.name = name;
     this.resourceUrl = mediaResourceUrl;
     this.adminUserIdCreatedBy = adminUserIdCreatedBy;
     this.adminUserIdLastModifiedBy = adminUserIdLastModifiedBy;

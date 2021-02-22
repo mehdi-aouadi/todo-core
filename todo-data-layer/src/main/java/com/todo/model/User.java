@@ -16,7 +16,7 @@ public class User extends Entity {
 
   private UserProfile userProfile;
   private String password;
-  private List<AssignedProgram> assignedPrograms;
+  private List<UUID> assignedPrograms;
   private UserHistory userHistory;
 
   @Builder
@@ -25,7 +25,7 @@ public class User extends Entity {
               Instant lastModificationDate,
               UserProfile userProfile,
               String password,
-              List<AssignedProgram> assignedPrograms,
+              List<UUID> assignedPrograms,
               UserHistory userHistory) {
     super(id, creationDate, lastModificationDate);
     this.userProfile = userProfile;

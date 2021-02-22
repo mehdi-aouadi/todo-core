@@ -1,14 +1,8 @@
 package com.todo.modules;
 
 import com.google.inject.AbstractModule;
-import com.todo.repositories.MediaRepository;
-import com.todo.repositories.ProgramRepository;
-import com.todo.repositories.TaskRepository;
-import com.todo.repositories.UserRepository;
-import com.todo.repositories.impl.MediaRepositoryImpl;
-import com.todo.repositories.impl.ProgramRepositoryMongoImpl;
-import com.todo.repositories.impl.TaskRepositoryMongoImpl;
-import com.todo.repositories.impl.UserRepositoryMongoImpl;
+import com.todo.repositories.*;
+import com.todo.repositories.impl.*;
 
 public class DataServiceModule extends AbstractModule {
 
@@ -18,6 +12,7 @@ public class DataServiceModule extends AbstractModule {
     bind(UserRepository.class).to(UserRepositoryMongoImpl.class);
     bind(ProgramRepository.class).to(ProgramRepositoryMongoImpl.class);
     bind(MediaRepository.class).to(MediaRepositoryImpl.class);
+    bind(AssignedProgramRepository.class).to(AssignedProgramRepositoryMongoImpl.class);
   }
 
 }

@@ -5,18 +5,19 @@ import com.todo.model.Program;
 import com.todo.repositories.impl.queries.ProgramQuery;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface ProgramService {
 
-  Program createProgram(Program program);
+  Program insert(Program program);
 
-  Program updateProgram(Program program);
+  Program update(Program program);
 
-  Program findProgramById(UUID programTemplateId);
+  Optional<Program> findById(UUID programTemplateId);
 
-  Page<Program> findProgramsByQuery(ProgramQuery programQuery);
+  Page<Program> findByQuery(ProgramQuery programQuery);
 
-  void deleteProgramById(UUID programId);
+  void deleteById(UUID programId);
 
 }

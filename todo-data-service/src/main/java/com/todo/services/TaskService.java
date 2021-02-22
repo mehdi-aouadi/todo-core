@@ -1,21 +1,20 @@
 package com.todo.services;
 
+import com.todo.common.Page;
 import com.todo.model.Task;
 import com.todo.repositories.impl.queries.TaskQuery;
 
-import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface TaskService {
+    Task insert(Task task);
 
-  Task createTask(Task task);
+    Task update(Task task);
 
-  Task updateTask(Task task);
+    Optional<Task> findById(UUID taskId);
 
-  Task findTaskById(UUID taskId);
+    Page<Task> find(TaskQuery taskQuery);
 
-  List<Task> findTasksByQuery(TaskQuery taskQuery);
-
-  void deleteTaskById(UUID taskId);
-
+    void deleteById(UUID taskId);
 }

@@ -3,7 +3,6 @@ package com.todo.controllers;
 import com.todo.contents.TaskContent;
 import com.todo.mappers.TaskMapper;
 import com.todo.queries.TaskQuery;
-import com.todo.services.TaskService;
 import lombok.NoArgsConstructor;
 
 import javax.inject.Inject;
@@ -37,7 +36,7 @@ public class TaskController extends AbstractController {
 
     return Response.status(OK)
         .entity(taskMapper.domainToContent(
-            taskService.findTasksByQuery((com.todo.repositories.impl.queries.TaskQuery) taskQuery.toDomainQuery())))
+            taskService.find((com.todo.repositories.impl.queries.TaskQuery) taskQuery.toDomainQuery())))
         .build();
   }
 
@@ -50,7 +49,7 @@ public class TaskController extends AbstractController {
   ) {
     return Response.status(OK)
         .entity(taskMapper.domainToContent(
-            taskService.findTaskById(taskId)))
+            taskService.findById(taskId)))
         .build();
   }
 
@@ -59,7 +58,7 @@ public class TaskController extends AbstractController {
   public Response create(TaskContent taskContent) {
     TaskContent createdTask
         = taskMapper.domainToContent(
-        taskService.createTask(taskMapper.contentToDomain(taskContent)));
+        taskService.insert(taskMapper.contentToDomain(taskContent)));
     return Response.status(OK).entity(createdTask).build();
   }
 }

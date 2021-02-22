@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -18,8 +17,10 @@ public class Program extends Entity {
   private String name;
   private String description;
   private String introduction;
-  private List<UUID> taskList;
+  private List<Module> modules;
   private Duration duration;
+  private ProgramSubscription programSubscription;
+  private Double price;
 
   @Builder
   public Program(UUID id,
@@ -28,13 +29,17 @@ public class Program extends Entity {
                  String name,
                  String description,
                  String introduction,
-                 List<UUID> taskList,
-                 Duration duration) {
+                 List<Module> modules,
+                 Duration duration,
+                 ProgramSubscription programSubscription,
+                 Double price) {
     super(id, creationDate, lastModificationDate);
     this.name = name;
     this.description = description;
     this.introduction = introduction;
-    this.taskList = taskList;
+    this.modules = modules;
     this.duration = duration;
+    this.programSubscription = programSubscription;
+    this.price = price;
   }
 }

@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 import org.bson.conversions.Bson;
 
 import java.util.UUID;
@@ -32,6 +33,9 @@ public class AssignedProgramQuery extends Query {
     Bson filter = new BasicDBObject();
     if(this.userId != null) {
       filter = Filters.eq(ID_FIELD, this.userId);
+    }
+    if(!StringUtils.isBlank(this.name)) {
+      filter = Filters.and(filter, Filters.regex(PROGRAM_NAME_FIELD, this.name, "i"));
     }
     return filter;
   }

@@ -1,7 +1,10 @@
 package com.todo.services.impl;
 
+import com.mongodb.client.result.DeleteResult;
 import com.todo.common.Page;
 import com.todo.exceptions.DataIntegrityException;
+import com.todo.exceptions.DataOperation;
+import com.todo.exceptions.DataOperationException;
 import com.todo.model.Media;
 import com.todo.repositories.MediaRepository;
 import com.todo.repositories.impl.queries.MediaQuery;
@@ -12,14 +15,16 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @NoArgsConstructor
 @Slf4j
 public class MediaServiceImpl implements MediaService {
+
+  private static String MEDIA_ENTITY_NAME = Media.class.getSimpleName();
+  private static String MEDIA_ID_FIELD_NAME = "mediaId";
+  private static String MEDIA_NAME_FIELD_NAME = "mediaName";
 
   private MediaRepository mediaRepository;
 
@@ -31,26 +36,18 @@ public class MediaServiceImpl implements MediaService {
 
   @Override
   public Media createMedia(Media media) {
-    if(media.getId() != null) {
-      throw new DataIntegrityException("mediaId", "To create a new Media mediaId must be null");
-    } else {
-      checkMedia(media);
-      media.setId(UUID.randomUUID());
-      media.setCreationDate(Instant.now());
-      media.setLastModificationDate(Instant.now());
-      return this.mediaRepository.insertMedia(media);
-    }
+    checkMediaForCreation(media);
+    media.setId(UUID.randomUUID());
+    media.setCreationDate(Instant.now());
+    media.setLastModificationDate(Instant.now());
+    return this.mediaRepository.insertMedia(media);
   }
 
   @Override
-  public Optional<Media> updteMedia(Media media) {
-    if(media.getId() == null) {
-      throw new DataIntegrityException("mediaId", "To update a Media mediaId is mandatory");
-    } else {
-      checkMedia(media);
-      media.setLastModificationDate(Instant.now());
-      return this.mediaRepository.updateMedia(media);
-    }
+  public Media updateMedia(Media media) {
+    checkMediaForUpdate(media);
+    media.setLastModificationDate(Instant.now());
+    return this.mediaRepository.updateMedia(media);
   }
 
   @Override
@@ -60,17 +57,52 @@ public class MediaServiceImpl implements MediaService {
 
   @Override
   public Page<Media> findMediasByQuery(MediaQuery mediaQuery) {
-    return mediaRepository.findByQuery(mediaQuery);
+    return mediaRepository.find(mediaQuery);
   }
 
   @Override
   public void deleteMediaById(UUID mediaId) {
-    mediaRepository.deleteMediaById(mediaId);
+    DeleteResult deleteResult = mediaRepository.deleteMediaById(mediaId);
+    if(!deleteResult.wasAcknowledged() || deleteResult.getDeletedCount() == 0) {
+      throw DataOperationException.builder()
+              .entityName(MEDIA_ENTITY_NAME)
+              .dataOperation(DataOperation.DELETE)
+              .message("Unable to delete Media with id " + mediaId.toString())
+              .build();
+    }
   }
 
-  private void checkMedia(Media media) {
+  private void checkMediaForCreation(Media media) {
+    if(media.getId() != null) {
+      throw DataIntegrityException.builder()
+              .entityName(Media.class.getSimpleName())
+              .fieldName(MEDIA_ID_FIELD_NAME)
+              .message("To insert a new Media, Id must be null. Media : " + media)
+              .build();
+    }
     if(StringUtils.isBlank(media.getName())) {
-      throw new DataIntegrityException("Media Name", "Media Name is manadatory");
+      throw DataIntegrityException.builder()
+              .entityName(Media.class.getSimpleName())
+              .fieldName(MEDIA_NAME_FIELD_NAME)
+              .message("Cannot insert Media. Missing Media NAme. Media : " + media)
+              .build();
+    }
+  }
+
+  private void checkMediaForUpdate(Media media) {
+    if(media.getId() == null) {
+      throw DataIntegrityException.builder()
+              .entityName(Media.class.getSimpleName())
+              .fieldName(MEDIA_ID_FIELD_NAME)
+              .message("Cannot update a Media with a null Id. Media : " + media)
+              .build();
+    }
+    if(StringUtils.isBlank(media.getName())) {
+      throw DataIntegrityException.builder()
+              .entityName(Media.class.getSimpleName())
+              .fieldName(MEDIA_NAME_FIELD_NAME)
+              .message("Media NAme is mandatory. Cannot update a Media with a null name. Media : " + media)
+              .build();
     }
   }
 }
