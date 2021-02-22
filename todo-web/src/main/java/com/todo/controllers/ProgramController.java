@@ -52,7 +52,7 @@ public class ProgramController extends AbstractController {
       return Response.status(OK)
           .entity(
               programMapper.pageToProgramPageContent(
-                  programService.findProgramsByQuery(
+                  programService.findByQuery(
                       (com.todo.repositories.impl.queries.ProgramQuery) programQuery.toDomainQuery()
                   )
               )
@@ -69,7 +69,7 @@ public class ProgramController extends AbstractController {
     return Response.status(OK)
         .entity(
             programMapper.domainToContent(
-                programService.findProgramById(programId)
+                programService.findById(programId)
             )
         ).build();
   }
@@ -79,7 +79,7 @@ public class ProgramController extends AbstractController {
   public Response createProgram(ProgramContent programContent) {
     return Response.status(CREATED).entity(
         programMapper.domainToContent(
-            programService.createProgram(
+            programService.insert(
                 programMapper.contentToDomain(programContent)
             )
         )

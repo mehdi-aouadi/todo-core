@@ -15,32 +15,29 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Task extends Entity {
 
+  private UUID programId;
+  private UUID moduleId;
   private String name;
   private String summary;
   private String description;
-  private Duration duration;
-  private List<UUID> mediaIds;
-  private Instant startDate;
-  private Instant endDate;
+  private List<Media> medias;
 
   @Builder
   public Task(UUID id,
               Instant creationDate,
               Instant lastModificationDate,
+              UUID programId,
+              UUID moduleId,
               String name,
               String summary,
               String description,
-              Duration duration,
-              List<UUID> mediaIds,
-              Instant startDate,
-              Instant endDate) {
+              List<Media> medias) {
     super(id, creationDate, lastModificationDate);
+    this.programId = programId;
+    this.moduleId = moduleId;
     this.name = name;
     this.summary = summary;
     this.description = description;
-    this.duration = duration;
-    this.mediaIds = mediaIds;
-    this.startDate = startDate;
-    this.endDate = endDate;
+    this.medias = medias;
   }
 }

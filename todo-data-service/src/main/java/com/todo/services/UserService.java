@@ -1,26 +1,34 @@
 package com.todo.services;
 
-import com.todo.model.AssignedProgram;
+import com.todo.exceptions.DataIntegrityException;
+import com.todo.exceptions.ResourceNotFoundException;
 import com.todo.model.User;
-import com.todo.repositories.impl.queries.AssignedProgramQuery;
 
-import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface UserService {
 
-  User findUserByEmail(String email);
+  Optional<User> findByEmail(String email);
 
-  User createUser(User user);
+  Optional<User> findById(UUID userId);
 
-  User updateUser(User user);
+  User insert(User user);
+
+  User update(User user) throws ResourceNotFoundException;
 
   boolean userExists(String email);
 
-  List<AssignedProgram> findAssignedProgramsByQuery(AssignedProgramQuery assignedProgramQuery);
+  void deleteByEmail(String userEmail);
 
-  AssignedProgram findAssignedProgramById(UUID userId, UUID assignedProgramId);
+  void deleteById(UUID userId);
 
-  void addAssignedProgram(UUID programId, UUID userId);
+  void enrollProgram(UUID userId, UUID programId) throws DataIntegrityException;
+
+  void enrollProgram(String userEmail, UUID programId);
+
+  void withdrawProgram(String userEmail, UUID programId);
+
+  void withdrawProgram(UUID userId, UUID programId);
 
 }

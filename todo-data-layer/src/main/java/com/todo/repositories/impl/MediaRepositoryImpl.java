@@ -4,6 +4,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.result.DeleteResult;
 import com.todo.common.Page;
 import com.todo.dbutils.MongoDbManager;
+import com.todo.exceptions.ResourceNotFoundException;
 import com.todo.model.Media;
 import com.todo.repositories.MediaRepository;
 import com.todo.repositories.impl.queries.MediaQuery;
@@ -19,7 +20,7 @@ import static com.mongodb.client.model.Filters.eq;
 
 public class MediaRepositoryImpl implements MediaRepository {
 
-  private static final String ID_FIELD = "_id";
+  private static final String MEDIA_ID_FIELD = "_id";
 
   private static final Logger LOGGER = LoggerFactory.getLogger(MediaRepositoryImpl.class);
 
@@ -29,35 +30,34 @@ public class MediaRepositoryImpl implements MediaRepository {
   @Override
   public Media insertMedia(Media media) {
     LOGGER.info("Inserting Media : {} ", media.toString());
-    mediaMongoCollection.insertOne(media);
-    return Media.builder()
-        .id(media.getId())
-        .creationDate(media.getCreationDate())
-        .lastModificationDate(media.getLastModificationDate())
-        .mediaName(media.getName())
-        .type(media.getType())
-        .mediaResourceUrl(media.getResourceUrl())
-        .adminUserIdCreatedBy(media.getAdminUserIdCreatedBy())
-        .adminUserIdLastModifiedBy(media.getAdminUserIdLastModifiedBy())
-        .build();
+    try {
+      mediaMongoCollection.insertOne(media);
+      return media;
+    } catch (Exception e) {
+      LOGGER.error("Insert of Media {} failed due to internal error. Stack Trace : {}", media.getName(), e.getStackTrace().toString());
+      return null;
+    }
   }
 
   @Override
   public Optional<Media> findMediaById(UUID mediaId) {
     LOGGER.info("Retrieving Media with Id : {} ", mediaId.toString());
-    return Optional.ofNullable(mediaMongoCollection.find(eq(ID_FIELD, mediaId)).first());
+    return Optional.ofNullable(mediaMongoCollection.find(eq(MEDIA_ID_FIELD, mediaId)).first());
   }
 
   @Override
-  public Optional<Media> updateMedia(Media media) {
+  public Media updateMedia(Media media) throws ResourceNotFoundException {
     LOGGER.info("Updating Media : {} ", media.toString());
     return Optional.ofNullable(
-        mediaMongoCollection.findOneAndReplace(eq(ID_FIELD, media.getId()), media)
-    );
+        mediaMongoCollection.findOneAndReplace(eq(MEDIA_ID_FIELD, media.getId()), media)
+    ).orElseThrow(() -> ResourceNotFoundException.builder()
+            .entityName(Media.class.getSimpleName())
+            .message("Media with id " + media.getId() + " and name " + media.getName() + " not found to update")
+            .build());
   }
 
   @Override
-  public Page<Media> findByQuery(MediaQuery mediaQuery) {
+  public Page<Media> find(MediaQuery mediaQuery) {
     LOGGER.info("Retrieving Medias by MediaQuery {}", mediaQuery);
     List<Media> medias = new ArrayList<>();
     mediaMongoCollection.find()
@@ -79,6 +79,6 @@ public class MediaRepositoryImpl implements MediaRepository {
   @Override
   public DeleteResult deleteMediaById(UUID mediaId) {
     LOGGER.info("Deleting Media with Id : {}", mediaId.toString());
-    return mediaMongoCollection.deleteOne(eq(ID_FIELD, mediaId));
+    return mediaMongoCollection.deleteOne(eq(MEDIA_ID_FIELD, mediaId));
   }
 }

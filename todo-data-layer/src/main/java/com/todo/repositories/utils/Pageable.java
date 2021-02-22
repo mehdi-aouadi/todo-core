@@ -1,4 +1,4 @@
-package com.todo.repositories;
+package com.todo.repositories.utils;
 
 import com.todo.common.Page;
 import com.todo.common.Query;
@@ -11,8 +11,7 @@ import com.todo.common.Query;
 public interface Pageable<T extends Query, V> {
 
   /**
-   * Find data based on the query.
-   *
+   * Finds entities based on a query.
    * @param query the query {@link T}
    * @return Paginated collection of {@link V} items
    */

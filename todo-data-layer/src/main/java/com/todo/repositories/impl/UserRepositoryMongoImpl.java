@@ -1,158 +1,237 @@
 package com.todo.repositories.impl;
 
+import com.google.inject.Inject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Updates;
+import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.todo.dbutils.MongoDbManager;
+import com.todo.exceptions.DataOperation;
+import com.todo.exceptions.DataOperationException;
+import com.todo.exceptions.PersistenceException;
+import com.todo.exceptions.ResourceNotFoundException;
+import com.todo.model.AssignedModule;
 import com.todo.model.AssignedProgram;
 import com.todo.model.Program;
 import com.todo.model.User;
+import com.todo.repositories.AssignedProgramRepository;
+import com.todo.repositories.ProgramRepository;
 import com.todo.repositories.UserRepository;
-import com.todo.repositories.impl.queries.AssignedProgramQuery;
 import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.push;
 
 @NoArgsConstructor
 public class UserRepositoryMongoImpl implements UserRepository {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(UserRepositoryMongoImpl.class);
 
-  private static final String ID_FIELD = "_id";
+  private static final String USER_ENTITY_NAME = User.class.getSimpleName();
+  private static final String ASSIGNED_PROGRAM_ENTITY_NAME = AssignedProgram.class.getSimpleName();
+  private static final String USER_ID_FIELD = "_id";
+  private static final String USER_PROFILE_FIELD = "userProfile";
+  private static final String USER_EMAIL_FIELD = "email";
+  private static final String USER_ASSIGNED_PROGRAMS_FIELD = "assignedPrograms";
 
-  private final MongoCollection<Program> programMongoCollection
-      = MongoDbManager.getMongoCollection(Program.class);
+  private ProgramRepository programRepository;
+  private AssignedProgramRepository assignedProgramRepository;
 
   private final MongoCollection<User> userMongoCollection
       = MongoDbManager.getMongoCollection(User.class);
 
+  @Inject
+  public UserRepositoryMongoImpl(ProgramRepository programRepository,
+                                 AssignedProgramRepository assignedProgramRepository) {
+    this.programRepository = programRepository;
+    this.assignedProgramRepository = assignedProgramRepository;
+  }
+
   @Override
-  public User findUserByEmail(String userEmail) {
+  public Optional<User> findByEmail(String userEmail) {
     LOGGER.info("Retrieving User. Email : {}", userEmail);
-    return userMongoCollection.find(eq("email", userEmail)).first();
+    return Optional.ofNullable(userMongoCollection.find(eq(USER_PROFILE_FIELD + '.' + USER_EMAIL_FIELD, userEmail)).first());
   }
 
   @Override
-  public User insertUser(User user) {
-    LOGGER.info("Inserting User : {}", user.toString());
-    userMongoCollection.insertOne(user);
-    return User.builder()
-        .id(user.getId())
-        .creationDate(user.getCreationDate())
-        .lastModificationDate(user.getLastModificationDate())
-        .userProfile(user.getUserProfile())
-        .password(user.getPassword())
-        .assignedPrograms(user.getAssignedPrograms())
-        .userHistory(user.getUserHistory())
-        .build();
+  public Optional<User> findById(UUID userId) {
+    LOGGER.info("Retrieving User. Id : {}", userId);
+    return Optional.ofNullable(userMongoCollection.find(eq(USER_ID_FIELD, userId.toString())).first());
   }
 
   @Override
-  public User updateUser(User user) {
-    LOGGER.info("Updatig User : {}", user.toString());
-    userMongoCollection.findOneAndReplace(eq(ID_FIELD, user.getId()), user);
-    return User.builder()
-        .id(user.getId())
-        .creationDate(user.getCreationDate())
-        .lastModificationDate(user.getLastModificationDate())
-        .userProfile(user.getUserProfile())
-        .password(user.getPassword())
-        .assignedPrograms(user.getAssignedPrograms())
-        .userHistory(user.getUserHistory())
-        .build();
-  }
-
-  @Override
-  public boolean userExists(String userEmail) {
-    LOGGER.info("Checking if User exists. Email : {}", userEmail);
-    return userMongoCollection.find(eq("email", userEmail)).first() != null;
-  }
-
-  @Override
-  public void deleteUserByEmail(String userEmail) {
-    LOGGER.info("Deleting User. Email : {}", userEmail);
-    userMongoCollection.deleteOne(eq("email", userEmail));
-  }
-
-  @Override
-  public void deleteUserById(UUID userId) {
-    LOGGER.info("Deleting User. Id : {}", userId.toString());
-    userMongoCollection.deleteOne(eq(ID_FIELD, userId.toString()));
-  }
-
-  @Override
-  public List<AssignedProgram> findAssignedProgramsByQuery(AssignedProgramQuery assignedProgramQuery) {
-    LOGGER.info("Retrieving Assigned Programs by Query : {}", assignedProgramQuery);
-    return userMongoCollection
-        .find(assignedProgramQuery.toBsonFilter())
-        .first()
-        .getAssignedPrograms()
-        .stream()
-        .filter(assignedProgram ->
-            assignedProgram.getProgram().getName().toLowerCase().matches(
-                "(.)*" + assignedProgramQuery.getName().toLowerCase() + "(.)*")
-        )
-        .skip(assignedProgramQuery.getPageIndex() * assignedProgramQuery.getPageSize())
-        .limit(assignedProgramQuery.getPageSize())
-        .collect(Collectors.toList());
-  }
-
-  @Override
-  public Optional<AssignedProgram> findAssignedProgramsById(UUID userId, UUID assignedProgramId) {
-    LOGGER.info("Retrieving Assigned Programs with id {} of user id : {}",
-        assignedProgramId.toString(), userId.toString());
-    User user = userMongoCollection.find(eq(ID_FIELD, userId.toString())).first();
-    if (user == null) {
-      return Optional.empty();
-    } else {
-      return userMongoCollection.find(eq(ID_FIELD, userId.toString())).first()
-          .getAssignedPrograms().stream().filter(assignedProgram -> assignedProgram.getId().equals(assignedProgramId)).findFirst();
+  public User insert(User user) {
+    LOGGER.info("Inserting a new User : {}", user.toString());
+    try {
+      userMongoCollection.insertOne(user);
+      return user;
+    } catch (Exception e) {
+      LOGGER.error("Insert operation of User {} failed due to internal error. Stack Trace : {}",
+              user.getUserProfile().getEmail(),
+              e.getStackTrace().toString());
+      return null;
     }
   }
 
   @Override
-  public UpdateResult addAssignedProgram(UUID programId, UUID userId) {
-    LOGGER.info("Assigning Program {} to User {}",
-        programId.toString(), userId.toString());
-    Program programToAssign = programMongoCollection.find(eq(ID_FIELD, programId)).first();
+  public User update(User user) throws ResourceNotFoundException {
+    LOGGER.info("Updating User : {}", user.toString());
+    return Optional.ofNullable(userMongoCollection.findOneAndReplace(eq(USER_ID_FIELD, user.getId()), user))
+            .orElseThrow(() -> ResourceNotFoundException.builder()
+              .entityName(User.class.getSimpleName())
+              .message("User with id " + user.getId() + " to update not found")
+              .build());
+  }
+
+  @Override
+  public boolean userExists(String userEmail) {
+    LOGGER.info("Checking if User with email {} exists", userEmail);
+    return userMongoCollection.countDocuments(eq(USER_PROFILE_FIELD + "." + USER_EMAIL_FIELD, userEmail)) >= 0;
+  }
+
+  @Override
+  public boolean userExists(UUID userId) {
+    LOGGER.info("Checking if User with Id {} exists", userId.toString());
+    return userMongoCollection.countDocuments(eq(USER_ID_FIELD, userId.toString())) >= 0;
+  }
+
+  @Override
+  public DeleteResult deleteByEmail(String userEmail) {
+    LOGGER.info("Deleting User with email {}", userEmail);
+    return userMongoCollection.deleteOne(eq(USER_PROFILE_FIELD + "." + USER_EMAIL_FIELD, userEmail));
+  }
+
+  @Override
+  public DeleteResult deleteById(UUID userId) {
+    LOGGER.info("Deleting User with email {}", userId.toString());
+    return userMongoCollection.deleteOne(eq(USER_ID_FIELD, userId.toString()));
+  }
+
+  @Override
+  public UpdateResult enrollProgram(String userEmail, UUID programId) throws PersistenceException {
+    LOGGER.info("Assigning Program with id {} to User with email {}",
+            programId.toString(),
+            userEmail);
+    if(!this.userExists(userEmail)) {
+      LOGGER.error("Unable to enroll User with email {} to Program with Id {}. The user doesn't exist",
+              userEmail,
+              programId.toString()
+      );
+      throw ResourceNotFoundException.builder().entityName(USER_ENTITY_NAME)
+              .message("User with email " + userEmail + " does not exist")
+              .build();
+    }
+    Optional<User> user = this.findByEmail(userEmail);
+    return this.enrollUserToProgram(user.get().getId(), programId);
+  }
+
+  @Override
+  public UpdateResult enrollProgram(UUID userId, UUID programId) throws ResourceNotFoundException {
+    LOGGER.info("Assigning Program with id {} to User with Id {}",
+            programId.toString(),
+            userId.toString());
+    if(!this.userExists(userId)) {
+      LOGGER.error("Unable to enroll User with Id {} to Program with Id {}. The user doesn't exist",
+              userId.toString(),
+              programId.toString()
+      );
+      throw ResourceNotFoundException.builder().entityName(USER_ENTITY_NAME)
+              .message("User with Id " + userId.toString() + " does not exist")
+              .build();
+    }
+
+    return this.enrollUserToProgram(userId, programId);
+  }
+
+  private UpdateResult enrollUserToProgram(UUID userId, UUID programId) {
+    Optional<Program> programToAssign = programRepository.findById(programId);
+    if(!programToAssign.isPresent()) {
+      throw ResourceNotFoundException
+              .builder()
+              .entityName(Program.class.getSimpleName())
+              .message("Cannot find Program with id "
+                      + programId.toString()
+                      + " to assign to User with id "
+                      + userId.toString())
+              .build();
+    }
+    List<AssignedModule> assignedModules
+            = programToAssign.get().getModules().stream()
+            .map(programModule ->
+                    AssignedModule.builder()
+                            .id(UUID.randomUUID())
+                            .creationDate(Instant.now())
+                            .lastModificationDate(Instant.now())
+                            .userId(userId)
+                            .id(UUID.randomUUID())
+                            .moduleId(programModule.getId())
+                            .finished(false)
+                            .startDate(null)
+                            .endDate(null)
+                            .build())
+            .collect(Collectors.toList());
+
     AssignedProgram assignedProgram = AssignedProgram.builder()
-        .id(UUID.randomUUID())
-        .creationDate(Instant.now())
-        .lastModificationDate(Instant.now())
-        .enrollmentDate(Instant.now())
-        .startDate(null)
-        .endDate(null)
-        .program(programToAssign)
-        .build();
+            .id(UUID.randomUUID())
+            .creationDate(Instant.now())
+            .lastModificationDate(Instant.now())
+            .enrollmentDate(Instant.now())
+            .startDate(null)
+            .endDate(null)
+            .assignedModules(assignedModules)
+            .build();
+
+    AssignedProgram insertedAssignedProgram = assignedProgramRepository.insert(assignedProgram);
+
+    if(insertedAssignedProgram == null) {
+      LOGGER.error("Unable to insert Assigned Program with program Id {} (Program id {}, name {}) to user with Id {}",
+              programToAssign.get().getId(),
+              programToAssign.get().getName(),
+              assignedProgram.getProgramId(),
+              userId.toString());
+      throw DataOperationException.builder()
+              .entityName(AssignedProgram.class.getSimpleName())
+              .message("Unable to insert Assigned Program with id "
+                      + assignedProgram.getProgramId()
+                      + " (Program Id "
+                      + programToAssign.get().getId()
+                      + ", name "
+                      + programToAssign.get().getName()
+                      + ") to user with Id "
+                      + userId.toString()
+              ).dataOperation(DataOperation.INSERT)
+              .build();
+    }
+
     return userMongoCollection.updateOne(
-        eq("id", userId.toString()),
-        Updates.addToSet("assignedPrograms", assignedProgram));
+            eq(USER_ID_FIELD, userId.toString()),
+            push(USER_ASSIGNED_PROGRAMS_FIELD, programId.toString())
+    );
   }
 
   @Override
-  public Optional<AssignedProgram> findAssignedProgramById(UUID assignedProgramId, UUID userId) {
-    return userMongoCollection.find(eq(ID_FIELD,
-        userId.toString())).first().getAssignedPrograms()
-        .stream()
-        .filter(assignedProgram -> assignedProgram.getId().equals(assignedProgramId))
-        .findFirst();
+  public UpdateResult withdrawProgram(String userEmail, UUID programId) {
+    LOGGER.info("Removing Assigned Program {} to User with email {}",
+        programId.toString(), userEmail);
+    return userMongoCollection.updateOne(
+        eq(USER_PROFILE_FIELD + "." + USER_EMAIL_FIELD, userEmail),
+        Updates.pull(USER_ASSIGNED_PROGRAMS_FIELD, eq(programId.toString())));
   }
 
   @Override
-  public UpdateResult deleteAssignedProgram(UUID assignedProgramId, UUID userId) {
-    LOGGER.info("Removing Assigned Program {} to User {}",
-        assignedProgramId.toString(), userId.toString());
+  public UpdateResult withdrawProgram(UUID userId, UUID programId) {
+    LOGGER.info("Removing Assigned Program {} to User with Id {}",
+            programId.toString(), userId.toString());
     return userMongoCollection.updateOne(
-        eq("id", userId.toString()),
-        Updates.pull("assignedPrograms", eq(ID_FIELD, assignedProgramId.toString())));
+            eq(USER_ID_FIELD, userId.toString()),
+            Updates.pull(USER_ASSIGNED_PROGRAMS_FIELD, eq(programId.toString())));
   }
 }

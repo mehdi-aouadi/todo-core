@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -13,24 +14,30 @@ import java.util.UUID;
 @NoArgsConstructor
 public class AssignedProgram extends Entity {
 
+  private UUID userId;
   private Instant enrollmentDate;
   private Instant startDate;
   private Instant endDate;
-  private Program program;
+  private UUID programId;
+  private List<AssignedModule> assignedModules;
 
   @Builder
   public AssignedProgram(UUID id,
                          Instant creationDate,
                          Instant lastModificationDate,
+                         UUID userId,
                          Instant enrollmentDate,
                          Instant startDate,
                          Instant endDate,
-                         Program program) {
+                         UUID programId,
+                         List<AssignedModule> assignedModules) {
     super(id, creationDate, lastModificationDate);
+    this.userId = userId;
     this.enrollmentDate = enrollmentDate;
     this.startDate = startDate;
     this.endDate = endDate;
-    this.program = program;
+    this.programId = programId;
+    this.assignedModules = assignedModules;
   }
 
 }
