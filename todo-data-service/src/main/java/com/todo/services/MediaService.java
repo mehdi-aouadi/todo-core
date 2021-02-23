@@ -2,9 +2,8 @@ package com.todo.services;
 
 import com.todo.common.Page;
 import com.todo.model.Media;
-import com.todo.repositories.impl.queries.MediaQuery;
+import com.todo.repositories.queries.MediaQuery;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 

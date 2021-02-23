@@ -20,7 +20,7 @@ import java.util.UUID;
 public class UserContent extends Content {
 
   private UserProfileContent userProfile;
-  private List<AssignedProgram> assignedPrograms;
+  private List<UUID> assignedPrograms;
   private UserHistoryContent userHistory;
 
 }

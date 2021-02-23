@@ -7,7 +7,7 @@ import com.todo.exceptions.DataOperation;
 import com.todo.exceptions.DataOperationException;
 import com.todo.model.Media;
 import com.todo.repositories.MediaRepository;
-import com.todo.repositories.impl.queries.MediaQuery;
+import com.todo.repositories.queries.MediaQuery;
 import com.todo.services.MediaService;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -64,7 +64,7 @@ public class MediaServiceImpl implements MediaService {
   public void deleteMediaById(UUID mediaId) {
     DeleteResult deleteResult = mediaRepository.deleteMediaById(mediaId);
     if(!deleteResult.wasAcknowledged() || deleteResult.getDeletedCount() == 0) {
-      throw DataOperationException.builder()
+      throw new DataOperationException.DataOperationExceptionBuilder()
               .entityName(MEDIA_ENTITY_NAME)
               .dataOperation(DataOperation.DELETE)
               .message("Unable to delete Media with id " + mediaId.toString())
@@ -74,14 +74,14 @@ public class MediaServiceImpl implements MediaService {
 
   private void checkMediaForCreation(Media media) {
     if(media.getId() != null) {
-      throw DataIntegrityException.builder()
+      throw new DataIntegrityException.DataIntegrationExceptionBuilder()
               .entityName(Media.class.getSimpleName())
               .fieldName(MEDIA_ID_FIELD_NAME)
               .message("To insert a new Media, Id must be null. Media : " + media)
               .build();
     }
     if(StringUtils.isBlank(media.getName())) {
-      throw DataIntegrityException.builder()
+      throw new DataIntegrityException.DataIntegrationExceptionBuilder()
               .entityName(Media.class.getSimpleName())
               .fieldName(MEDIA_NAME_FIELD_NAME)
               .message("Cannot insert Media. Missing Media NAme. Media : " + media)
@@ -91,14 +91,14 @@ public class MediaServiceImpl implements MediaService {
 
   private void checkMediaForUpdate(Media media) {
     if(media.getId() == null) {
-      throw DataIntegrityException.builder()
+      throw new DataIntegrityException.DataIntegrationExceptionBuilder()
               .entityName(Media.class.getSimpleName())
               .fieldName(MEDIA_ID_FIELD_NAME)
               .message("Cannot update a Media with a null Id. Media : " + media)
               .build();
     }
     if(StringUtils.isBlank(media.getName())) {
-      throw DataIntegrityException.builder()
+      throw new DataIntegrityException.DataIntegrationExceptionBuilder()
               .entityName(Media.class.getSimpleName())
               .fieldName(MEDIA_NAME_FIELD_NAME)
               .message("Media NAme is mandatory. Cannot update a Media with a null name. Media : " + media)

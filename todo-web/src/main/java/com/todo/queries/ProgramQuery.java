@@ -2,7 +2,7 @@ package com.todo.queries;
 
 import javax.ws.rs.core.MultivaluedMap;
 
-public class ProgramQuery extends Query {
+public class ProgramQuery extends Query<com.todo.repositories.queries.ProgramQuery> {
 
   public static final String NAME = "name";
   public static final String ORDER_NAME = "orderName";
@@ -19,9 +19,9 @@ public class ProgramQuery extends Query {
   }
 
   @Override
-  protected com.todo.common.Query buildQuery() {
+  protected com.todo.repositories.queries.ProgramQuery buildQuery() {
     Page page = new Page(param(RANGE).orElse(null));
-    return com.todo.repositories.impl.queries.ProgramQuery.builder()
+    return com.todo.repositories.queries.ProgramQuery.builder()
         .pageIndex(page.getPageIndex())
         .pageSize(page.getPageSize())
         .name(param(NAME).orElse(null))

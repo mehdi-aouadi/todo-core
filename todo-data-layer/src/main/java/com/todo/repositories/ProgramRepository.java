@@ -1,10 +1,9 @@
 package com.todo.repositories;
 
 import com.mongodb.client.result.DeleteResult;
-import com.todo.common.Page;
 import com.todo.exceptions.ResourceNotFoundException;
 import com.todo.model.Program;
-import com.todo.repositories.impl.queries.ProgramQuery;
+import com.todo.repositories.queries.ProgramQuery;
 import com.todo.repositories.utils.Pageable;
 
 import java.util.Optional;

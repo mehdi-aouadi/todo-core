@@ -9,7 +9,7 @@ import com.todo.exceptions.DataOperationException;
 import com.todo.exceptions.PersistenceException;
 import com.todo.model.Task;
 import com.todo.repositories.TaskRepository;
-import com.todo.repositories.impl.queries.TaskQuery;
+import com.todo.repositories.queries.TaskQuery;
 import com.todo.services.TaskService;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -50,7 +50,7 @@ public class TaskServiceImpl implements TaskService {
     Task insertedTask = taskRepository.insert(task);
     if(insertedTask == null) {
       LOGGER.error("Unable to insert Task {} due to internal server error.", task.toString());
-      throw DataOperationException.builder()
+      throw new DataOperationException.DataOperationExceptionBuilder()
               .dataOperation(DataOperation.INSERT)
               .entityName(TASK_ENTITY_NAME)
               .message("Unable to create Task due to internal server error. Task : " + task.toString())
@@ -77,7 +77,7 @@ public class TaskServiceImpl implements TaskService {
   public void deleteById(UUID taskId) {
     DeleteResult deleteResult = taskRepository.deleteById(taskId);
     if(!deleteResult.wasAcknowledged() || deleteResult.getDeletedCount() == 0) {
-      throw DataOperationException.builder()
+      throw new DataOperationException.DataOperationExceptionBuilder()
               .dataOperation(DataOperation.DELETE)
               .entityName(TASK_ENTITY_NAME)
               .message("Unable to delete Task with id "
@@ -90,14 +90,14 @@ public class TaskServiceImpl implements TaskService {
   private void checkTaskForCreation(Task task) throws DataIntegrityException {
     if (task == null) {
       LOGGER.error("Unable to create a new Task. Value is null");
-      throw PersistenceException.builder()
+      throw new PersistenceException.PersistenceExceptionBuilder()
               .entityName(TASK_ENTITY_NAME)
               .message("Cannot create Task. Value is null")
               .build();
     }
     if (task.getId() != null) {
       LOGGER.error("Unable to create a new Task {} . Id must be null", task.toString());
-      throw DataIntegrityException.builder()
+      throw new DataIntegrityException.DataIntegrationExceptionBuilder()
               .entityName(TASK_ENTITY_NAME)
               .fieldName(TASK_ID_FIELD_NAME)
               .message("To create a new Task id must be null")
@@ -105,7 +105,7 @@ public class TaskServiceImpl implements TaskService {
     }
     if (task.getName() == null || StringUtils.isBlank(task.getName())) {
       LOGGER.error("Unable to create a new Task {} . The name field is mandatory", task.toString());
-      throw DataIntegrityException.builder()
+      throw new DataIntegrityException.DataIntegrationExceptionBuilder()
               .entityName(TASK_ENTITY_NAME)
               .fieldName(TASK_NAME_FIELD_NAME)
               .message("To create a new Task the name field is mandatory")
@@ -116,14 +116,14 @@ public class TaskServiceImpl implements TaskService {
   private void checkTaskForUpdate(Task task) throws DataIntegrityException {
     if (task == null) {
       LOGGER.error("Unable to update Task. Value is null");
-      throw PersistenceException.builder()
+      throw new PersistenceException.PersistenceExceptionBuilder()
               .entityName(TASK_ENTITY_NAME)
               .message("Cannot update Task. Value is null")
               .build();
     }
     if (task.getName() == null || StringUtils.isBlank(task.getName())) {
       LOGGER.error("Unable to create a new Task {} . The name field is mandatory", task.toString());
-      throw DataIntegrityException.builder()
+      throw new DataIntegrityException.DataIntegrationExceptionBuilder()
               .entityName(TASK_ENTITY_NAME)
               .fieldName(TASK_NAME_FIELD_NAME)
               .message("To create a new Task the name field is mandatory")

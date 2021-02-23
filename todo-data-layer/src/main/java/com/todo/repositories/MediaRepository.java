@@ -1,13 +1,11 @@
 package com.todo.repositories;
 
 import com.mongodb.client.result.DeleteResult;
-import com.todo.common.Page;
 import com.todo.exceptions.ResourceNotFoundException;
 import com.todo.model.Media;
-import com.todo.repositories.impl.queries.MediaQuery;
+import com.todo.repositories.queries.MediaQuery;
 import com.todo.repositories.utils.Pageable;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 

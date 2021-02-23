@@ -8,7 +8,7 @@ import com.todo.exceptions.DataOperation;
 import com.todo.exceptions.DataOperationException;
 import com.todo.model.Program;
 import com.todo.repositories.ProgramRepository;
-import com.todo.repositories.impl.queries.ProgramQuery;
+import com.todo.repositories.queries.ProgramQuery;
 import com.todo.services.ProgramService;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -64,7 +64,7 @@ public class ProgramServiceImpl implements ProgramService {
     DeleteResult deleteResult = programRepository.deleteById(programId);
     if(!deleteResult.wasAcknowledged() || deleteResult.getDeletedCount() == 0) {
       LOGGER.error("Cannot delete program with id {} due to an internal error.", programId);
-      throw DataOperationException.builder()
+      throw new DataOperationException.DataOperationExceptionBuilder()
               .entityName(PROGRAM_ENTITY_NAME)
               .message("Unable to delete program with Id " + programId + " due to internal error")
               .dataOperation(DataOperation.DELETE)
@@ -75,7 +75,7 @@ public class ProgramServiceImpl implements ProgramService {
   private void checkProgramForCreation(Program program) {
     if (program == null) {
       LOGGER.error("Cannot insert a null program.");
-      throw DataOperationException.builder()
+      throw new DataOperationException.DataOperationExceptionBuilder()
               .entityName(PROGRAM_ENTITY_NAME)
               .dataOperation(DataOperation.INSERT)
               .message("Unable to insert a null program")
@@ -83,7 +83,7 @@ public class ProgramServiceImpl implements ProgramService {
     }
     if (program.getId() != null) {
       LOGGER.error("To create a new program, the id field must be null. Program {}", program);
-      throw DataIntegrityException.builder()
+      throw new DataIntegrityException.DataIntegrationExceptionBuilder()
               .entityName(PROGRAM_ENTITY_NAME)
               .fieldName(PROGRAM_ID_FIELD_NAME)
               .message("To create a new Program id must be null. Program : " + program)
@@ -91,7 +91,7 @@ public class ProgramServiceImpl implements ProgramService {
     }
     if (StringUtils.isBlank(program.getName())) {
       LOGGER.error("To create a new program, the name field is mandatory. Program {}", program);
-      throw DataIntegrityException.builder()
+      throw new DataIntegrityException.DataIntegrationExceptionBuilder()
               .entityName(PROGRAM_ENTITY_NAME)
               .fieldName(PROGRAM_NAME_FIELD_NAME)
               .message("To create a new Program, name is mandatory. Program : " + program)
@@ -102,7 +102,7 @@ public class ProgramServiceImpl implements ProgramService {
   private void checkProgramForUpdate(Program program) {
     if (program == null) {
       LOGGER.error("Cannot update a program with null");
-      throw DataOperationException.builder()
+      throw new DataOperationException.DataOperationExceptionBuilder()
               .entityName(PROGRAM_ENTITY_NAME)
               .dataOperation(DataOperation.INSERT)
               .message("Unable to update a program with null")
@@ -110,7 +110,7 @@ public class ProgramServiceImpl implements ProgramService {
     }
     if(program.getId() == null) {
       LOGGER.error("Cannot update a program with null Id. Program {}", program);
-      throw DataIntegrityException.builder()
+      throw new DataIntegrityException.DataIntegrationExceptionBuilder()
               .entityName(PROGRAM_ENTITY_NAME)
               .fieldName(PROGRAM_ID_FIELD_NAME)
               .message("To update a program, Id is a mandatory field. Program : " + program)
@@ -118,7 +118,7 @@ public class ProgramServiceImpl implements ProgramService {
     }
     if (StringUtils.isBlank(program.getName())) {
       LOGGER.error("Cannot update a program without name. Program {}", program);
-      throw DataIntegrityException.builder()
+      throw new DataIntegrityException.DataIntegrationExceptionBuilder()
               .entityName(PROGRAM_ENTITY_NAME)
               .fieldName(PROGRAM_ID_FIELD_NAME)
               .message("To update a program, the name field is mandatory. Program : " + program)

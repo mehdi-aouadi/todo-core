@@ -2,9 +2,8 @@ package com.todo.services;
 
 import com.todo.common.Page;
 import com.todo.model.Program;
-import com.todo.repositories.impl.queries.ProgramQuery;
+import com.todo.repositories.queries.ProgramQuery;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 

@@ -7,7 +7,7 @@ import com.todo.dbutils.MongoDbManager;
 import com.todo.exceptions.ResourceNotFoundException;
 import com.todo.model.Media;
 import com.todo.repositories.MediaRepository;
-import com.todo.repositories.impl.queries.MediaQuery;
+import com.todo.repositories.queries.MediaQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +50,7 @@ public class MediaRepositoryImpl implements MediaRepository {
     LOGGER.info("Updating Media : {} ", media.toString());
     return Optional.ofNullable(
         mediaMongoCollection.findOneAndReplace(eq(MEDIA_ID_FIELD, media.getId()), media)
-    ).orElseThrow(() -> ResourceNotFoundException.builder()
+    ).orElseThrow(() -> new ResourceNotFoundException.ResourceNotFoundExceptionBuilder()
             .entityName(Media.class.getSimpleName())
             .message("Media with id " + media.getId() + " and name " + media.getName() + " not found to update")
             .build());

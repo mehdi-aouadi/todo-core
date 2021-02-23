@@ -7,11 +7,10 @@ import com.todo.dbutils.MongoDbManager;
 import com.todo.exceptions.ResourceNotFoundException;
 import com.todo.model.Program;
 import com.todo.repositories.ProgramRepository;
-import com.todo.repositories.impl.queries.ProgramQuery;
+import com.todo.repositories.queries.ProgramQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -47,7 +46,7 @@ public class ProgramRepositoryMongoImpl implements ProgramRepository {
   public Program update(Program program) throws ResourceNotFoundException {
     LOGGER.info("Inserting new Program : {}", program.toString());
     return Optional.ofNullable(programMongoCollection.findOneAndReplace(eq(PROGRAM_ID_FIELD_NAME, program.getId()), program))
-            .orElseThrow(() -> ResourceNotFoundException.builder()
+            .orElseThrow(() -> new ResourceNotFoundException.ResourceNotFoundExceptionBuilder()
             .entityName(Program.class.getSimpleName())
             .message("The program with id " + program.getId() + " and name " + program.getName() + " to update is not found")
             .build());

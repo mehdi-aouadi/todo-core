@@ -51,7 +51,7 @@ public class MediaController extends AbstractController {
           .entity(
               mediaMapper.pageToMediaPageContent(
                   mediaService.findMediasByQuery(
-                      (com.todo.repositories.impl.queries.MediaQuery) mediaQuery.toDomainQuery()
+                      mediaQuery.toDomainQuery()
                   )
               )
           ).build();

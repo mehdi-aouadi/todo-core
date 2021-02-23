@@ -1,13 +1,19 @@
 package com.todo.controllers;
 
+import com.todo.common.Page;
 import com.todo.contents.UserContent;
 import com.todo.mappers.AssignedProgramMapper;
+import com.todo.mappers.AssignedProgramMapperDecorator;
 import com.todo.mappers.UserMapper;
+import com.todo.model.AssignedProgram;
 import com.todo.model.User;
 import com.todo.queries.AssignedProgramQuery;
 import com.todo.services.AssignedProgramService;
 import com.todo.services.UserService;
+import com.todo.services.impl.ProgramServiceImpl;
 import lombok.NoArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.validation.constraints.Pattern;
@@ -24,10 +30,10 @@ import static javax.ws.rs.core.Response.Status.*;
 @NoArgsConstructor
 public class UserController extends AbstractController {
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+
   private UserService userService;
   private AssignedProgramService assignedProgramService;
-  private UserMapper userMapper = UserMapper.INSTANCE;
-  private AssignedProgramMapper assignedProgramMapper = AssignedProgramMapper.INSTANCE;
 
   @Inject
   public UserController(UserService userService,
@@ -44,7 +50,7 @@ public class UserController extends AbstractController {
     if(user.isPresent()) {
       return Response
               .status(OK)
-              .entity(userMapper.domainToContent(user.get()))
+              .entity(userMapper().domainToContent(user.get()))
               .build();
     } else {
       return Response.status(NOT_FOUND).build();
@@ -63,24 +69,26 @@ public class UserController extends AbstractController {
         .build();
   }
 
+  @POST
+  public Response createNewUser(UserContent userContent) {
+    userService.insert(userMapper().contentToDomain(userContent));
+    return Response.status(Response.Status.CREATED)
+            .entity("User created successfully")
+            .build();
+  }
+
   @GET
-  @Path("/{userId}/assigned/program/{assignedProgramId}")
+  @Path("/assigned/program/{assignedProgramId}")
   public Response getUserAssignedProgram(
-          @Context UriInfo uriInfo,
-      @PathParam("userId")
-      @Pattern(regexp = UUID_PATTERN, message = "User Id must be a valid UUID.")
-          UUID userId,
-      @PathParam("assignedProgramId")
-      @Pattern(regexp = UUID_PATTERN, message = "AssignedProgram Id must be a valid UUID.")
-          UUID assignedProgramId
-  ) {
-    MultivaluedMap<String, String> queryParameters = uriInfo.getQueryParameters();
-    com.todo.repositories.impl.queries.AssignedProgramQuery
-    return Response
-        .status(OK)
-        .entity(assignedProgramMapper
-            .domainToContent(assignedProgramService.find(userId, assignedProgramId))
-        ).build();
+          @PathParam("assignedProgramId")
+          @Pattern(regexp = UUID_PATTERN, message = "AssignedProgram Id must be a valid UUID.")
+              UUID assignedProgramId
+      ) {
+    return assignedProgramService.findById(assignedProgramId)
+            .map(assignedProgram
+                    -> Response.status(OK).entity(assignedProgramMapper().domainToContent(assignedProgram))
+                    .build()
+            ).orElse(Response.status(NOT_FOUND).build());
   }
 
   @GET
@@ -92,15 +100,19 @@ public class UserController extends AbstractController {
       @Context UriInfo uriInfo) {
     AssignedProgramQuery assignedProgramQuery
         = new AssignedProgramQuery(uriInfo.getQueryParameters(), userId);
-    return Response
-        .status(OK)
-        .entity(assignedProgramMapper
-            .domainListToContentList(
-                userService.findAssignedProgramsByQuery(
-                    (com.todo.repositories.impl.queries.AssignedProgramQuery)
-                        assignedProgramQuery.toDomainQuery()
-                ))
-        ).build();
+    if(assignedProgramQuery.isValid()) {
+      Page<AssignedProgram> assignedProgramPage = assignedProgramService.find(assignedProgramQuery.toDomainQuery());
+      return Response
+              .status(OK)
+              .entity(assignedProgramMapper().domainPageToContentPage(assignedProgramPage))
+              .build();
+    } else {
+      LOGGER.error("Invalid parameters on call to /user/{userId}/assigned/program/list : {}. Detailed error : {}",
+              userId.toString(),
+              assignedProgramQuery.errorMessage());
+      return Response.status(BAD_REQUEST).build();
+    }
+
   }
 
   @POST
@@ -111,19 +123,17 @@ public class UserController extends AbstractController {
           UUID userId,
       @PathParam("programId")
       @Pattern(regexp = UUID_PATTERN, message = "Program Id must be a valid UUID.")
-          UUID programId
-  ) {
-    userService.addAssignedProgram(programId, userId);
+          UUID programId) {
+    userService.enrollProgram(userId, programId);
     return Response
         .status(CREATED)
         .build();
   }
 
-  @POST
-  public Response createNewUser(UserContent userContent) {
-    userService.insert(userMapper.contentToDomain(userContent));
-    return Response.status(Response.Status.CREATED)
-        .entity("User created successfully")
-        .build();
+  private AssignedProgramMapperDecorator assignedProgramMapper() {
+    return new AssignedProgramMapperDecorator();
+  }
+  private UserMapper userMapper() {
+    return UserMapper.INSTANCE;
   }
 }

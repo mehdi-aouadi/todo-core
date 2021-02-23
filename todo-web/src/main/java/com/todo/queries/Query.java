@@ -12,13 +12,13 @@ import java.util.Optional;
 import static java.time.Instant.ofEpochMilli;
 import static java.util.stream.Collectors.joining;
 
-public abstract class Query {
+public abstract class Query<DQ extends com.todo.common.Query> {
 
   public static final String RANGE = "range";
   public static final int MAX_RANGE_LENGTH = 200;
 
   private final MultivaluedMap<String, String> queryParameters;
-  protected com.todo.common.Query query;
+  protected DQ query;
   protected Boolean valid;
   protected StringBuilder paramErrorsBuilder;
 
@@ -65,7 +65,7 @@ public abstract class Query {
    * @throws IllegalStateException If {@link Query#isValid()} hasn't been
    *                               called or it returns false.
    */
-  public com.todo.common.Query toDomainQuery()
+  public DQ toDomainQuery()
       throws IllegalStateException {
     if (valid == null) {
       throw new IllegalStateException("Check validity of parameters first by calling isValid()");
@@ -85,7 +85,7 @@ public abstract class Query {
     return query;
   }
 
-  protected abstract com.todo.common.Query buildQuery();
+  protected abstract DQ buildQuery();
 
 
   /**
@@ -116,7 +116,7 @@ public abstract class Query {
     return param(order).map(Order::valueOf).orElse(null);
   }
 
-  protected Optional<String> param(String paramName) {
+  public Optional<String> param(String paramName) {
     List<String> paramValues = queryParameters.get(paramName);
     if (paramValues == null || paramValues.size() < 1) {
       return Optional.empty();

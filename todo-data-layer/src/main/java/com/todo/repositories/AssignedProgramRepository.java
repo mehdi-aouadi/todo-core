@@ -1,9 +1,8 @@
 package com.todo.repositories;
 
 import com.mongodb.client.result.DeleteResult;
-import com.todo.common.Page;
 import com.todo.model.AssignedProgram;
-import com.todo.repositories.impl.queries.AssignedProgramQuery;
+import com.todo.repositories.queries.AssignedProgramQuery;
 import com.todo.repositories.utils.Pageable;
 
 import java.util.Optional;

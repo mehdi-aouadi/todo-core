@@ -1,9 +1,15 @@
 package com.todo.controllers;
 
+import com.todo.common.Page;
 import com.todo.contents.TaskContent;
 import com.todo.mappers.TaskMapper;
+import com.todo.mappers.TaskMapperDecorator;
+import com.todo.model.Task;
 import com.todo.queries.TaskQuery;
+import com.todo.services.TaskService;
 import lombok.NoArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.validation.constraints.Pattern;
@@ -11,7 +17,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.UUID;
 
-import static javax.ws.rs.core.Response.Status.OK;
+import static javax.ws.rs.core.Response.Status.*;
 
 @Path("task")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -19,8 +25,9 @@ import static javax.ws.rs.core.Response.Status.OK;
 @NoArgsConstructor
 public class TaskController extends AbstractController {
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+
   private TaskService taskService;
-  private TaskMapper taskMapper = TaskMapper.INSTANCE;
 
   @Inject
   public TaskController(TaskService taskService) {
@@ -33,11 +40,14 @@ public class TaskController extends AbstractController {
 
     MultivaluedMap<String, String> queryParameters = uriInfo.getQueryParameters();
     TaskQuery taskQuery = new TaskQuery(queryParameters);
-
-    return Response.status(OK)
-        .entity(taskMapper.domainToContent(
-            taskService.find((com.todo.repositories.impl.queries.TaskQuery) taskQuery.toDomainQuery())))
-        .build();
+    if(taskQuery.isValid()) {
+      Page<Task> taskPage = taskService.find(taskQuery.toDomainQuery());
+      return Response.status(OK).entity(taskMapper().domainPageToContentPage(taskPage)).build();
+    } else {
+      LOGGER.error("Invalid parameters on call to /task/list. Detailed error : {}",
+              taskQuery.errorMessage());
+      return Response.status(BAD_REQUEST).build();
+    }
   }
 
   @GET
@@ -47,18 +57,21 @@ public class TaskController extends AbstractController {
       @Pattern(regexp = UUID_PATTERN, message = "Task Id must be a valid UUID.")
           UUID taskId
   ) {
-    return Response.status(OK)
-        .entity(taskMapper.domainToContent(
-            taskService.findById(taskId)))
-        .build();
+    return taskService.findById(taskId).map(task ->
+            Response.status(OK).entity(taskMapper().domainToContent(task)).build())
+            .orElse(Response.status(NOT_FOUND).build());
   }
 
   @POST
   @Path("/")
   public Response create(TaskContent taskContent) {
     TaskContent createdTask
-        = taskMapper.domainToContent(
-        taskService.insert(taskMapper.contentToDomain(taskContent)));
+        = taskMapper().domainToContent(
+        taskService.insert(taskMapper().contentToDomain(taskContent)));
     return Response.status(OK).entity(createdTask).build();
+  }
+
+  private TaskMapperDecorator taskMapper() {
+    return new TaskMapperDecorator();
   }
 }

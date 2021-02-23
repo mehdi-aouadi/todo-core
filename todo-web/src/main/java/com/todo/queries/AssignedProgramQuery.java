@@ -3,14 +3,10 @@ package com.todo.queries;
 import javax.ws.rs.core.MultivaluedMap;
 import java.util.UUID;
 
-public class AssignedProgramQuery extends Query {
+public class AssignedProgramQuery extends Query<com.todo.repositories.queries.AssignedProgramQuery> {
 
   public static final String NAME = "name";
-  public static final String ORDER_NAME = "orderName";
-  public static final String ORDER_CREATION_DATE = "orderCreationDate";
-  public static final String ORDER_LAST_MODIFICATION_DATE = "orderLastModificationDate";
-
-  private UUID userId;
+  private final UUID userId;
 
   /**
    * Build a {@link Query} from HTTP query parameters.
@@ -23,9 +19,9 @@ public class AssignedProgramQuery extends Query {
   }
 
   @Override
-  protected com.todo.common.Query buildQuery() {
+  protected com.todo.repositories.queries.AssignedProgramQuery buildQuery() {
     Page page = new Page(param(RANGE).orElse(null));
-    return com.todo.repositories.impl.queries.AssignedProgramQuery.builder()
+    return com.todo.repositories.queries.AssignedProgramQuery.builder()
         .userId(this.userId)
         .pageIndex(page.getPageIndex())
         .pageSize(page.getPageSize())

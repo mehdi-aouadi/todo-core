@@ -8,7 +8,7 @@ import com.todo.model.Program;
 import com.todo.model.User;
 import com.todo.model.UserProfile;
 import com.todo.repositories.impl.UserRepositoryMongoImpl;
-import com.todo.repositories.impl.queries.AssignedProgramQuery;
+import com.todo.repositories.queries.AssignedProgramQuery;
 import org.bson.conversions.Bson;
 import org.junit.Before;
 import org.junit.Test;
