@@ -1,5 +1,6 @@
 package com.todo.contents;
 
+import com.todo.model.Module;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,7 @@ public class ProgramContent extends Content{
   private String name;
   private String description;
   private String introduction;
-  private List<UUID> modules;
+  private List<Module> modules;
   private DurationContent duration;
 
 }

@@ -14,8 +14,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.UUID;
 
-import static javax.ws.rs.core.Response.Status.CREATED;
-import static javax.ws.rs.core.Response.Status.OK;
+import static javax.ws.rs.core.Response.Status.*;
 
 @Path("program")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -25,7 +24,6 @@ import static javax.ws.rs.core.Response.Status.OK;
 public class ProgramController extends AbstractController {
 
   private ProgramService programService;
-  private ProgramMapperDecorator programMapper = new ProgramMapperDecorator(ProgramMapper.INSTANCE);
 
   @Inject
   public ProgramController(ProgramService programService) {
@@ -51,10 +49,8 @@ public class ProgramController extends AbstractController {
     } else {
       return Response.status(OK)
           .entity(
-              programMapper.pageToProgramPageContent(
-                  programService.findByQuery(
-                      (com.todo.repositories.impl.queries.ProgramQuery) programQuery.toDomainQuery()
-                  )
+              programMapper().pageToProgramPageContent(
+                  programService.findByQuery(programQuery.toDomainQuery())
               )
           ).build();
     }
@@ -66,23 +62,24 @@ public class ProgramController extends AbstractController {
       @PathParam("programId")
       @Pattern(regexp = UUID_PATTERN, message = "Program Id must be a valid UUID.")
           UUID programId) {
-    return Response.status(OK)
-        .entity(
-            programMapper.domainToContent(
-                programService.findById(programId)
-            )
-        ).build();
+      return programService.findById(programId).map(
+              program -> Response.status(OK).entity(programMapper().domainToContent(program)).build()
+      ).orElse(Response.status(NOT_FOUND).build());
   }
 
   @POST
   @Path("/")
   public Response createProgram(ProgramContent programContent) {
     return Response.status(CREATED).entity(
-        programMapper.domainToContent(
+        programMapper().domainToContent(
             programService.insert(
-                programMapper.contentToDomain(programContent)
+                programMapper().contentToDomain(programContent)
             )
         )
     ).build();
+  }
+
+  ProgramMapperDecorator programMapper() {
+      return new ProgramMapperDecorator();
   }
 }

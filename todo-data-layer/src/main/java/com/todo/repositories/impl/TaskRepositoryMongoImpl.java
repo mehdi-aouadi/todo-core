@@ -7,7 +7,7 @@ import com.todo.dbutils.MongoDbManager;
 import com.todo.exceptions.ResourceNotFoundException;
 import com.todo.model.Task;
 import com.todo.repositories.TaskRepository;
-import com.todo.repositories.impl.queries.TaskQuery;
+import com.todo.repositories.queries.TaskQuery;
 import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +51,7 @@ public class TaskRepositoryMongoImpl implements TaskRepository {
   public Task update(Task task) throws ResourceNotFoundException {
     LOGGER.info("Updating Task : {}", task.toString());
     return Optional.ofNullable(taskMongoCollection.findOneAndReplace(eq(ID_FIELD, task.getId()), task))
-            .orElseThrow(() -> ResourceNotFoundException.builder()
+            .orElseThrow(() -> new ResourceNotFoundException.ResourceNotFoundExceptionBuilder()
                     .entityName(Task.class.getSimpleName())
                     .message("Task with id " + task.getId() + " and name " + task.getName() + " not found to update")
                     .build()

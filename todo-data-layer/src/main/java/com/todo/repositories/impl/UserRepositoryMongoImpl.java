@@ -85,7 +85,7 @@ public class UserRepositoryMongoImpl implements UserRepository {
   public User update(User user) throws ResourceNotFoundException {
     LOGGER.info("Updating User : {}", user.toString());
     return Optional.ofNullable(userMongoCollection.findOneAndReplace(eq(USER_ID_FIELD, user.getId()), user))
-            .orElseThrow(() -> ResourceNotFoundException.builder()
+            .orElseThrow(() -> new ResourceNotFoundException.ResourceNotFoundExceptionBuilder()
               .entityName(User.class.getSimpleName())
               .message("User with id " + user.getId() + " to update not found")
               .build());
@@ -125,7 +125,7 @@ public class UserRepositoryMongoImpl implements UserRepository {
               userEmail,
               programId.toString()
       );
-      throw ResourceNotFoundException.builder().entityName(USER_ENTITY_NAME)
+      throw new ResourceNotFoundException.ResourceNotFoundExceptionBuilder().entityName(USER_ENTITY_NAME)
               .message("User with email " + userEmail + " does not exist")
               .build();
     }
@@ -143,7 +143,7 @@ public class UserRepositoryMongoImpl implements UserRepository {
               userId.toString(),
               programId.toString()
       );
-      throw ResourceNotFoundException.builder().entityName(USER_ENTITY_NAME)
+      throw new ResourceNotFoundException.ResourceNotFoundExceptionBuilder().entityName(USER_ENTITY_NAME)
               .message("User with Id " + userId.toString() + " does not exist")
               .build();
     }
@@ -154,8 +154,7 @@ public class UserRepositoryMongoImpl implements UserRepository {
   private UpdateResult enrollUserToProgram(UUID userId, UUID programId) {
     Optional<Program> programToAssign = programRepository.findById(programId);
     if(!programToAssign.isPresent()) {
-      throw ResourceNotFoundException
-              .builder()
+      throw new ResourceNotFoundException.ResourceNotFoundExceptionBuilder()
               .entityName(Program.class.getSimpleName())
               .message("Cannot find Program with id "
                       + programId.toString()
@@ -197,7 +196,7 @@ public class UserRepositoryMongoImpl implements UserRepository {
               programToAssign.get().getName(),
               assignedProgram.getProgramId(),
               userId.toString());
-      throw DataOperationException.builder()
+      throw new DataOperationException.DataOperationExceptionBuilder()
               .entityName(AssignedProgram.class.getSimpleName())
               .message("Unable to insert Assigned Program with id "
                       + assignedProgram.getProgramId()

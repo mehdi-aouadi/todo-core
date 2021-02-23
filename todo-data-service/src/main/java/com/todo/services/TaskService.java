@@ -2,7 +2,7 @@ package com.todo.services;
 
 import com.todo.common.Page;
 import com.todo.model.Task;
-import com.todo.repositories.impl.queries.TaskQuery;
+import com.todo.repositories.queries.TaskQuery;
 
 import java.util.Optional;
 import java.util.UUID;

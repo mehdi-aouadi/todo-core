@@ -2,7 +2,7 @@ package com.todo.queries;
 
 import javax.ws.rs.core.MultivaluedMap;
 
-public class TaskQuery extends Query {
+public class TaskQuery extends Query<com.todo.repositories.queries.TaskQuery> {
 
   public static final String NAME = "name";
   public static final String ORDER_NAME = "orderName";
@@ -19,9 +19,9 @@ public class TaskQuery extends Query {
   }
 
   @Override
-  protected com.todo.common.Query buildQuery() {
+  protected com.todo.repositories.queries.TaskQuery buildQuery() {
     Page page = new Page(param(RANGE).orElse(null));
-    return com.todo.repositories.impl.queries.TaskQuery.builder()
+    return com.todo.repositories.queries.TaskQuery.builder()
         .pageIndex(page.getPageIndex())
         .pageSize(page.getPageSize())
         .name(param(NAME).orElse(null))

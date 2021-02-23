@@ -1,4 +1,4 @@
-package com.todo.repositories.impl.queries;
+package com.todo.repositories.queries;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.model.Filters;

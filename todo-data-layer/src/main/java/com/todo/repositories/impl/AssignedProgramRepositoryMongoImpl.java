@@ -6,7 +6,7 @@ import com.todo.common.Page;
 import com.todo.dbutils.MongoDbManager;
 import com.todo.model.AssignedProgram;
 import com.todo.repositories.AssignedProgramRepository;
-import com.todo.repositories.impl.queries.AssignedProgramQuery;
+import com.todo.repositories.queries.AssignedProgramQuery;
 import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

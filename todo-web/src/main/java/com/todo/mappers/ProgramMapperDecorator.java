@@ -8,10 +8,9 @@ import lombok.AllArgsConstructor;
 
 import java.util.List;
 
-@AllArgsConstructor
 public class ProgramMapperDecorator implements ProgramMapper {
 
-  private ProgramMapper delegate;
+  private ProgramMapper delegate = ProgramMapper.INSTANCE;
 
   @Override
   public ProgramContent domainToContent(Program program) {

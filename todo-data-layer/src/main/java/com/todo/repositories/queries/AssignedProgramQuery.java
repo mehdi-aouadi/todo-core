@@ -1,4 +1,4 @@
-package com.todo.repositories.impl.queries;
+package com.todo.repositories.queries;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.model.Filters;
@@ -17,12 +17,16 @@ import java.util.UUID;
 @ToString(callSuper = true)
 public class AssignedProgramQuery extends Query {
 
+  private static final String PROGRAM_USER_ID_FIELD = "userId";
   private static final String PROGRAM_NAME_FIELD = "name";
-  private UUID userId;
-  private String name;
+  private final UUID userId;
+  private final String name;
 
   @Builder
-  protected AssignedProgramQuery(Integer pageIndex, Integer pageSize, UUID userId, String name) {
+  protected AssignedProgramQuery(Integer pageIndex,
+                                 Integer pageSize,
+                                 UUID userId,
+                                 String name) {
     super(pageIndex, pageSize);
     this.userId = userId;
     this.name = name;
@@ -31,11 +35,11 @@ public class AssignedProgramQuery extends Query {
   @Override
   public Bson toBsonFilter() {
     Bson filter = new BasicDBObject();
-    if(this.userId != null) {
-      filter = Filters.eq(ID_FIELD, this.userId);
+    if(userId != null) {
+      filter = Filters.eq(PROGRAM_USER_ID_FIELD, userId);
     }
     if(!StringUtils.isBlank(this.name)) {
-      filter = Filters.and(filter, Filters.regex(PROGRAM_NAME_FIELD, this.name, "i"));
+      filter = Filters.and(filter, Filters.regex(PROGRAM_NAME_FIELD, name, "i"));
     }
     return filter;
   }

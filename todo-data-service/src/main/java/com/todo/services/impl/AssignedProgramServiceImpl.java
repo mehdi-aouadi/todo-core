@@ -9,7 +9,7 @@ import com.todo.exceptions.DataOperationException;
 import com.todo.exceptions.PersistenceException;
 import com.todo.model.AssignedProgram;
 import com.todo.repositories.AssignedProgramRepository;
-import com.todo.repositories.impl.queries.AssignedProgramQuery;
+import com.todo.repositories.queries.AssignedProgramQuery;
 import com.todo.services.AssignedProgramService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +21,7 @@ import java.util.UUID;
 public class AssignedProgramServiceImpl implements AssignedProgramService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProgramServiceImpl.class);
+
     private static final String ASSIGNED_PROGRAM_ENTITY_NAME = AssignedProgram.class.getSimpleName();
     private static final String ASSIGNED_PROGRAM_ID_FIELD_NAME = "assignedProgramId";
     private static final String ASSIGNED_PROGRAM_PROGRAM_ID_FIELD_NAME = "programId";
@@ -43,7 +44,7 @@ public class AssignedProgramServiceImpl implements AssignedProgramService {
         if(insertedAssignedProgram == null) {
             LOGGER.error("Unable to insert Assigned Program due to internal server error. Assigned Program : "
             + assignedProgram.toString());
-            throw DataOperationException.builder()
+            throw new DataOperationException.DataOperationExceptionBuilder()
                     .dataOperation(DataOperation.INSERT)
                     .entityName(ASSIGNED_PROGRAM_ENTITY_NAME)
                     .message("Unable to insert Assigned Program due to internal server error")
@@ -64,7 +65,7 @@ public class AssignedProgramServiceImpl implements AssignedProgramService {
         DeleteResult deleteResult = assignedProgramRepository.deleteById(assignedProgramId);
         if(!deleteResult.wasAcknowledged() || deleteResult.getDeletedCount() == 0) {
             LOGGER.error("Unable to delete Assigned Program with Id {}", assignedProgramId);
-            throw DataOperationException.builder()
+            throw new DataOperationException.DataOperationExceptionBuilder()
                     .dataOperation(DataOperation.DELETE)
                     .entityName(ASSIGNED_PROGRAM_ENTITY_NAME)
                     .message("Unable to delete Assigned Program with Id " + assignedProgramId.toString())
@@ -80,7 +81,7 @@ public class AssignedProgramServiceImpl implements AssignedProgramService {
     private void checkAssignedProgramForCreation(AssignedProgram assignedProgram) {
         if(assignedProgram == null) {
             LOGGER.error("Cannot insert a null Assigned Program");
-            throw PersistenceException.builder()
+            throw new PersistenceException.PersistenceExceptionBuilder()
                     .entityName(ASSIGNED_PROGRAM_ENTITY_NAME)
                     .message("Cannot insert a null Assigned Program")
                     .build();
@@ -88,7 +89,7 @@ public class AssignedProgramServiceImpl implements AssignedProgramService {
         if(assignedProgram.getId() != null) {
             LOGGER.error("To create a new Assigned Program the Id field must be null. Assigned Program {}",
                     assignedProgram.toString());
-            throw DataIntegrityException.builder()
+            throw new DataIntegrityException.DataIntegrationExceptionBuilder()
                     .entityName(ASSIGNED_PROGRAM_ENTITY_NAME)
                     .fieldName(ASSIGNED_PROGRAM_ID_FIELD_NAME)
                     .message("To create a new Assigned Program the Id field must be null")
@@ -97,7 +98,7 @@ public class AssignedProgramServiceImpl implements AssignedProgramService {
         if(assignedProgram.getProgramId() == null) {
             LOGGER.error("To create a new Assigned Program the programId field is mandatory. Assigned Program {}",
                     assignedProgram.toString());
-            throw DataIntegrityException.builder()
+            throw new DataIntegrityException.DataIntegrationExceptionBuilder()
                     .entityName(ASSIGNED_PROGRAM_ENTITY_NAME)
                     .fieldName(ASSIGNED_PROGRAM_PROGRAM_ID_FIELD_NAME)
                     .message("To create a new Assigned Program the programId field is mandatory")

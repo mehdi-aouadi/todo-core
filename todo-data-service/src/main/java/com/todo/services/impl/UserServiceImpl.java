@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
     user.setLastModificationDate(Instant.now());
     User insertedUser = userRepository.insert(user);
     if (insertedUser == null) {
-      throw DataOperationException.builder()
+      throw new DataOperationException.DataOperationExceptionBuilder()
               .entityName(USER_ENTITY_NAME)
               .dataOperation(DataOperation.DELETE)
               .message("Unable to create the new User " + user.toString())
@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService {
     DeleteResult userDeleteResult = userRepository.deleteByEmail(userEmail);
     if(!userDeleteResult.wasAcknowledged() || userDeleteResult.getDeletedCount() == 0) {
       LOGGER.error("Unable to delete user with email {} due to internal server error", userEmail);
-      throw DataOperationException.builder()
+      throw new DataOperationException.DataOperationExceptionBuilder()
               .entityName(USER_ENTITY_NAME)
               .message("Unable to delete user with email " + userEmail)
               .dataOperation(DataOperation.DELETE)
@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
     DeleteResult userDeleteResult = userRepository.deleteById(userId);
     if(!userDeleteResult.wasAcknowledged() || userDeleteResult.getDeletedCount() == 0) {
       LOGGER.error("Unable to delete user with Id {} due to internal server error.", userId.toString());
-      throw DataOperationException.builder()
+      throw new DataOperationException.DataOperationExceptionBuilder()
               .entityName(USER_ENTITY_NAME)
               .message("Unable to delete user with Id " + userId.toString())
               .dataOperation(DataOperation.DELETE)
@@ -138,30 +138,28 @@ public class UserServiceImpl implements UserService {
       throw new IllegalArgumentException("User is null.");
     }
     if(user.getId() == null) {
-      throw DataIntegrityException
-              .builder()
+      throw new DataIntegrityException.DataIntegrationExceptionBuilder()
               .fieldName(USER_ID_FIELD_NAME)
               .entityName(USER_ENTITY_NAME)
               .message("To update a User userId is mandatory")
               .build();
     }
     if(user.getUserProfile().getId() != null) {
-      throw DataIntegrityException
-              .builder()
+      throw new DataIntegrityException.DataIntegrationExceptionBuilder()
               .entityName(UserProfile.class.getSimpleName())
               .fieldName(USER_PROFILE_ID_FIELD_NAME)
               .message("To create a new User userProfileId must be null")
               .build();
     }
     if(user.getUserHistory().getId() != null) {
-      throw DataIntegrityException.builder()
+      throw new DataIntegrityException.DataIntegrationExceptionBuilder()
               .fieldName(USER_HISTORY_ID_FIELD_NAME)
               .entityName(UserHistory.class.getSimpleName())
               .message("To create a new User userHistoryId must be null")
               .build();
     }
     if (StringUtils.isBlank(user.getUserProfile().getEmail())) {
-      throw DataIntegrityException.builder()
+      throw new DataIntegrityException.DataIntegrationExceptionBuilder()
               .entityName(USER_ENTITY_NAME)
               .fieldName(USER_EMAIL_FIELD_NAME)
               .message("Missing user email.")
@@ -174,14 +172,14 @@ public class UserServiceImpl implements UserService {
       throw new IllegalArgumentException("Cannot update User. User is null.");
     }
     if(user.getId() == null) {
-      throw DataIntegrityException.builder()
+      throw new DataIntegrityException.DataIntegrationExceptionBuilder()
               .entityName(USER_ENTITY_NAME)
               .fieldName(USER_ID_FIELD_NAME)
               .message("To update a user, Id is mandatory. User : " + user)
               .build();
     }
     if (StringUtils.isBlank(user.getUserProfile().getEmail())) {
-      throw DataIntegrityException.builder()
+      throw new DataIntegrityException.DataIntegrationExceptionBuilder()
               .entityName(USER_ENTITY_NAME)
               .fieldName(USER_EMAIL_FIELD_NAME)
               .message("Missing user email. USer : " + user)

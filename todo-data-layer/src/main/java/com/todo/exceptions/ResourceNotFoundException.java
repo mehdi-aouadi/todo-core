@@ -1,19 +1,32 @@
 package com.todo.exceptions;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @ToString(callSuper = true)
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
 public class ResourceNotFoundException extends PersistenceException {
 
-    public ResourceNotFoundException(String message,
-                                     String entityName) {
-        super(message, entityName);
+    public ResourceNotFoundException(ResourceNotFoundExceptionBuilder resourceNotFoundExceptionBuilder) {
+        super(resourceNotFoundExceptionBuilder.message, resourceNotFoundExceptionBuilder.entityName);
     }
 
+    public static class ResourceNotFoundExceptionBuilder {
+
+        private String message;
+        private String entityName;
+
+        public ResourceNotFoundExceptionBuilder message(String message) {
+            this.message = message;
+            return this;
+        }
+
+        public ResourceNotFoundExceptionBuilder entityName(String entityName) {
+            this.entityName = entityName;
+            return this;
+        }
+
+        public ResourceNotFoundException build() {
+            return new ResourceNotFoundException(this);
+        }
+
+    }
 }

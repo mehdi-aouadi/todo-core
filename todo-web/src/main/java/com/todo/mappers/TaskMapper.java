@@ -1,12 +1,16 @@
 package com.todo.mappers;
 
+import com.todo.common.Page;
 import com.todo.contents.TaskContent;
+import com.todo.contents.TaskPageContent;
 import com.todo.model.Task;
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
+import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface TaskMapper {
@@ -17,8 +21,14 @@ public interface TaskMapper {
 
   Task contentToDomain(TaskContent taskContent);
 
-  List<TaskContent> domainToContent(List<Task> taskList);
+  List<TaskContent> domainListToContentList(List<Task> taskList);
 
-  List<Task> contentToDomain(List<TaskContent> contentsList);
+  List<Task> contentListToDomainList(List<TaskContent> contentsList);
+
+  @Mappings( {
+          @Mapping(source = "totalElementCount", target = "totalCount"),
+          @Mapping(source = "content", target = "tasks")
+  })
+  TaskPageContent domainPageToContentPage(Page<Task> page);
 
 }
