@@ -1,0 +1,26 @@
+version: '2'
+
+services:
+
+  mongo:
+    container_name: mongo
+    image: mongo:$MONGO_VERSION
+    command: mongod
+    labels:
+      wait.port: "27017"
+    mem_limit: 256m
+    ulimits:
+      nofile:
+        soft: 64000
+        hard: 64000
+    networks:
+      t2s:
+        ipv4_address: 172.16.220.2
+
+networks:
+  t2s:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.220.0/24
+          gateway: 172.16.220.1
