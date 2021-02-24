@@ -13,6 +13,7 @@
 
     <properties>
         <com.todo.todo-data-service.version>1.0-SNAPSHOT</com.todo.todo-data-service.version>
+        <com.todo.todo-common.version>1.0-SNAPSHOT</com.todo.todo-common.version>
         <org.webjars.bootstrap.version>3.3.5</org.webjars.bootstrap.version>
         <org.glassfish.jersey.containers.jersey-container-servlet.version>2.25</org.glassfish.jersey.containers.jersey-container-servlet.version>
         <com.fasterxml.jackson.module.jackson-modules-java8.version>2.9.8</com.fasterxml.jackson.module.jackson-modules-java8.version>
@@ -24,6 +25,11 @@
             <groupId>com.todo</groupId>
             <artifactId>todo-data-service</artifactId>
             <version>${com.todo.todo-data-service.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.todo</groupId>
+            <artifactId>todo-common</artifactId>
+            <version>${com.todo.todo-common.version}</version>
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>

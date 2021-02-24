@@ -13,6 +13,7 @@
     <module>todo-data-service</module>
     <module>todo-web</module>
     <module>todo-integration-tests</module>
+    <module>todo-common</module>
   </modules>
 
   <name>todo</name>
