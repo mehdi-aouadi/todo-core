@@ -14,6 +14,7 @@
 
     <properties>
         <org.mongodb.mongo-java-driver.version>3.8.0</org.mongodb.mongo-java-driver.version>
+        <com.todo.todo-common.version>1.0-SNAPSHOT</com.todo.todo-common.version>
     </properties>
 
     <dependencies>
@@ -21,6 +22,11 @@
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
             <version>${org.mongodb.mongo-java-driver.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.todo</groupId>
+            <artifactId>todo-common</artifactId>
+            <version>${com.todo.todo-common.version}</version>
         </dependency>
     </dependencies>
 </project>

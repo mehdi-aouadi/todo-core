@@ -1,10 +1,12 @@
 package com.todo.dbutils;
 
+import com.todo.config.PropertyManager;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.todo.config.Version;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
@@ -18,11 +20,19 @@ public class MongoDbManager {
   private static MongoDbManager INSTANCE;
 
   private MongoDbManager() {
-    MongoClientURI connectionString = new MongoClientURI("mongodb://localhost:27017");
+    String env = PropertyManager.getInstance().getProperty("todo.environment");
+    String mongoUri;
+    if (env == Version.TEST.name()) {
+      mongoUri = PropertyManager.getInstance().getProperty("dev.mongo.uri");
+    } else {
+      mongoUri = PropertyManager.getInstance().getProperty("production.mongo.uri");
+    }
+    MongoClientURI connectionString = new MongoClientURI(mongoUri);
     MongoClient mongoClient = new MongoClient(connectionString);
+    String dbName = PropertyManager.getInstance().getProperty("mongo.db.name");
     CodecRegistry pojoCodecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
         fromProviders(PojoCodecProvider.builder().automatic(true).build()));
-    database = mongoClient.getDatabase("tododb").withCodecRegistry(pojoCodecRegistry);
+    database = mongoClient.getDatabase(dbName).withCodecRegistry(pojoCodecRegistry);
   }
 
   private static MongoDbManager getInstance() {
