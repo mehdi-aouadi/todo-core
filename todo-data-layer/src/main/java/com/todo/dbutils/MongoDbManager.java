@@ -7,13 +7,20 @@ import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.todo.config.Version;
+import com.todo.repositories.impl.AssignedProgramRepositoryMongoImpl;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Locale;
 
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 public class MongoDbManager {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(MongoDbManager.class);
 
   private static MongoDatabase database;
 
@@ -21,12 +28,13 @@ public class MongoDbManager {
 
   private MongoDbManager() {
     String env = PropertyManager.getInstance().getProperty("todo.environment");
-    String mongoUri;
-    if (env == Version.TEST.name()) {
+    LOGGER.info("Connecting to mongodb env: {}", env);
+    String mongoUri;if (env.equals(Version.TEST.name()) || env.equals(Version.DEV.name())) {
       mongoUri = PropertyManager.getInstance().getProperty("dev.mongo.uri");
     } else {
       mongoUri = PropertyManager.getInstance().getProperty("production.mongo.uri");
     }
+    LOGGER.info("Using mongo uri: {}", mongoUri);
     MongoClientURI connectionString = new MongoClientURI(mongoUri);
     MongoClient mongoClient = new MongoClient(connectionString);
     String dbName = PropertyManager.getInstance().getProperty("mongo.db.name");
