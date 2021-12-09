@@ -16,7 +16,7 @@
         <com.todo.todo-common.version>1.0-SNAPSHOT</com.todo.todo-common.version>
         <org.webjars.bootstrap.version>3.3.5</org.webjars.bootstrap.version>
         <org.glassfish.jersey.containers.jersey-container-servlet.version>2.25</org.glassfish.jersey.containers.jersey-container-servlet.version>
-        <com.fasterxml.jackson.module.jackson-modules-java8.version>2.9.8</com.fasterxml.jackson.module.jackson-modules-java8.version>
+        <com.fasterxml.jackson.module.jackson-modules-java8.version>2.9.10.8</com.fasterxml.jackson.module.jackson-modules-java8.version>
         <org.glassfish.hk2.guice-bridge.version>2.5.0-b62</org.glassfish.hk2.guice-bridge.version>
     </properties>
 
